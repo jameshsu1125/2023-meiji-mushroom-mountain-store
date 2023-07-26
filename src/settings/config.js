@@ -4,7 +4,7 @@ import { ACTION, LOADING_PROCESS_STATE, PAGE } from './constant';
 export const Context = createContext();
 
 export const initialState = {
-	[ACTION.page]: PAGE.landing,
+	[ACTION.page]: PAGE.game,
 	[ACTION.LoadingProcess]: LOADING_PROCESS_STATE,
 };
 

@@ -5,6 +5,7 @@ export const ACTION = {
 
 export const PAGE = {
 	landing: '/landing',
+	game: '/game',
 };
 
 export const LOADING_PROCESS_TYPE = [
