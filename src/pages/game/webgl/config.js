@@ -47,9 +47,10 @@ export const webglConfig = {
 		outputEncoding: THREE.sRGBEncoding,
 		physicallyCorrectLights: false,
 	},
-	physics: false,
+	physics: true,
 	stats: true,
 };
 
 export const CubeSize = 2;
-export const CharacterSize = 0.8;
+export const CubeGapSize = 0.1;
+export const ModelSize = 0.6;

@@ -1,25 +1,47 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable function-paren-newline */
 /* eslint-disable implicit-arrow-linebreak */
 import * as THREE from 'three';
+import * as CANNON from 'cannon-es';
 import loadTexture from '../../../components/loadTexture';
 import TopImage from './texture/cube-top.jpg';
 import SizeImage from './texture/cube-side.jpg';
-import { CubeSize } from './config';
+import { CubeGapSize, CubeSize } from './config';
 
 export default class Cubes {
 	constructor({ webgl }) {
 		this.webgl = webgl;
 		this.numberOfBox = 9;
 		this.size = CubeSize;
-		this.gapSize = 0.1;
+		this.gapSize = CubeGapSize;
 		this.data = [...new Array(this.numberOfBox).keys()].map(() =>
 			Math.floor(Math.random() * this.numberOfBox),
 		);
-
-		this.addBox();
+		this.addBoxes();
 	}
 
-	async addBox() {
+	addPhysics({ col, row, i }) {
+		const { world, physicsStaticMaterial } = this.webgl;
+
+		const size = CubeSize * 0.5;
+		const halfExtents = new CANNON.Vec3(size, size, size);
+		const boxShape = new CANNON.Box(halfExtents);
+		const boxBody = new CANNON.Body({
+			mass: 0,
+			shape: boxShape,
+			type: CANNON.Body.STATIC,
+			material: physicsStaticMaterial,
+		});
+
+		const offsetX = 1 * (this.size + this.gapSize);
+		const offsetZ = 1 * (this.size + this.gapSize);
+		const x = (i % 3) * this.size + row * this.gapSize - offsetX;
+		const z = Math.floor(i / 3) * this.size + col * this.gapSize - offsetZ;
+		boxBody.position.set(x, 0, z);
+		world.addBody(boxBody);
+	}
+
+	async addBoxes() {
 		const topTexture = await loadTexture(TopImage);
 		const sideTexture = await loadTexture(SizeImage);
 		topTexture.wrapS = THREE.RepeatWrapping;
@@ -53,11 +75,19 @@ export default class Cubes {
 			mesh.receiveShadow = true;
 			mesh.position.set(x, 0, z);
 			group.add(mesh);
+
+			this.addPhysics({ col, row, i });
 			return mesh;
 		});
 
 		group.position.x = 0 - 1 * (this.size + this.gapSize);
 		group.position.z = 0 - 1 * (this.size + this.gapSize);
 		scene.add(group);
+	}
+
+	visible(v) {
+		this.boxes.forEach((box) => {
+			box.visible = v;
+		});
 	}
 }

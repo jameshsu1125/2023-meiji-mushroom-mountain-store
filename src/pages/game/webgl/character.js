@@ -1,71 +1,118 @@
+import * as CANNON from 'cannon-es';
 import GlbLoader from 'lesca-glb-loader';
 import * as THREE from 'three';
-import { CharacterSize, CubeSize } from './config';
+import { CubeSize, ModelSize } from './config';
 import Avatar from './models/character.glb';
 
 export default class Character {
 	constructor({ webgl }) {
 		this.webgl = webgl;
-		this.mixers = [];
-		this.index = 1;
+		this.model = null;
+		this.mixer = null;
+		this.actions = {};
+		this.actionName = 'run';
 
-		this.addCharacter();
-		this.wave();
+		this.property = {
+			index: 5,
+			height: 1.7,
+			size: CubeSize,
+			position: {
+				x: 0,
+				y: CubeSize - 0.13,
+				z: 0,
+			},
+			correction: {
+				x: 0,
+				y: -0.85,
+				z: 0,
+			},
+		};
 
+		this.addCharacter().then(() => {
+			// this.actions[this.actionName].play();
+		});
 		this.update();
 	}
 
-	update() {
-		const { enterframe } = this.webgl;
-		enterframe.add(() => {
-			const delta = this.webgl.clock.getDelta();
-			this.mixers[this.index]?.update(delta);
-		});
+	down() {
+		const keyName = 'down';
+		this.doActionByName(keyName);
 	}
 
 	wave() {
-		// const action = mixer[2].clipAction(gltf.animations[0]);
-		// action.setLoop(THREE.LoopOnce);
-		// action.play();
-		this.index = 2;
+		const keyName = 'wavehand';
+		this.doActionByName(keyName);
 	}
 
 	walk() {
-		this.index = 1;
+		const keyName = 'run';
+		this.doActionByName(keyName);
+	}
+
+	doActionByName(keyName) {
+		if (keyName === this.actionName) return;
+		this.actions[this.actionName].stop();
+		this.actions[keyName].play();
+		this.actionName = keyName;
+	}
+
+	addPhysics() {
+		const { world, physicsStaticMaterial } = this.webgl;
+
+		const cylinderShape = new CANNON.Cylinder(0.5, 0.5, this.property.height, 16, 1);
+		this.body = new CANNON.Body({
+			mass: 1,
+			shape: cylinderShape,
+			type: CANNON.Body.STATIC,
+			material: physicsStaticMaterial,
+		});
+
+		this.body.position.copy(this.property.position);
+
+		world.addBody(this.body);
 	}
 
 	addCharacter() {
-		GlbLoader(Avatar).then((e) => {
-			const { model, mixers, gltf } = e;
-
-			gltf.scene.traverse((child) => {
-				const mesh = child;
-				if (mesh.isMesh) mesh.castShadow = true;
-			});
-
-			// const action = mixers[2].clipAction(gltf.animations[2]);
-			// action.setLoop(THREE.LoopOnce);
-			// action.play();
-
-			// this.mixer = new THREE.AnimationMixer(gltf.scene);
-			// this.actions = {};
-
-			// console.log(gltf);
-
-			// gltf.animations.forEach((clip) => {
-			// 	const { name } = clip;
-			// 	const action = this.mixer.clipAction(clip);
-
-			// 	this.actions[name] = action;
-			// });
-			// console.log(this.actions.WaveHand);
-
-			const scale = CharacterSize;
-			model.scale.set(scale, scale, scale);
-			model.position.y = CubeSize - 1;
-			this.webgl.scene.add(model);
-
-			this.mixers = mixers;
+		return new Promise((resolve, reject) => {
+			GlbLoader(Avatar)
+				.then((e) => {
+					const { model, gltf } = e;
+					gltf.scene.traverse((child) => {
+						const mesh = child;
+						if (mesh.isMesh) mesh.castShadow = true;
+					});
+					this.mixer = new THREE.AnimationMixer(gltf.scene);
+					gltf.animations.forEach((clip) => {
+						const { name } = clip;
+						const action = this.mixer.clipAction(clip);
+						this.actions[name.toLowerCase()] = action;
+					});
+					const scale = ModelSize;
+					model.scale.set(scale, scale, scale);
+					this.webgl.scene.add(model);
+					this.model = model;
+					this.addPhysics();
+					resolve();
+				})
+				.catch(reject);
 		});
+	}
+
+	visible(v) {
+		this.model.visible = v;
+	}
+
+	update() {
+		if (this.model) {
+			const { position } = this.body;
+			const { correction } = this.property;
+			const p = { ...position };
+			p.x += correction.x;
+			p.y += correction.y;
+			p.z += correction.z;
+			this.model.position.copy(p);
+			const delta = this.webgl.clock.getDelta();
+			this.mixer?.update(delta);
+		}
 	}
 }

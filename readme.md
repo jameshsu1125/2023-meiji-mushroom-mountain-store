@@ -118,10 +118,18 @@ Thank customers and some manufacturers for their support.
 
 Code and documentation copyright 2011-2022 the authors. Code released under the [MIT License](https://reponame/blob/master/LICENSE).
 
-## remove optimized svg
+## game rule
 
-```sh
-find . -name '*\<*' | while read f; do mv "$f" "${f//\</}"; done
+```
+香菇遊戲說明：
+在倒數9~0的九宮格菇田上移動採菇（倒數數字隨機，不會每格都是一樣數字）
+也須小心別被竹筍給彈飛（可能會彈進倒數至0的田裡）
+遊玩時間越久，菇菇＆竹筍冒出的速度越快、數量越多（隨機出現，皆最多一次出現3朵/支）
+掉落到「數字為0的菇田」或「田邊懸崖（*跑動時未及時煞車，角色會落下懸崖）」，遊戲結束
+
+．採菇菇：每採一朵＋1分
+．誤碰竹筍：以「倒退嚕」形式被彈開
+．靜止3秒：「冒出竹筍」將角色彈開
 ```
 
 <!-- open -n -a /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --args --user-data-dir="/tmp/chrome_dev_test" --disable-web-security -->

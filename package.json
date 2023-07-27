@@ -45,7 +45,10 @@
 		"webpack-dev-server": "^4.15.1"
 	},
 	"dependencies": {
+		"cannon-es": "^0.20.0",
+		"cannon-es-debugger": "^1.0.0",
 		"dat.gui": "^0.7.9",
+		"lesca-click": "^4.3.2",
 		"lesca-glb-loader": "^1.0.0",
 		"lesca-react-onload": "^1.0.11",
 		"lesca-use-tween": "^3.0.1",
