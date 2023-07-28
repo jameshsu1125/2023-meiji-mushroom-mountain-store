@@ -10,26 +10,18 @@ export default class Character {
 		this.model = null;
 		this.mixer = null;
 		this.actions = {};
-		this.actionName = 'run';
+		this.actionName = 'idle';
+		this.delta = this.webgl.clock.getDelta();
+		this.isOut = false;
 
 		this.property = {
-			index: 5,
-			height: 1.7,
 			size: CubeSize,
-			position: {
-				x: 0,
-				y: CubeSize - 0.13,
-				z: 0,
-			},
-			correction: {
-				x: 0,
-				y: -0.85,
-				z: 0,
-			},
+			position: { x: 0, y: CubeSize - 0.4, z: 0 },
+			correction: { x: 0, y: -0.6, z: 0 },
 		};
 
 		this.addCharacter().then(() => {
-			// this.actions[this.actionName].play();
+			this.actions[this.actionName].play();
 		});
 		this.update();
 	}
@@ -40,35 +32,46 @@ export default class Character {
 	}
 
 	wave() {
+		if (this.isOut) return;
 		const keyName = 'wavehand';
 		this.doActionByName(keyName);
 	}
 
 	walk() {
+		if (this.isOut) return;
 		const keyName = 'run';
 		this.doActionByName(keyName);
 	}
 
+	stop() {
+		if (!this.model || this.isOut) return;
+		const keyName = 'idle';
+		this.doActionByName(keyName);
+	}
+
+	rotate(rotation = 0) {
+		const quaternion = new THREE.Quaternion();
+		quaternion.setFromAxisAngle(new THREE.Vector3(0, 1, 0).normalize(), rotation);
+		this.model.rotation.setFromQuaternion(quaternion);
+	}
+
 	doActionByName(keyName) {
 		if (keyName === this.actionName) return;
-		this.actions[this.actionName].stop();
+		if (this.actionName) this.actions[this.actionName].stop();
 		this.actions[keyName].play();
 		this.actionName = keyName;
 	}
 
 	addPhysics() {
 		const { world, physicsStaticMaterial } = this.webgl;
-
-		const cylinderShape = new CANNON.Cylinder(0.5, 0.5, this.property.height, 16, 1);
+		const cylinderShape = new CANNON.Sphere(0.6);
 		this.body = new CANNON.Body({
-			mass: 1,
+			mass: 10,
 			shape: cylinderShape,
-			type: CANNON.Body.STATIC,
+			type: CANNON.Body.DYNAMIC,
 			material: physicsStaticMaterial,
 		});
-
 		this.body.position.copy(this.property.position);
-
 		world.addBody(this.body);
 	}
 
@@ -102,6 +105,40 @@ export default class Character {
 		this.model.visible = v;
 	}
 
+	move(direct) {
+		if (this.isOut) return;
+		if (!this.body && !this.model) return;
+		const { ArrowLeft = 0, ArrowRight = 0, ArrowUp = 0, ArrowDown = 0 } = direct;
+
+		const x = ArrowLeft - ArrowRight;
+		const z = ArrowUp - ArrowDown;
+
+		const degree = {
+			'00': false,
+			10: -Math.PI / 2,
+			'-10': Math.PI / 2,
+			'01': Math.PI,
+			'0-1': 0,
+			'-11': (Math.PI / 4) * 3,
+			11: (-Math.PI / 4) * 3,
+			'1-1': -Math.PI / 4,
+			'-1-1': Math.PI / 4,
+		};
+
+		const angle = degree[`${x}${z}`];
+		if (angle !== false) this.rotate(angle);
+		else this.stop();
+
+		const { position } = this.body;
+		const clonePosition = { ...position };
+		clonePosition.x -= x * 0.05;
+		clonePosition.z -= z * 0.05;
+		this.body.velocity.x = 0;
+		this.body.velocity.z = 0;
+		this.body.position.x = clonePosition.x;
+		this.body.position.z = clonePosition.z;
+	}
+
 	update() {
 		if (this.model) {
 			const { position } = this.body;
@@ -111,8 +148,13 @@ export default class Character {
 			p.y += correction.y;
 			p.z += correction.z;
 			this.model.position.copy(p);
-			const delta = this.webgl.clock.getDelta();
-			this.mixer?.update(delta);
+			this.mixer?.update(this.delta);
+
+			if (this.isOut) return;
+			if (position.y <= 1.55) {
+				this.isOut = true;
+				this.down();
+			}
 		}
 	}
 }

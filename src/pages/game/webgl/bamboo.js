@@ -11,7 +11,7 @@ export default class Bamboo {
 		this.model = null;
 		this.body = null;
 		this.property = {
-			index: 7,
+			index: 3,
 			y: CubeSize * 0.5 + 0.25,
 			size: CubeSize,
 			gap: CubeGapSize,
@@ -48,9 +48,9 @@ export default class Bamboo {
 
 		const cylinderShape = new CANNON.Cylinder(0.1, 0.16, height, 16, 1);
 		this.body = new CANNON.Body({
-			mass: 0,
+			mass: 0.1,
 			shape: cylinderShape,
-			type: CANNON.Body.STATIC,
+			type: CANNON.Body.DYNAMIC,
 			material: physicsStaticMaterial,
 		});
 
@@ -95,6 +95,7 @@ export default class Bamboo {
 			p.y += correction.y;
 			p.z += correction.z;
 			this.model.position.copy(p);
+			this.model.quaternion.copy(this.body.quaternion);
 		}
 	}
 }

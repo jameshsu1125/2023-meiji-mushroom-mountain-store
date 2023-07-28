@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import { CameraType } from 'lesca-webgl-threejs/lib/types';
 
 export const webglConfig = {
-	fps: 0,
 	camera: { fov: 50, far: 75, type: CameraType.perspective },
 	sky: {
 		enabled: true,
@@ -37,7 +36,7 @@ export const webglConfig = {
 			decay: 0.5,
 			position: { x: 0, y: 8, z: 0 },
 		},
-		shadowMapSize: 512,
+		shadowMapSize: 1024,
 		debug: true,
 	},
 	renderer: {

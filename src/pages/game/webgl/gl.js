@@ -1,56 +1,45 @@
 import * as dat from 'dat.gui';
-import CannonDebugger from 'cannon-es-debugger';
 import Webgl from 'lesca-webgl-threejs';
-import { webglConfig } from './config';
-import Cubes from './cubes';
-import Character from './character';
-import Mushroom from './mushroom';
 import Bamboo from './bamboo';
+import Character from './character';
+import { webglConfig } from './config';
+import Controller from './controller';
+import Cubes from './cubes';
+import Mushroom from './mushroom';
 
 export default class GL {
 	constructor(dom) {
 		this.webgl = new Webgl(webglConfig);
+		this.webgl.controls.controls.enablePan = false;
+		dom.appendChild(this.webgl.render.domElement);
 
 		this.cubes = null;
 		this.character = null;
 		this.mushroom = null;
 		this.bamboo = null;
-		this.cannonDebugger = null;
-
-		dom.appendChild(this.webgl.render.domElement);
-		const onWindowResize = () => {
-			const { camera, renderer } = this.webgl;
-			camera.aspect = window.innerWidth / window.innerHeight;
-			camera.updateProjectionMatrix();
-
-			renderer.renderer.setSize(window.innerWidth, window.innerHeight);
-		};
-		window.addEventListener('resize', onWindowResize, false);
+		this.controller = null;
+		// this.cannonDebugger = this.webgl.addCannonDebuger();
 
 		this.addGUI();
 		this.addCubes();
 		this.addCharacter();
-		this.addMushroom();
-		this.addBamboo();
-		this.addDebugMode();
+		// this.addMushroom();
+		// this.addBamboo();
+		this.addController();
 		this.update();
+
+		const onWindowResize = () => {
+			const { camera, renderer } = this.webgl;
+			camera.aspect = window.innerWidth / window.innerHeight;
+			camera.updateProjectionMatrix();
+			renderer.renderer.setSize(window.innerWidth, window.innerHeight);
+		};
+		window.addEventListener('resize', onWindowResize, false);
 	}
 
-	update() {
-		const { enterframe } = this.webgl;
-		enterframe.add(() => {
-			this.cannonDebugger.update();
-			this.bamboo.update();
-			this.mushroom.update();
-			this.character.update();
-		});
-	}
-
-	addDebugMode() {
-		const { scene, world } = this.webgl;
-		this.cannonDebugger = new CannonDebugger(scene, world, {
-			color: 0xff6600,
-		});
+	addController() {
+		const { webgl, cubes, character, mushroom, bamboo } = this;
+		this.controller = new Controller({ webgl, cubes, character, mushroom, bamboo });
 	}
 
 	addBamboo() {
@@ -119,6 +108,18 @@ export default class GL {
 			this.character?.visible(v);
 			this.bamboo?.visible(v);
 			this.mushroom?.visible(v);
+		});
+	}
+
+	update() {
+		const { enterframe, stats } = this.webgl;
+		enterframe.add(() => {
+			this.character.move(this.controller.direct);
+			this.cannonDebugger?.update();
+			this.bamboo?.update();
+			this.mushroom?.update();
+			this.character?.update();
+			stats.end();
 		});
 	}
 }
