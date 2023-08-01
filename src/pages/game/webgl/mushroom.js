@@ -80,6 +80,7 @@ export default class Mushroom {
 			type: CANNON.Body.STATIC,
 			material: physicsStaticMaterial,
 		});
+		this.body.name = 'mushroom';
 
 		world.addBody(this.body);
 	}

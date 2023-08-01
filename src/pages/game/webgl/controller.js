@@ -1,9 +1,10 @@
 export default class Controller {
-	constructor({ character, bamboo, mushroom, cubes }) {
+	constructor({ character, bamboo, mushroom, cubes, onCollide }) {
 		this.character = character;
 		this.bamboo = bamboo;
 		this.mushroom = mushroom;
 		this.cubes = cubes;
+		this.onCollide = onCollide;
 
 		this.direct = {};
 		this.speed = 1;
@@ -12,7 +13,6 @@ export default class Controller {
 
 	addEvents() {
 		window.addEventListener('keydown', (e) => {
-			this.character.walk();
 			const { key } = e;
 			switch (key) {
 				case 'ArrowLeft':

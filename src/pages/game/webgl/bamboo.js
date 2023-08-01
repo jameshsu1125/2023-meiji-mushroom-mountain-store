@@ -10,8 +10,9 @@ export default class Bamboo {
 
 		this.model = null;
 		this.body = null;
+
 		this.property = {
-			index: 3,
+			index: 4,
 			y: CubeSize * 0.5 + 0.25,
 			size: CubeSize,
 			gap: CubeGapSize,
@@ -48,11 +49,12 @@ export default class Bamboo {
 
 		const cylinderShape = new CANNON.Cylinder(0.1, 0.16, height, 16, 1);
 		this.body = new CANNON.Body({
-			mass: 0.1,
+			mass: 100,
 			shape: cylinderShape,
-			type: CANNON.Body.DYNAMIC,
+			type: CANNON.Body.STATIC,
 			material: physicsStaticMaterial,
 		});
+		this.body.name = 'bamboo';
 
 		world.addBody(this.body);
 	}

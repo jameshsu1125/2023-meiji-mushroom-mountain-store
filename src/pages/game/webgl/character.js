@@ -11,8 +11,9 @@ export default class Character {
 		this.mixer = null;
 		this.actions = {};
 		this.actionName = 'idle';
-		this.delta = this.webgl.clock.getDelta();
+		this.delta = this.webgl.clock.getDelta() + 0.007;
 		this.isOut = false;
+		this.moveable = true;
 
 		this.property = {
 			size: CubeSize,
@@ -24,6 +25,11 @@ export default class Character {
 			this.actions[this.actionName].play();
 		});
 		this.update();
+	}
+
+	setMoveable(bool) {
+		this.moveable = bool;
+		this.stop();
 	}
 
 	down() {
@@ -63,15 +69,40 @@ export default class Character {
 	}
 
 	addPhysics() {
-		const { world, physicsStaticMaterial } = this.webgl;
+		const { world, physicsImpactMaterial } = this.webgl;
 		const cylinderShape = new CANNON.Sphere(0.6);
 		this.body = new CANNON.Body({
-			mass: 10,
+			mass: 3,
 			shape: cylinderShape,
 			type: CANNON.Body.DYNAMIC,
-			material: physicsStaticMaterial,
+			material: physicsImpactMaterial,
 		});
 		this.body.position.copy(this.property.position);
+
+		// add event
+
+		const onCollide = (event) => {
+			const { name } = event.body;
+			// body => bamboo or mushroom, target => character
+			if (name === 'box') {
+				if (!this.moveable) this.moveable = true;
+				return;
+			}
+
+			const { target } = event;
+			const { position: p1 } = event.body;
+			const { position: p2 } = target;
+			const forceScale = -5;
+
+			const velocity = { x: (p1.x - p2.x) * forceScale, z: (p1.z - p2.z) * forceScale, y: 5 };
+			target.velocity.setZero();
+			this.setMoveable(false);
+
+			requestAnimationFrame(() => {
+				target.velocity.set(velocity.x, velocity.y, velocity.z);
+			});
+		};
+		this.body.addEventListener('collide', onCollide);
 		world.addBody(this.body);
 	}
 
@@ -106,7 +137,7 @@ export default class Character {
 	}
 
 	move(direct) {
-		if (this.isOut) return;
+		if (this.isOut || !this.moveable) return;
 		if (!this.body && !this.model) return;
 		const { ArrowLeft = 0, ArrowRight = 0, ArrowUp = 0, ArrowDown = 0 } = direct;
 
@@ -126,8 +157,10 @@ export default class Character {
 		};
 
 		const angle = degree[`${x}${z}`];
-		if (angle !== false) this.rotate(angle);
-		else this.stop();
+		if (angle !== false) {
+			this.rotate(angle);
+			this.walk();
+		} else this.stop();
 
 		const { position } = this.body;
 		const clonePosition = { ...position };
@@ -151,7 +184,7 @@ export default class Character {
 			this.mixer?.update(this.delta);
 
 			if (this.isOut) return;
-			if (position.y <= 1.55) {
+			if (position.y <= 1.4) {
 				this.isOut = true;
 				this.down();
 			}

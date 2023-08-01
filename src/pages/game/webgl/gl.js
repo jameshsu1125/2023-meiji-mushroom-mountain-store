@@ -18,13 +18,13 @@ export default class GL {
 		this.mushroom = null;
 		this.bamboo = null;
 		this.controller = null;
-		// this.cannonDebugger = this.webgl.addCannonDebuger();
+		this.cannonDebugger = this.webgl.addCannonDebuger();
 
 		this.addGUI();
 		this.addCubes();
 		this.addCharacter();
 		// this.addMushroom();
-		// this.addBamboo();
+		this.addBamboo();
 		this.addController();
 		this.update();
 

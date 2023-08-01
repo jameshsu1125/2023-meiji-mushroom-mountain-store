@@ -25,10 +25,10 @@ export default class Cubes {
 
 		const size = CubeSize * 0.5;
 		const halfExtents = new CANNON.Vec3(size, size, size);
-		const boxShape = new CANNON.Box(halfExtents);
-		const boxBody = new CANNON.Body({
+		const shape = new CANNON.Box(halfExtents);
+		const body = new CANNON.Body({
 			mass: 0,
-			shape: boxShape,
+			shape,
 			type: CANNON.Body.STATIC,
 			material: physicsStaticMaterial,
 		});
@@ -37,8 +37,9 @@ export default class Cubes {
 		const offsetZ = 1 * (this.size + this.gapSize);
 		const x = (i % 3) * this.size + row * this.gapSize - offsetX;
 		const z = Math.floor(i / 3) * this.size + col * this.gapSize - offsetZ;
-		boxBody.position.set(x, 0, z);
-		world.addBody(boxBody);
+		body.position.set(x, 0, z);
+		body.name = 'box';
+		world.addBody(body);
 	}
 
 	async addBoxes() {
