@@ -1,6 +1,7 @@
 export const ACTION = {
 	page: '頁面',
-	LoadingProcess: '讀取產生中',
+	loadingProcess: '讀取產生中',
+	modal: 'modal',
 };
 
 export const PAGE = {
@@ -18,6 +19,12 @@ export const LOADING_PROCESS_TYPE = [
 	'spinningBubbles',
 	'spokes',
 ];
+
+export const MODAL = {
+	enabled: false,
+	body: '',
+	time: 0,
+};
 
 export const LOADING_PROCESS_STATE = {
 	enabled: false,

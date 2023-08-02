@@ -1,11 +1,12 @@
 import { createContext } from 'react';
-import { ACTION, LOADING_PROCESS_STATE, PAGE } from './constant';
+import { ACTION, LOADING_PROCESS_STATE, MODAL, PAGE } from './constant';
 
 export const Context = createContext();
 
 export const initialState = {
 	[ACTION.page]: PAGE.game,
-	[ACTION.LoadingProcess]: LOADING_PROCESS_STATE,
+	[ACTION.loadingProcess]: LOADING_PROCESS_STATE,
+	[ACTION.modal]: MODAL,
 };
 
 export const reducer = (state, action) => {

@@ -6,13 +6,19 @@ export default class Controller {
 		this.cubes = cubes;
 		this.onCollide = onCollide;
 
+		this.enabled = true;
 		this.direct = {};
 		this.speed = 1;
 		this.addEvents();
 	}
 
+	stop() {
+		this.enabled = false;
+	}
+
 	addEvents() {
 		window.addEventListener('keydown', (e) => {
+			if (!this.enabled) return;
 			const { key } = e;
 			switch (key) {
 				case 'ArrowLeft':

@@ -1,56 +1,46 @@
-import GlbLoader from 'lesca-glb-loader';
+/* eslint-disable no-return-assign */
+/* eslint-disable no-param-reassign */
 import * as CANNON from 'cannon-es';
-import { ModelSize, CubeGapSize, CubeSize } from './config';
+import GlbLoader from 'lesca-glb-loader';
+import Tweener from 'lesca-object-tweener';
+import { CubeGapSize, CubeSize, ModelSize, gameRule } from './config';
+import { easingDelta, shuffleArray } from './misc';
 import mushroom from './models/mushroom.glb';
 
 export default class Mushroom {
-	constructor({ webgl }) {
+	constructor({ webgl, collector, onload }) {
 		this.webgl = webgl;
-		this.model = null;
-		this.body = null;
+		this.collector = collector;
+		this.name = 'mushroom';
+		this.models = [];
+		this.bodies = [];
+
+		this.serial = 0;
+		this.enabled = true;
+		this.offset = { x: 0, z: 0 };
+
+		this.getOffset = () => {
+			const paddingCubeSize = CubeSize * 0.8;
+			this.offset.x = 0 - paddingCubeSize * 0.5 + Math.random() * paddingCubeSize;
+			this.offset.z = 0 - paddingCubeSize * 0.5 + Math.random() * paddingCubeSize;
+		};
 
 		this.property = {
 			index: 5,
 			y: CubeSize * 0.5 + 0.25,
 			size: CubeSize,
 			gap: CubeGapSize,
-			offset: {
-				x: (CubeSize + CubeGapSize) * -1,
-				z: (CubeSize + CubeGapSize) * -1,
-			},
-			correction: {
-				x: -0.08,
-				y: -0.25,
-				z: 0.095,
-			},
+			offset: { x: (CubeSize + CubeGapSize) * -1, z: (CubeSize + CubeGapSize) * -1 },
+			correction: { x: -0.08, y: -0.25, z: 0.095 },
 		};
 
 		this.init();
-		this.addMushroom();
+		this.addMushroom().then(() => onload(this.name));
 		this.randomPosition = () => Math.floor(Math.random() * 9);
+	}
 
-		// window.addEventListener('keydown', (e) => {
-		// 	const { keyCode } = e;
-		// 	const gap = 0.01;
-		// 	switch (keyCode) {
-		// 		case 65: // a
-		// 			this.property.correction.x -= gap;
-		// 			console.log(this.property.correction.x);
-		// 			break;
-		// 		case 68:
-		// 			this.property.correction.x += gap;
-		// 			console.log(this.property.correction.x);
-		// 			break;
-		// 		case 87:
-		// 			this.property.correction.z += gap;
-		// 			console.log(this.property.correction.z);
-		// 			break;
-		// 		case 83:
-		// 			this.property.correction.z -= gap;
-		// 			console.log(this.property.correction.z);
-		// 			break;
-		// 	}
-		// });
+	stop() {
+		this.enabled = false;
 	}
 
 	init() {
@@ -62,11 +52,58 @@ export default class Mushroom {
 			const z = Math.floor(i / 3) * size + col * gap + offset.z;
 			return { x, y, z };
 		});
+		this.tweeners = [...new Array(gameRule.maxMushroom).keys()].map(() => new Tweener());
 	}
 
 	setPositionByIndex() {
-		const position = this.position[this.property.index];
-		this.body.position.copy(position);
+		if (!this.enabled) return;
+
+		const [aliveCubes] = shuffleArray(
+			this.collector.data.filter((e) => {
+				if (e.number > 0) {
+					if (e.hasItem !== '') return false;
+					return true;
+				}
+				return false;
+			}),
+		);
+
+		if (!aliveCubes) return;
+		const { index } = aliveCubes;
+		this.collector.setMushroomIndex(index);
+		const position = this.position[index];
+		position.y = this.property.y - 0.6;
+		const targetIndex = this.serial % gameRule.maxMushroom;
+		const tweener = this.tweeners[targetIndex];
+		const body = this.bodies[targetIndex];
+		const model = this.models[targetIndex];
+
+		tweener
+			.stop()
+			.clearQueue()
+			.add({
+				from: {
+					...position,
+					y: this.property.y - 0.6,
+				},
+				to: { ...position, y: this.property.y },
+				duration: 200,
+				onStart: () => {
+					this.getOffset();
+					model.visible = true;
+					body.type = CANNON.Body.STATIC;
+					body.velocity.setZero();
+				},
+				onUpdate: (e) => {
+					body.position.copy({ x: e.x + this.offset.x, y: e.y, z: e.z + this.offset.z });
+				},
+				onComplete: (e) => {
+					body.position.copy({ x: e.x + this.offset.x, y: e.y, z: e.z + this.offset.z });
+					body.type = CANNON.Body.DYNAMIC;
+					body.velocity.setZero();
+				},
+			})
+			.play();
 	}
 
 	addPhysics() {
@@ -74,15 +111,17 @@ export default class Mushroom {
 		const height = 0.5;
 
 		const cylinderShape = new CANNON.Cylinder(0.16, 0.16, height, 16, 1);
-		this.body = new CANNON.Body({
-			mass: 0,
-			shape: cylinderShape,
-			type: CANNON.Body.STATIC,
-			material: physicsStaticMaterial,
+		this.bodies = [...new Array(gameRule.maxMushroom).keys()].map(() => {
+			const body = new CANNON.Body({
+				mass: 10000,
+				shape: cylinderShape,
+				type: CANNON.Body.STATIC,
+				material: physicsStaticMaterial,
+			});
+			body.name = this.name;
+			world.addBody(body);
+			return body;
 		});
-		this.body.name = 'mushroom';
-
-		world.addBody(this.body);
 	}
 
 	addMushroom() {
@@ -96,8 +135,12 @@ export default class Mushroom {
 					});
 					const scale = ModelSize;
 					model.scale.set(scale, scale, scale);
-					this.webgl.scene.add(model);
-					this.model = model;
+
+					this.models = [...new Array(gameRule.maxMushroom).keys()].map(() => {
+						const currentModel = model.clone();
+						this.webgl.scene.add(currentModel);
+						return currentModel;
+					});
 					this.addPhysics();
 					this.setPositionByIndex();
 					resolve();
@@ -107,18 +150,29 @@ export default class Mushroom {
 	}
 
 	visible(v) {
-		this.model.visible = v;
+		this.models.forEach((model) => {
+			model.visible = v;
+		});
 	}
 
-	update() {
-		if (this.model) {
-			const { position } = this.body;
-			const { correction } = this.property;
-			const p = { ...position };
-			p.x += correction.x;
-			p.y += correction.y;
-			p.z += correction.z;
-			this.model.position.copy(p);
+	update(delta) {
+		if (this.models.length !== 0) {
+			const currentDelta = easingDelta(delta, 'linear');
+			if (currentDelta !== this.serial) {
+				this.serial = currentDelta;
+				this.setPositionByIndex();
+			}
+
+			[...new Array(gameRule.maxMushroom).keys()].forEach((index) => {
+				const model = this.models[index];
+				const { position } = this.bodies[index];
+				const { correction } = this.property;
+				model.position.copy({
+					x: position.x + correction.x,
+					y: position.y + correction.y,
+					z: position.z + correction.z,
+				});
+			});
 		}
 	}
 }

@@ -2,17 +2,24 @@ import * as dat from 'dat.gui';
 import Webgl from 'lesca-webgl-threejs';
 import Bamboo from './bamboo';
 import Character from './character';
-import { webglConfig } from './config';
+import { gameRule, webglConfig } from './config';
 import Controller from './controller';
 import Cubes from './cubes';
 import Mushroom from './mushroom';
+import Collector from './collector';
 
 export default class GL {
-	constructor(dom) {
+	constructor({ dom, onMushroomTrigger, onModulesLoaded, onGameTimeUp, onGameOver }) {
 		this.webgl = new Webgl(webglConfig);
 		this.webgl.controls.controls.enablePan = false;
 		dom.appendChild(this.webgl.render.domElement);
+		this.onMushroomTrigger = onMushroomTrigger;
+		this.onModulesLoaded = onModulesLoaded;
+		this.onGameTimeUp = onGameTimeUp;
+		this.onGameOver = onGameOver;
+		this.enabled = false;
 
+		this.collector = new Collector();
 		this.cubes = null;
 		this.character = null;
 		this.mushroom = null;
@@ -20,13 +27,26 @@ export default class GL {
 		this.controller = null;
 		this.cannonDebugger = this.webgl.addCannonDebuger();
 
+		// loader
+		this.loaderData = {};
+		this.onGLBLoaded = (target) => {
+			this.loaderData[target] = true;
+			const { length } = Object.keys(this.loaderData);
+			if (length >= 4) {
+				onModulesLoaded();
+				this.addController();
+				this.update();
+			}
+		};
+
+		// updater
+		this.firstDelta = false;
+
 		this.addGUI();
 		this.addCubes();
-		this.addCharacter();
-		// this.addMushroom();
+		this.addCharacter(onMushroomTrigger, onGameOver);
+		this.addMushroom();
 		this.addBamboo();
-		this.addController();
-		this.update();
 
 		const onWindowResize = () => {
 			const { camera, renderer } = this.webgl;
@@ -43,19 +63,36 @@ export default class GL {
 	}
 
 	addBamboo() {
-		this.bamboo = new Bamboo({ webgl: this.webgl });
+		this.bamboo = new Bamboo({
+			webgl: this.webgl,
+			collector: this.collector,
+			onload: this.onGLBLoaded,
+		});
 	}
 
 	addMushroom() {
-		this.mushroom = new Mushroom({ webgl: this.webgl });
+		this.mushroom = new Mushroom({
+			webgl: this.webgl,
+			collector: this.collector,
+			onload: this.onGLBLoaded,
+		});
 	}
 
-	addCharacter() {
-		this.character = new Character({ webgl: this.webgl });
+	addCharacter(onMushroomTrigger, onGameOver) {
+		this.character = new Character({
+			webgl: this.webgl,
+			onMushroomTrigger,
+			onGameOver,
+			onload: this.onGLBLoaded,
+		});
 	}
 
 	addCubes() {
-		this.cubes = new Cubes({ webgl: this.webgl });
+		this.cubes = new Cubes({
+			webgl: this.webgl,
+			collector: this.collector,
+			onload: this.onGLBLoaded,
+		});
 	}
 
 	addGUI() {
@@ -90,35 +127,32 @@ export default class GL {
 		skyGUI.add(effectController, 'azimuth', 0, Math.PI / 2, 0.001).onChange(guiChanged);
 		skyGUI.add(effectController, 'inclination', 0, Math.PI / 2, 0.001).onChange(guiChanged);
 		skyGUI.add(effectController, 'exposure', 0, 1, 0.001).onChange(guiChanged);
-
-		const characterGUI = gui.addFolder('character');
-		const wave = {
-			揮手: () => this.character.wave(),
-			跑步: () => this.character.walk(),
-			掉落: () => this.character.down(),
-		};
-		characterGUI.add(wave, '揮手');
-		characterGUI.add(wave, '跑步');
-		characterGUI.add(wave, '掉落');
-
-		const Debug = gui.addFolder('debug');
-		const debug = { mesh: true };
-		Debug.add(debug, 'mesh').onChange((v) => {
-			this.cubes?.visible(v);
-			this.character?.visible(v);
-			this.bamboo?.visible(v);
-			this.mushroom?.visible(v);
-		});
 	}
 
 	update() {
 		const { enterframe, stats } = this.webgl;
-		enterframe.add(() => {
+		enterframe.add((e) => {
+			const { delta } = e;
+			const { totalDuration } = gameRule;
+
+			if (this.firstDelta === false) this.firstDelta = delta;
+			const currentDelta = delta - this.firstDelta;
 			this.character.move(this.controller.direct);
 			this.cannonDebugger?.update();
-			this.bamboo?.update();
-			this.mushroom?.update();
+			this.bamboo?.update(currentDelta);
+			this.mushroom?.update(currentDelta);
 			this.character?.update();
+			this.cubes?.update(currentDelta);
+
+			if (currentDelta > totalDuration && this.enabled === false) {
+				this.enabled = true;
+				this.onGameTimeUp();
+				this.character.stop();
+				this.controller.stop();
+				this.bamboo.stop();
+				this.mushroom.stop();
+			}
+
 			stats.end();
 		});
 	}

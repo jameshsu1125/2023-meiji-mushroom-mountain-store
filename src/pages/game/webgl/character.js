@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import * as CANNON from 'cannon-es';
 import GlbLoader from 'lesca-glb-loader';
 import * as THREE from 'three';
@@ -5,15 +6,20 @@ import { CubeSize, ModelSize } from './config';
 import Avatar from './models/character.glb';
 
 export default class Character {
-	constructor({ webgl }) {
+	constructor({ webgl, onMushroomTrigger, onGameOver, onload }) {
 		this.webgl = webgl;
+		this.onMushroomTrigger = onMushroomTrigger;
+		this.onGameOver = onGameOver;
+		this.name = 'character';
 		this.model = null;
 		this.mixer = null;
 		this.actions = {};
 		this.actionName = 'idle';
-		this.delta = this.webgl.clock.getDelta() + 0.007;
+		this.delta = 0.03;
+		this.speed = 0.08;
 		this.isOut = false;
 		this.moveable = true;
+		this.bounce = true;
 
 		this.property = {
 			size: CubeSize,
@@ -23,6 +29,7 @@ export default class Character {
 
 		this.addCharacter().then(() => {
 			this.actions[this.actionName].play();
+			onload(this.name);
 		});
 		this.update();
 	}
@@ -79,28 +86,44 @@ export default class Character {
 		});
 		this.body.position.copy(this.property.position);
 
-		// add event
-
 		const onCollide = (event) => {
 			const { name } = event.body;
-			// body => bamboo or mushroom, target => character
+			const { target } = event;
+
 			if (name === 'box') {
+				target.velocity.setZero();
 				if (!this.moveable) this.moveable = true;
 				return;
 			}
 
-			const { target } = event;
-			const { position: p1 } = event.body;
-			const { position: p2 } = target;
-			const forceScale = -5;
+			// body => bamboo or mushroom, target => character
+			if (name === 'bamboo') {
+				const { position: p1 } = event.body;
+				const { position: p2 } = target;
+				const forceScale = -5;
 
-			const velocity = { x: (p1.x - p2.x) * forceScale, z: (p1.z - p2.z) * forceScale, y: 5 };
-			target.velocity.setZero();
-			this.setMoveable(false);
+				const velocity = { x: (p1.x - p2.x) * forceScale, z: (p1.z - p2.z) * forceScale, y: 5 };
+				target.velocity.setZero();
+				this.setMoveable(false);
 
-			requestAnimationFrame(() => {
-				target.velocity.set(velocity.x, velocity.y, velocity.z);
-			});
+				requestAnimationFrame(() => {
+					target.velocity.set(velocity.x, velocity.y, velocity.z);
+				});
+			} else {
+				const { body } = event;
+				body.position.y = -1000;
+				body.type = CANNON.Body.STATIC;
+				body.velocity.setZero();
+				target.velocity.setZero();
+
+				// 防抖動
+				if (!this.bounce) return;
+				this.bounce = false;
+				this.onMushroomTrigger();
+				setTimeout(() => {
+					this.bounce = true;
+				}, 500);
+			}
 		};
 		this.body.addEventListener('collide', onCollide);
 		world.addBody(this.body);
@@ -164,8 +187,8 @@ export default class Character {
 
 		const { position } = this.body;
 		const clonePosition = { ...position };
-		clonePosition.x -= x * 0.05;
-		clonePosition.z -= z * 0.05;
+		clonePosition.x -= x * this.speed;
+		clonePosition.z -= z * this.speed;
 		this.body.velocity.x = 0;
 		this.body.velocity.z = 0;
 		this.body.position.x = clonePosition.x;
@@ -187,6 +210,7 @@ export default class Character {
 			if (position.y <= 1.4) {
 				this.isOut = true;
 				this.down();
+				this.onGameOver();
 			}
 		}
 	}

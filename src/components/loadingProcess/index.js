@@ -9,7 +9,7 @@ const Background = () => (
 const Text = ({ children }) => <span className='relative text-textColor'>{children}</span>;
 const LoadingProcess = memo(() => {
 	const [context] = useContext(Context);
-	const data = context[ACTION.LoadingProcess];
+	const data = context[ACTION.loadingProcess];
 	return (
 		<div className='absolute top-0 z-50 flex h-full w-full flex-col items-center justify-center space-y-3'>
 			<Background />

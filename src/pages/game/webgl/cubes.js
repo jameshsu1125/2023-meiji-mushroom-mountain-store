@@ -7,22 +7,30 @@ import loadTexture from '../../../components/loadTexture';
 import TopImage from './texture/cube-top.jpg';
 import SizeImage from './texture/cube-side.jpg';
 import { CubeGapSize, CubeSize } from './config';
+import { easingDelta } from './misc';
 
 export default class Cubes {
-	constructor({ webgl }) {
+	constructor({ webgl, collector, onload }) {
 		this.webgl = webgl;
-		this.numberOfBox = 9;
+		this.collector = collector;
+		this.onload = onload;
+		this.name = 'box';
+
+		this.serial = 0;
+		this.enabled = true;
+
+		this.boxes = [];
+		this.bodies = [];
+
+		this.numberOfBox = collector.data.length;
 		this.size = CubeSize;
 		this.gapSize = CubeGapSize;
-		this.data = [...new Array(this.numberOfBox).keys()].map(() =>
-			Math.floor(Math.random() * this.numberOfBox),
-		);
+
 		this.addBoxes();
 	}
 
 	addPhysics({ col, row, i }) {
 		const { world, physicsStaticMaterial } = this.webgl;
-
 		const size = CubeSize * 0.5;
 		const halfExtents = new CANNON.Vec3(size, size, size);
 		const shape = new CANNON.Box(halfExtents);
@@ -40,6 +48,7 @@ export default class Cubes {
 		body.position.set(x, 0, z);
 		body.name = 'box';
 		world.addBody(body);
+		this.bodies.push(body);
 	}
 
 	async addBoxes() {
@@ -57,7 +66,7 @@ export default class Cubes {
 			const underSideMaterial = new THREE.MeshLambertMaterial({ color: 0x190e05 });
 			const topMaterial = new THREE.MeshStandardMaterial({ map: topTexture.clone() });
 			const sideMaterial = new THREE.MeshStandardMaterial({ map: sideTexture });
-			topMaterial.map.offset.set(0, (1 / 10) * this.data[i]);
+			topMaterial.map.offset.set(0, (1 / 10) * (this.numberOfBox - this.collector.data[i].number));
 
 			const mesh = new THREE.Mesh(geometry, [
 				sideMaterial,
@@ -84,11 +93,66 @@ export default class Cubes {
 		group.position.x = 0 - 1 * (this.size + this.gapSize);
 		group.position.z = 0 - 1 * (this.size + this.gapSize);
 		scene.add(group);
+		this.onload(this.name);
 	}
 
 	visible(v) {
 		this.boxes.forEach((box) => {
 			box.visible = v;
 		});
+	}
+
+	updateMaterial() {
+		this.boxes.forEach((box, i) => {
+			const { map } = box.material[2];
+			const data = this.collector.data[i];
+			const { number } = data;
+			const n = Math.round(this.numberOfBox - number);
+			map.offset.setY(n / 10);
+
+			if (n === this.numberOfBox) {
+				const body = this.bodies[i];
+				body.mass = 100000;
+				body.updateMassProperties();
+				body.type = CANNON.Body.DYNAMIC;
+				body.velocity.y = -10;
+			}
+		});
+	}
+
+	setMaterialByIndex() {
+		this.collector.data.forEach((item) => {
+			const { number } = item;
+			const currentNumber = number - 1;
+			if (currentNumber < 0) item.number = 0;
+			else item.number = currentNumber;
+		});
+		this.updateMaterial();
+	}
+
+	update(delta) {
+		if (this.bodies.length === this.numberOfBox) {
+			const currentDelta = easingDelta(delta, 'linear');
+			if (currentDelta !== this.serial) {
+				this.serial = currentDelta;
+				this.setMaterialByIndex();
+			}
+
+			[...new Array(this.numberOfBox).keys()].forEach((index) => {
+				const body = this.bodies[index];
+				const box = this.boxes[index];
+				const { position } = body;
+				const correction = {
+					x: -this.size - this.gapSize,
+					z: -this.size - this.gapSize,
+					y: 0,
+				};
+				box.position.copy({
+					x: position.x - correction.x,
+					y: position.y - correction.y,
+					z: position.z - correction.z,
+				});
+			});
+		}
 	}
 }

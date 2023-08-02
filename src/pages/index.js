@@ -2,6 +2,7 @@ import Click from 'lesca-click';
 import { lazy, memo, Suspense, useContext, useMemo, useReducer } from 'react';
 import { createRoot } from 'react-dom/client';
 import LoadingProcess from '../components/loadingProcess';
+import Modal from '../components/modal';
 import { Context, initialState, reducer } from '../settings/config';
 import { ACTION, PAGE } from '../settings/constant';
 import '../settings/global.less';
@@ -35,7 +36,8 @@ const App = () => {
 		<div className='App'>
 			<Context.Provider {...{ value }}>
 				<Pages />
-				{state[ACTION.LoadingProcess].enabled && <LoadingProcess />}
+				{state[ACTION.loadingProcess].enabled && <LoadingProcess />}
+				{state[ACTION.modal].enabled && <Modal />}
 			</Context.Provider>
 		</div>
 	);
