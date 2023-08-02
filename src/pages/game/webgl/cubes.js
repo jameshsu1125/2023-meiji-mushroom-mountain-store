@@ -46,7 +46,7 @@ export default class Cubes {
 		const x = (i % 3) * this.size + row * this.gapSize - offsetX;
 		const z = Math.floor(i / 3) * this.size + col * this.gapSize - offsetZ;
 		body.position.set(x, 0, z);
-		body.name = 'box';
+		body.name = this.name + i;
 		world.addBody(body);
 		this.bodies.push(body);
 	}
@@ -60,14 +60,13 @@ export default class Cubes {
 
 		const { scene } = this.webgl;
 		const group = new THREE.Group();
+		const geometry = new THREE.BoxGeometry(this.size, this.size, this.size);
+		const underSideMaterial = new THREE.MeshLambertMaterial({ color: 0x190e05 });
+		const sideMaterial = new THREE.MeshStandardMaterial({ map: sideTexture });
 
 		this.boxes = [...new Array(this.numberOfBox).keys()].map((i) => {
-			const geometry = new THREE.BoxGeometry(this.size, this.size, this.size);
-			const underSideMaterial = new THREE.MeshLambertMaterial({ color: 0x190e05 });
 			const topMaterial = new THREE.MeshStandardMaterial({ map: topTexture.clone() });
-			const sideMaterial = new THREE.MeshStandardMaterial({ map: sideTexture });
 			topMaterial.map.offset.set(0, (1 / 10) * (this.numberOfBox - this.collector.data[i].number));
-
 			const mesh = new THREE.Mesh(geometry, [
 				sideMaterial,
 				sideMaterial,
@@ -79,9 +78,9 @@ export default class Cubes {
 
 			const col = Math.floor(i / 3);
 			const row = i % 3;
-
 			const x = (i % 3) * this.size + row * this.gapSize;
 			const z = Math.floor(i / 3) * this.size + col * this.gapSize;
+
 			mesh.receiveShadow = true;
 			mesh.position.set(x, 0, z);
 			group.add(mesh);
@@ -102,6 +101,10 @@ export default class Cubes {
 		});
 	}
 
+	stop() {
+		this.enabled = false;
+	}
+
 	updateMaterial() {
 		this.boxes.forEach((box, i) => {
 			const { map } = box.material[2];
@@ -111,11 +114,18 @@ export default class Cubes {
 			map.offset.setY(n / 10);
 
 			if (n === this.numberOfBox) {
-				const body = this.bodies[i];
-				body.mass = 100000;
-				body.updateMassProperties();
-				body.type = CANNON.Body.DYNAMIC;
-				body.velocity.y = -10;
+				const { stay } = this.collector;
+				if (stay === i) {
+					this.collector.data[i].drop = true;
+					const body = this.bodies[i];
+					body.mass = 100000;
+					body.updateMassProperties();
+					body.type = CANNON.Body.DYNAMIC;
+					body.velocity.y = -10;
+				} else {
+					this.collector.data[i].number = 10;
+					map.offset.setY(1);
+				}
 			}
 		});
 	}
@@ -135,7 +145,7 @@ export default class Cubes {
 			const currentDelta = easingDelta(delta, 'linear');
 			if (currentDelta !== this.serial) {
 				this.serial = currentDelta;
-				this.setMaterialByIndex();
+				if (this.enabled) this.setMaterialByIndex();
 			}
 
 			[...new Array(this.numberOfBox).keys()].forEach((index) => {

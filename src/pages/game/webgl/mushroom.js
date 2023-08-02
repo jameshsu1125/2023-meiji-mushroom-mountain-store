@@ -3,7 +3,7 @@
 import * as CANNON from 'cannon-es';
 import GlbLoader from 'lesca-glb-loader';
 import Tweener from 'lesca-object-tweener';
-import { CubeGapSize, CubeSize, ModelSize, gameRule } from './config';
+import { CubeGapSize, CubeSize, gameRule, mushroomSize } from './config';
 import { easingDelta, shuffleArray } from './misc';
 import mushroom from './models/mushroom.glb';
 
@@ -27,11 +27,15 @@ export default class Mushroom {
 
 		this.property = {
 			index: 5,
-			y: CubeSize * 0.5 + 0.25,
+			y: CubeSize * 0.5 + (0.25 / 0.6) * mushroomSize,
 			size: CubeSize,
 			gap: CubeGapSize,
 			offset: { x: (CubeSize + CubeGapSize) * -1, z: (CubeSize + CubeGapSize) * -1 },
-			correction: { x: -0.08, y: -0.25, z: 0.095 },
+			correction: {
+				x: (-0.08 / 0.6) * mushroomSize,
+				y: (-0.25 / 0.6) * mushroomSize,
+				z: (0.095 / 0.6) * mushroomSize,
+			},
 		};
 
 		this.init();
@@ -60,7 +64,7 @@ export default class Mushroom {
 
 		const [aliveCubes] = shuffleArray(
 			this.collector.data.filter((e) => {
-				if (e.number > 0) {
+				if (!e.drop) {
 					if (e.hasItem !== '') return false;
 					return true;
 				}
@@ -78,13 +82,14 @@ export default class Mushroom {
 		const body = this.bodies[targetIndex];
 		const model = this.models[targetIndex];
 
+		if (!tweener) return;
 		tweener
 			.stop()
 			.clearQueue()
 			.add({
 				from: {
 					...position,
-					y: this.property.y - 0.6,
+					y: this.property.y - (0.6 / 0.6) * mushroomSize,
 				},
 				to: { ...position, y: this.property.y },
 				duration: 200,
@@ -108,12 +113,18 @@ export default class Mushroom {
 
 	addPhysics() {
 		const { world, physicsStaticMaterial } = this.webgl;
-		const height = 0.5;
+		const height = (0.5 / 0.6) * mushroomSize;
 
-		const cylinderShape = new CANNON.Cylinder(0.16, 0.16, height, 16, 1);
+		const cylinderShape = new CANNON.Cylinder(
+			(0.16 / 0.6) * mushroomSize,
+			(0.16 / 0.6) * mushroomSize,
+			height,
+			16,
+			1,
+		);
 		this.bodies = [...new Array(gameRule.maxMushroom).keys()].map(() => {
 			const body = new CANNON.Body({
-				mass: 10000,
+				mass: 0,
 				shape: cylinderShape,
 				type: CANNON.Body.STATIC,
 				material: physicsStaticMaterial,
@@ -133,7 +144,7 @@ export default class Mushroom {
 						const mesh = child;
 						if (mesh.isMesh) mesh.castShadow = true;
 					});
-					const scale = ModelSize;
+					const scale = mushroomSize;
 					model.scale.set(scale, scale, scale);
 
 					this.models = [...new Array(gameRule.maxMushroom).keys()].map(() => {

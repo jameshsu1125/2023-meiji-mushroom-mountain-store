@@ -2,14 +2,16 @@
 import * as CANNON from 'cannon-es';
 import GlbLoader from 'lesca-glb-loader';
 import * as THREE from 'three';
-import { CubeSize, ModelSize } from './config';
+import { CubeSize, ModelSize, bambooSize } from './config';
 import Avatar from './models/character.glb';
 
 export default class Character {
-	constructor({ webgl, onMushroomTrigger, onGameOver, onload }) {
+	constructor({ webgl, onMushroomTrigger, onGameOver, collector, stopRender, onload }) {
 		this.webgl = webgl;
 		this.onMushroomTrigger = onMushroomTrigger;
 		this.onGameOver = onGameOver;
+		this.collector = collector;
+		this.stopRender = stopRender;
 		this.name = 'character';
 		this.model = null;
 		this.mixer = null;
@@ -79,7 +81,7 @@ export default class Character {
 		const { world, physicsImpactMaterial } = this.webgl;
 		const cylinderShape = new CANNON.Sphere(0.6);
 		this.body = new CANNON.Body({
-			mass: 3,
+			mass: 1,
 			shape: cylinderShape,
 			type: CANNON.Body.DYNAMIC,
 			material: physicsImpactMaterial,
@@ -90,8 +92,10 @@ export default class Character {
 			const { name } = event.body;
 			const { target } = event;
 
-			if (name === 'box') {
+			if (name.indexOf('box') >= 0) {
 				target.velocity.setZero();
+				const index = Number(name.slice(3));
+				this.collector.stay = index;
 				if (!this.moveable) this.moveable = true;
 				return;
 			}
@@ -100,9 +104,13 @@ export default class Character {
 			if (name === 'bamboo') {
 				const { position: p1 } = event.body;
 				const { position: p2 } = target;
-				const forceScale = -5;
+				const forceScale = (-5 / bambooSize) * 0.6;
 
-				const velocity = { x: (p1.x - p2.x) * forceScale, z: (p1.z - p2.z) * forceScale, y: 5 };
+				const dx = p1.x - p2.x > 0 ? 1 : -1;
+				const dz = p1.z - p2.z > 0 ? 1 : -1;
+
+				const velocity = { x: 2 * dx * forceScale, z: 2 * dz * forceScale, y: 8 };
+
 				target.velocity.setZero();
 				this.setMoveable(false);
 
@@ -111,10 +119,10 @@ export default class Character {
 				});
 			} else {
 				const { body } = event;
-				body.position.y = -1000;
+				body.position.y = -1;
 				body.type = CANNON.Body.STATIC;
+				// target.velocity.setZero();
 				body.velocity.setZero();
-				target.velocity.setZero();
 
 				// 防抖動
 				if (!this.bounce) return;
@@ -210,6 +218,8 @@ export default class Character {
 			if (position.y <= 1.4) {
 				this.isOut = true;
 				this.down();
+				this.collector.stay = 999;
+				this.stopRender();
 				this.onGameOver();
 			}
 		}

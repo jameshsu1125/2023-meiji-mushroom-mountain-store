@@ -2,11 +2,11 @@ import * as dat from 'dat.gui';
 import Webgl from 'lesca-webgl-threejs';
 import Bamboo from './bamboo';
 import Character from './character';
-import { gameRule, webglConfig } from './config';
+import Collector from './collector';
+import { webglConfig } from './config';
 import Controller from './controller';
 import Cubes from './cubes';
 import Mushroom from './mushroom';
-import Collector from './collector';
 
 export default class GL {
 	constructor({ dom, onMushroomTrigger, onModulesLoaded, onGameTimeUp, onGameOver }) {
@@ -17,7 +17,6 @@ export default class GL {
 		this.onModulesLoaded = onModulesLoaded;
 		this.onGameTimeUp = onGameTimeUp;
 		this.onGameOver = onGameOver;
-		this.enabled = false;
 
 		this.collector = new Collector();
 		this.cubes = null;
@@ -44,9 +43,9 @@ export default class GL {
 
 		this.addGUI();
 		this.addCubes();
-		this.addCharacter(onMushroomTrigger, onGameOver);
 		this.addMushroom();
 		this.addBamboo();
+		this.addCharacter(onMushroomTrigger, onGameOver);
 
 		const onWindowResize = () => {
 			const { camera, renderer } = this.webgl;
@@ -83,6 +82,13 @@ export default class GL {
 			webgl: this.webgl,
 			onMushroomTrigger,
 			onGameOver,
+			collector: this.collector,
+			stopRender: () => {
+				this.controller.stop();
+				this.bamboo.stop();
+				this.mushroom.stop();
+				this.cubes.stop();
+			},
 			onload: this.onGLBLoaded,
 		});
 	}
@@ -133,7 +139,6 @@ export default class GL {
 		const { enterframe, stats } = this.webgl;
 		enterframe.add((e) => {
 			const { delta } = e;
-			const { totalDuration } = gameRule;
 
 			if (this.firstDelta === false) this.firstDelta = delta;
 			const currentDelta = delta - this.firstDelta;
@@ -143,15 +148,6 @@ export default class GL {
 			this.mushroom?.update(currentDelta);
 			this.character?.update();
 			this.cubes?.update(currentDelta);
-
-			if (currentDelta > totalDuration && this.enabled === false) {
-				this.enabled = true;
-				this.onGameTimeUp();
-				this.character.stop();
-				this.controller.stop();
-				this.bamboo.stop();
-				this.mushroom.stop();
-			}
 
 			stats.end();
 		});

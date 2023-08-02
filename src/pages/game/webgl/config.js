@@ -53,12 +53,14 @@ export const webglConfig = {
 export const CubeSize = 2;
 export const CubeGapSize = 0.1;
 export const ModelSize = 0.6;
+export const mushroomSize = 1;
+export const bambooSize = 1;
 
-export const cubeData = { number: 0, index: 0, hasItem: '' };
+export const cubeData = { number: 0, index: 0, hasItem: '', drop: false };
 export const gameRule = {
-	totalDuration: 30000,
 	frameOfCountDown: 3000,
 	maxMushroom: 3,
+	stay: 0,
 	cubes: [...new Array(9).keys()].map((index) => {
 		const cloneData = { ...cubeData };
 		cloneData.number = 5 + Math.floor(Math.random() * 5);

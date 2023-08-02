@@ -4,6 +4,7 @@ import { gameRule } from './config';
 export default class DataCollector {
 	constructor() {
 		this.data = [...gameRule.cubes];
+		this.stay = 4;
 		this.bambooName = 'bamboo';
 		this.mushroomName = 'mushroom';
 		this.mushroomData = [];

@@ -2,7 +2,7 @@
 import * as CANNON from 'cannon-es';
 import GlbLoader from 'lesca-glb-loader';
 import Tweener from 'lesca-object-tweener';
-import { CubeGapSize, CubeSize, ModelSize } from './config';
+import { CubeGapSize, CubeSize, bambooSize } from './config';
 import { easingDelta, shuffleArray } from './misc';
 import bamboo from './models/bamboo.glb';
 
@@ -20,11 +20,15 @@ export default class Bamboo {
 		this.offset = { x: 0, z: 0 };
 
 		this.property = {
-			y: CubeSize * 0.5 + 0.25,
+			y: CubeSize * 0.5 + (0.25 / 0.6) * bambooSize,
 			size: CubeSize,
 			gap: CubeGapSize,
 			offset: { x: (CubeSize + CubeGapSize) * -1, z: (CubeSize + CubeGapSize) * -1 },
-			correction: { x: -0.07, y: -0.25, z: 0.115 },
+			correction: {
+				x: (-0.07 / 0.6) * bambooSize,
+				y: (-0.25 / 0.6) * bambooSize,
+				z: (0.115 / 0.6) * bambooSize,
+			},
 		};
 
 		this.getOffset = () => {
@@ -65,7 +69,7 @@ export default class Bamboo {
 
 		const [aliveCubes] = shuffleArray(
 			this.collector.data.filter((e) => {
-				if (e.number > 0) {
+				if (!e.drop) {
 					if (e.hasItem !== '') return false;
 					return true;
 				}
@@ -86,15 +90,14 @@ export default class Bamboo {
 			.add({
 				from: {
 					...position,
-					y: this.property.y - 0.6,
+					y: this.property.y - (0.6 / 0.6) * bambooSize,
 				},
 				to: { ...position, y: this.property.y },
-				duration: 200,
+				duration: 500,
 				onStart: () => {
 					this.getOffset();
 					this.model.visible = true;
 					this.isTween = true;
-
 					this.body.type = CANNON.Body.STATIC;
 					this.body.velocity.setZero();
 				},
@@ -104,7 +107,6 @@ export default class Bamboo {
 				onComplete: (e) => {
 					this.body.position.copy({ x: e.x + this.offset.x, y: e.y, z: e.z + this.offset.z });
 					this.isTween = false;
-
 					this.body.type = CANNON.Body.DYNAMIC;
 					this.body.velocity.setZero();
 				},
@@ -114,8 +116,14 @@ export default class Bamboo {
 
 	addPhysics() {
 		const { world, physicsStaticMaterial } = this.webgl;
-		const height = 0.5;
-		const cylinderShape = new CANNON.Cylinder(0.1, 0.16, height, 16, 1);
+		const height = (0.5 / 0.6) * bambooSize;
+		const cylinderShape = new CANNON.Cylinder(
+			(0.1 / 0.6) * bambooSize,
+			(0.16 / 0.6) * bambooSize,
+			height,
+			16,
+			1,
+		);
 		this.body = new CANNON.Body({
 			mass: 100,
 			shape: cylinderShape,
@@ -125,6 +133,8 @@ export default class Bamboo {
 		this.body.name = this.name;
 		this.hide();
 		world.addBody(this.body);
+
+		this.setPositionByIndex();
 	}
 
 	addBamboo() {
@@ -135,7 +145,7 @@ export default class Bamboo {
 					gltf.scene.traverse((child) => {
 						if (child.isMesh) child.castShadow = true;
 					});
-					model.scale.set(ModelSize, ModelSize, ModelSize);
+					model.scale.set(bambooSize, bambooSize, bambooSize);
 					this.webgl.scene.add(model);
 					this.model = model;
 					this.addPhysics();
@@ -151,7 +161,7 @@ export default class Bamboo {
 
 	update(delta) {
 		if (this.model) {
-			const currentDelta = easingDelta(delta, 'linear');
+			const currentDelta = easingDelta(delta);
 			if (currentDelta !== this.serial) {
 				this.serial = currentDelta;
 				this.setPositionByIndex();
