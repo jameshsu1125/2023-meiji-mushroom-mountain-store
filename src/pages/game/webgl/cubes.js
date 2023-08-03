@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 /* eslint-disable no-param-reassign */
 /* eslint-disable function-paren-newline */
 /* eslint-disable implicit-arrow-linebreak */
@@ -6,17 +7,19 @@ import * as CANNON from 'cannon-es';
 import loadTexture from '../../../components/loadTexture';
 import TopImage from './texture/cube-top.jpg';
 import SizeImage from './texture/cube-side.jpg';
-import { CubeGapSize, CubeSize } from './config';
+import { CubeGapSize, CubeSize, gameRule } from './config';
 import { easingDelta } from './misc';
 
 export default class Cubes {
-	constructor({ webgl, collector, onload }) {
+	constructor({ webgl, collector, onGameCountDown, onload }) {
 		this.webgl = webgl;
 		this.collector = collector;
+		this.onGameCountDown = onGameCountDown;
 		this.onload = onload;
 		this.name = 'box';
 
-		this.serial = 0;
+		this.serial = gameRule.startCountDown;
+		this.countdownSerial = 0;
 		this.enabled = true;
 
 		this.boxes = [];
@@ -39,6 +42,11 @@ export default class Cubes {
 			shape,
 			type: CANNON.Body.STATIC,
 			material: physicsStaticMaterial,
+			collisionFilterGroup: gameRule.collideGroup.box,
+			collisionFilterMask:
+				gameRule.collideGroup.bamboo |
+				gameRule.collideGroup.mushroom |
+				gameRule.collideGroup.character,
 		});
 
 		const offsetX = 1 * (this.size + this.gapSize);
@@ -118,10 +126,10 @@ export default class Cubes {
 				if (stay === i) {
 					this.collector.data[i].drop = true;
 					const body = this.bodies[i];
-					body.mass = 100000;
+					body.mass = 10000;
 					body.updateMassProperties();
 					body.type = CANNON.Body.DYNAMIC;
-					body.velocity.y = -10;
+					body.velocity.set(0, -10, 0);
 				} else {
 					this.collector.data[i].number = 10;
 					map.offset.setY(1);
@@ -143,9 +151,16 @@ export default class Cubes {
 	update(delta) {
 		if (this.bodies.length === this.numberOfBox) {
 			const currentDelta = easingDelta(delta, 'linear');
-			if (currentDelta !== this.serial) {
+			if (currentDelta > this.serial) {
 				this.serial = currentDelta;
 				if (this.enabled) this.setMaterialByIndex();
+			}
+
+			if (currentDelta !== this.countdownSerial) {
+				if (this.countdownSerial < gameRule.startCountDown) {
+					this.countdownSerial = currentDelta;
+					this.onGameCountDown(gameRule.startCountDown - currentDelta + 1);
+				}
 			}
 
 			[...new Array(this.numberOfBox).keys()].forEach((index) => {

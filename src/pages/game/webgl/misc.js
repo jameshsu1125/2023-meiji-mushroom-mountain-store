@@ -12,7 +12,7 @@ export const ABDistance = (a, b) => {
 export const ABAngle = (a, b) => Math.atan2(a.x - b.x, a.z - b.z);
 
 export const easingDelta = (delta, type = 'inCirc') => {
-	const maxDuration = 30000;
+	const maxDuration = 20000;
 	const bezier = type === 'inCirc' ? Bezier.inCirc : Bezier.linear;
 	const easing = BezierEasing(bezier[0], bezier[1], bezier[2], bezier[3]);
 	const currentDelta = Math.floor((easing(delta / maxDuration) * maxDuration) / 1000);

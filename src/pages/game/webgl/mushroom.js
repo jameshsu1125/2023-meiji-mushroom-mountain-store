@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 /* eslint-disable no-return-assign */
 /* eslint-disable no-param-reassign */
 import * as CANNON from 'cannon-es';
@@ -15,7 +16,7 @@ export default class Mushroom {
 		this.models = [];
 		this.bodies = [];
 
-		this.serial = 0;
+		this.serial = gameRule.startCountDown;
 		this.enabled = true;
 		this.offset = { x: 0, z: 0 };
 
@@ -27,13 +28,13 @@ export default class Mushroom {
 
 		this.property = {
 			index: 5,
-			y: CubeSize * 0.5 + (0.25 / 0.6) * mushroomSize,
+			y: CubeSize * 0.5 + (0.09 / 0.6) * mushroomSize,
 			size: CubeSize,
 			gap: CubeGapSize,
 			offset: { x: (CubeSize + CubeGapSize) * -1, z: (CubeSize + CubeGapSize) * -1 },
 			correction: {
 				x: (-0.08 / 0.6) * mushroomSize,
-				y: (-0.25 / 0.6) * mushroomSize,
+				y: (-0.09 / 0.6) * mushroomSize,
 				z: (0.095 / 0.6) * mushroomSize,
 			},
 		};
@@ -63,8 +64,9 @@ export default class Mushroom {
 		if (!this.enabled) return;
 
 		const [aliveCubes] = shuffleArray(
-			this.collector.data.filter((e) => {
+			this.collector.data.filter((e, i) => {
 				if (!e.drop) {
+					if (this.collector.stay === i) return false;
 					if (e.hasItem !== '') return false;
 					return true;
 				}
@@ -97,7 +99,9 @@ export default class Mushroom {
 					this.getOffset();
 					model.visible = true;
 					body.type = CANNON.Body.STATIC;
+					body.collisionFilterMask = gameRule.collideGroup.unset;
 					body.velocity.setZero();
+					// body.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), 0);
 				},
 				onUpdate: (e) => {
 					body.position.copy({ x: e.x + this.offset.x, y: e.y, z: e.z + this.offset.z });
@@ -106,6 +110,8 @@ export default class Mushroom {
 					body.position.copy({ x: e.x + this.offset.x, y: e.y, z: e.z + this.offset.z });
 					body.type = CANNON.Body.DYNAMIC;
 					body.velocity.setZero();
+					body.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), 0);
+					body.collisionFilterMask = gameRule.collideGroup.box | gameRule.collideGroup.character;
 				},
 			})
 			.play();
@@ -113,7 +119,7 @@ export default class Mushroom {
 
 	addPhysics() {
 		const { world, physicsStaticMaterial } = this.webgl;
-		const height = (0.5 / 0.6) * mushroomSize;
+		const height = (0.2 / 0.6) * mushroomSize;
 
 		const cylinderShape = new CANNON.Cylinder(
 			(0.16 / 0.6) * mushroomSize,
@@ -124,10 +130,12 @@ export default class Mushroom {
 		);
 		this.bodies = [...new Array(gameRule.maxMushroom).keys()].map(() => {
 			const body = new CANNON.Body({
-				mass: 0,
+				mass: 100,
 				shape: cylinderShape,
 				type: CANNON.Body.STATIC,
 				material: physicsStaticMaterial,
+				collisionFilterGroup: gameRule.collideGroup.mushroom,
+				collisionFilterMask: gameRule.collideGroup.box | gameRule.collideGroup.character,
 			});
 			body.name = this.name;
 			world.addBody(body);
@@ -153,7 +161,6 @@ export default class Mushroom {
 						return currentModel;
 					});
 					this.addPhysics();
-					this.setPositionByIndex();
 					resolve();
 				})
 				.catch(reject);
@@ -169,7 +176,7 @@ export default class Mushroom {
 	update(delta) {
 		if (this.models.length !== 0) {
 			const currentDelta = easingDelta(delta, 'linear');
-			if (currentDelta !== this.serial) {
+			if (currentDelta > this.serial) {
 				this.serial = currentDelta;
 				this.setPositionByIndex();
 			}

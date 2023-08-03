@@ -9,7 +9,14 @@ import Cubes from './cubes';
 import Mushroom from './mushroom';
 
 export default class GL {
-	constructor({ dom, onMushroomTrigger, onModulesLoaded, onGameTimeUp, onGameOver }) {
+	constructor({
+		dom,
+		onMushroomTrigger,
+		onModulesLoaded,
+		onGameTimeUp,
+		onGameCountDown,
+		onGameOver,
+	}) {
 		this.webgl = new Webgl(webglConfig);
 		this.webgl.controls.controls.enablePan = false;
 		dom.appendChild(this.webgl.render.domElement);
@@ -17,6 +24,7 @@ export default class GL {
 		this.onModulesLoaded = onModulesLoaded;
 		this.onGameTimeUp = onGameTimeUp;
 		this.onGameOver = onGameOver;
+		this.onGameCountDown = onGameCountDown;
 
 		this.collector = new Collector();
 		this.cubes = null;
@@ -97,6 +105,7 @@ export default class GL {
 		this.cubes = new Cubes({
 			webgl: this.webgl,
 			collector: this.collector,
+			onGameCountDown: this.onGameCountDown,
 			onload: this.onGLBLoaded,
 		});
 	}

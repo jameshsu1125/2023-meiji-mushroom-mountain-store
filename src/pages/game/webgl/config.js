@@ -58,13 +58,20 @@ export const bambooSize = 1;
 
 export const cubeData = { number: 0, index: 0, hasItem: '', drop: false };
 export const gameRule = {
-	frameOfCountDown: 3000,
+	startCountDown: 3,
 	maxMushroom: 3,
 	stay: 0,
 	cubes: [...new Array(9).keys()].map((index) => {
 		const cloneData = { ...cubeData };
-		cloneData.number = 5 + Math.floor(Math.random() * 5);
+		cloneData.number = 2 + Math.floor(Math.random() * 8);
 		cloneData.index = index;
 		return cloneData;
 	}),
+	collideGroup: {
+		box: 1,
+		character: 2,
+		bamboo: 2,
+		mushroom: 3,
+		unset: 0,
+	},
 };

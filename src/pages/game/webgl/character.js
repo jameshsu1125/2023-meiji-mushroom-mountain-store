@@ -1,8 +1,9 @@
+/* eslint-disable no-bitwise */
 /* eslint-disable no-param-reassign */
 import * as CANNON from 'cannon-es';
 import GlbLoader from 'lesca-glb-loader';
 import * as THREE from 'three';
-import { CubeSize, ModelSize, bambooSize } from './config';
+import { CubeSize, ModelSize, bambooSize, gameRule } from './config';
 import Avatar from './models/character.glb';
 
 export default class Character {
@@ -26,7 +27,7 @@ export default class Character {
 		this.property = {
 			size: CubeSize,
 			position: { x: 0, y: CubeSize - 0.4, z: 0 },
-			correction: { x: 0, y: -0.6, z: 0 },
+			correction: { x: 0, y: -0.38, z: 0 },
 		};
 
 		this.addCharacter().then(() => {
@@ -79,12 +80,13 @@ export default class Character {
 
 	addPhysics() {
 		const { world, physicsImpactMaterial } = this.webgl;
-		const cylinderShape = new CANNON.Sphere(0.6);
+		const cylinderShape = new CANNON.Sphere(0.4);
 		this.body = new CANNON.Body({
-			mass: 1,
+			mass: 100,
 			shape: cylinderShape,
 			type: CANNON.Body.DYNAMIC,
 			material: physicsImpactMaterial,
+			collisionFilterGroup: gameRule.collideGroup.character,
 		});
 		this.body.position.copy(this.property.position);
 
@@ -119,10 +121,14 @@ export default class Character {
 				});
 			} else {
 				const { body } = event;
-				body.position.y = -1;
+
 				body.type = CANNON.Body.STATIC;
-				// target.velocity.setZero();
 				body.velocity.setZero();
+				body.position.y = -1;
+				setTimeout(() => {
+					body.position.y = -1000;
+					// body.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), 0);
+				}, 50);
 
 				// 防抖動
 				if (!this.bounce) return;
@@ -215,7 +221,7 @@ export default class Character {
 			this.mixer?.update(this.delta);
 
 			if (this.isOut) return;
-			if (position.y <= 1.4) {
+			if (position.y <= 1.25) {
 				this.isOut = true;
 				this.down();
 				this.collector.stay = 999;

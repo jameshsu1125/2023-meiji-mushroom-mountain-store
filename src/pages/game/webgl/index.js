@@ -30,6 +30,10 @@ const WebGL = memo(() => {
 		setContext({ type: ACTION.modal, state: { enabled: true, body: '出界了', time: 10000 } });
 	}, []);
 
+	const onGameCountDown = useCallback((message) => {
+		setContext({ type: ACTION.modal, state: { enabled: true, body: `倒數${message}秒開始` } });
+	}, []);
+
 	useEffect(() => {
 		setContext({ type: ACTION.loadingProcess, state: { enabled: true } });
 		const gl = new GL({
@@ -37,6 +41,7 @@ const WebGL = memo(() => {
 			onMushroomTrigger,
 			onModulesLoaded,
 			onGameTimeUp,
+			onGameCountDown,
 			onGameOver,
 		});
 		return () => gl.webgl.enterframe.stop();

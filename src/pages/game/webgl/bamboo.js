@@ -1,8 +1,9 @@
+/* eslint-disable no-bitwise */
 /* eslint-disable no-param-reassign */
 import * as CANNON from 'cannon-es';
 import GlbLoader from 'lesca-glb-loader';
 import Tweener from 'lesca-object-tweener';
-import { CubeGapSize, CubeSize, bambooSize } from './config';
+import { CubeGapSize, CubeSize, bambooSize, gameRule } from './config';
 import { easingDelta, shuffleArray } from './misc';
 import bamboo from './models/bamboo.glb';
 
@@ -14,7 +15,8 @@ export default class Bamboo {
 		this.model = null;
 		this.body = null;
 
-		this.serial = 0;
+		this.serial = gameRule.startCountDown;
+		this.countdownSerial = 0;
 		this.enabled = true;
 		this.isTween = false;
 		this.offset = { x: 0, z: 0 };
@@ -92,7 +94,7 @@ export default class Bamboo {
 					...position,
 					y: this.property.y - (0.6 / 0.6) * bambooSize,
 				},
-				to: { ...position, y: this.property.y },
+				to: { ...position, y: this.property.y + 0.1 },
 				duration: 500,
 				onStart: () => {
 					this.getOffset();
@@ -125,16 +127,16 @@ export default class Bamboo {
 			1,
 		);
 		this.body = new CANNON.Body({
-			mass: 100,
+			mass: 10000,
 			shape: cylinderShape,
 			type: CANNON.Body.STATIC,
 			material: physicsStaticMaterial,
+			collisionFilterGroup: gameRule.collideGroup.bamboo,
+			collisionFilterMask: gameRule.collideGroup.box | gameRule.collideGroup.character,
 		});
 		this.body.name = this.name;
 		this.hide();
 		world.addBody(this.body);
-
-		this.setPositionByIndex();
 	}
 
 	addBamboo() {
@@ -162,7 +164,7 @@ export default class Bamboo {
 	update(delta) {
 		if (this.model) {
 			const currentDelta = easingDelta(delta);
-			if (currentDelta !== this.serial) {
+			if (currentDelta > this.serial) {
 				this.serial = currentDelta;
 				this.setPositionByIndex();
 			}
