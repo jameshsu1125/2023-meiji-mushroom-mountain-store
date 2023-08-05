@@ -1,0 +1,74 @@
+@import url('../../settings/config.less');
+.Navigation {
+	height: 80px;
+	@apply relative w-full bg-white;
+
+	.logo {
+		width: image-width(@img) * @scale;
+		height: image-height(@img) * @scale;
+		background-image: url(@img);
+		background-size: 100%;
+
+		@scale: 0.32;
+		@img: './img/logo.svg';
+	}
+
+	.menu {
+		button {
+			@apply px-3 font-MiMedium text-base text-gray;
+		}
+
+		button:not(:last-child) {
+			@apply border-r border-gray;
+		}
+
+		.burger {
+			width: 120px;
+			height: 100%;
+
+			@apply -mr-5 flex cursor-pointer flex-col items-center justify-center;
+
+			& > div {
+				margin: 3px 0;
+				height: 14px;
+
+				@apply pointer-events-none w-4/5 rounded-l-full rounded-r-full bg-primary;
+			}
+
+			& > div:not(:nth-child(2)) {
+				transition: 0.1s;
+			}
+		}
+
+		.active {
+			& > div:nth-child(1) {
+				transform: translateY(20px) rotate(135deg);
+			}
+
+			& > div:nth-child(2) {
+				opacity: 0;
+			}
+
+			& > div:nth-child(3) {
+				transform: translateY(-20px) rotate(-135deg);
+			}
+		}
+	}
+}
+
+@media only screen and (max-width: @MD) {
+	.Navigation {
+		height: 134px;
+		box-shadow: 0 12px 0 #e5cf13;
+
+		.logo {
+			width: image-width(@img) * @scale;
+			height: image-height(@img) * @scale;
+
+			@scale: 0.6;
+			@img: './img/logo.svg';
+
+			@apply ml-5;
+		}
+	}
+}

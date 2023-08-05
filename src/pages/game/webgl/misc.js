@@ -11,6 +11,13 @@ export const ABDistance = (a, b) => {
 
 export const ABAngle = (a, b) => Math.atan2(a.x - b.x, a.z - b.z);
 
+export const Vec2Angle = (a, b) => Math.atan2(a.x - b.x, a.y - b.y);
+export const Vec2Distance = (a, b) => {
+	const x = a.x - b.x;
+	const y = a.y - b.y;
+	return Math.sqrt(x ** 2 + y ** 2);
+};
+
 export const easingDelta = (delta, type = 'inCirc') => {
 	const maxDuration = 20000;
 	const bezier = type === 'inCirc' ? Bezier.inCirc : Bezier.linear;

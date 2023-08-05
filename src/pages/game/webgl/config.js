@@ -13,9 +13,9 @@ export const webglConfig = {
 		azimuth: 0.25,
 	},
 	controls: {
-		distance: { min: 13, max: 30 },
-		polar: { min: -70, max: 70 },
-		azimuth: { min: -Infinity, max: Infinity },
+		distance: { min: 13, max: 13 },
+		polar: { min: 50, max: 50 },
+		azimuth: { min: 35, max: 35 },
 		default: {
 			polar: 50,
 			azimuth: 35,
@@ -63,7 +63,8 @@ export const gameRule = {
 	stay: 0,
 	cubes: [...new Array(9).keys()].map((index) => {
 		const cloneData = { ...cubeData };
-		cloneData.number = 2 + Math.floor(Math.random() * 8);
+		if (index === 4) cloneData.number = 5 + Math.floor(Math.random() * 5);
+		else cloneData.number = 2 + Math.floor(Math.random() * 8);
 		cloneData.index = index;
 		return cloneData;
 	}),
@@ -74,4 +75,10 @@ export const gameRule = {
 		mushroom: 3,
 		unset: 0,
 	},
+};
+
+export const ControllerMode = {
+	unset: 0,
+	keyboard: 1,
+	joystick: 2,
 };

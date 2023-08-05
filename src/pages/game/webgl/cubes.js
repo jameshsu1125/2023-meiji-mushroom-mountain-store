@@ -11,10 +11,12 @@ import { CubeGapSize, CubeSize, gameRule } from './config';
 import { easingDelta } from './misc';
 
 export default class Cubes {
-	constructor({ webgl, collector, onGameCountDown, onload }) {
+	constructor({ webgl, collector, onGameCountDown, onGameOver, stopRender, onload }) {
 		this.webgl = webgl;
 		this.collector = collector;
 		this.onGameCountDown = onGameCountDown;
+		this.onGameOver = onGameOver;
+		this.stopRender = stopRender;
 		this.onload = onload;
 		this.name = 'box';
 
@@ -113,6 +115,11 @@ export default class Cubes {
 		this.enabled = false;
 	}
 
+	out() {
+		this.onGameOver();
+		this.stopRender();
+	}
+
 	updateMaterial() {
 		this.boxes.forEach((box, i) => {
 			const { map } = box.material[2];
@@ -130,6 +137,7 @@ export default class Cubes {
 					body.updateMassProperties();
 					body.type = CANNON.Body.DYNAMIC;
 					body.velocity.set(0, -10, 0);
+					this.out();
 				} else {
 					this.collector.data[i].number = 10;
 					map.offset.setY(1);

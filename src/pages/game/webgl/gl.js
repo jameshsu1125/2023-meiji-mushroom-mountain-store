@@ -50,9 +50,9 @@ export default class GL {
 		this.firstDelta = false;
 
 		this.addGUI();
-		this.addCubes();
 		this.addMushroom();
 		this.addBamboo();
+		this.addCubes(onGameOver);
 		this.addCharacter(onMushroomTrigger, onGameOver);
 
 		const onWindowResize = () => {
@@ -101,11 +101,19 @@ export default class GL {
 		});
 	}
 
-	addCubes() {
+	addCubes(onGameOver) {
 		this.cubes = new Cubes({
 			webgl: this.webgl,
+			onGameOver,
 			collector: this.collector,
 			onGameCountDown: this.onGameCountDown,
+			stopRender: () => {
+				this.controller.stop();
+				this.bamboo.stop();
+				this.mushroom.stop();
+				this.cubes.stop();
+				this.character.kickOut();
+			},
 			onload: this.onGLBLoaded,
 		});
 	}
@@ -151,7 +159,8 @@ export default class GL {
 
 			if (this.firstDelta === false) this.firstDelta = delta;
 			const currentDelta = delta - this.firstDelta;
-			this.character.move(this.controller.direct);
+
+			this.character.move(this.controller);
 			this.cannonDebugger?.update();
 			this.bamboo?.update(currentDelta);
 			this.mushroom?.update(currentDelta);

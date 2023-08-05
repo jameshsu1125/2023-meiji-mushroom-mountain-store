@@ -1,0 +1,21 @@
+.Drawer {
+	top: 134px;
+
+	@apply absolute z-10 block w-full bg-white lg:hidden;
+
+	.jacking {
+		@apply w-full;
+
+		.inner {
+			@apply flex w-full flex-col items-center justify-start py-24;
+
+			button {
+				@apply w-6/12 border-primary py-7 text-4xl text-gray;
+			}
+
+			& > button:not(:last-child) {
+				@apply border-b-2;
+			}
+		}
+	}
+}

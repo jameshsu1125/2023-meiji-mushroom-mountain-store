@@ -1,3 +1,5 @@
+import { ControllerMode } from './config';
+
 export default class Controller {
 	constructor({ character, bamboo, mushroom, cubes, onCollide }) {
 		this.character = character;
@@ -7,8 +9,8 @@ export default class Controller {
 		this.onCollide = onCollide;
 
 		this.enabled = true;
+		this.mode = ControllerMode.unset;
 		this.direct = {};
-		this.speed = 1;
 		this.addEvents();
 	}
 
@@ -16,9 +18,27 @@ export default class Controller {
 		this.enabled = false;
 	}
 
+	moveJoystick(property) {
+		if (!this.enabled) return;
+
+		this.mode = ControllerMode.joystick;
+		this.angle = property.angle;
+		this.distance = property.distance;
+	}
+
+	stopJoystick() {
+		if (!this.enabled) return;
+
+		this.mode = ControllerMode.unset;
+		this.angle = 0;
+		this.distance = 0;
+	}
+
 	addEvents() {
 		window.addEventListener('keydown', (e) => {
 			if (!this.enabled) return;
+			this.mode = ControllerMode.keyboard;
+
 			const { key } = e;
 			switch (key) {
 				case 'ArrowLeft':
@@ -42,6 +62,8 @@ export default class Controller {
 		});
 
 		window.addEventListener('keyup', (e) => {
+			if (!this.enabled) return;
+
 			const { key } = e;
 			switch (key) {
 				case 'ArrowLeft':

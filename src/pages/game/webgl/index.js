@@ -2,10 +2,12 @@ import { memo, useCallback, useContext, useEffect, useRef, useState } from 'reac
 import GL from './gl';
 import { Context } from '../../../settings/config';
 import { ACTION } from '../../../settings/constant';
+import Joystick from './joystick';
 
 const WebGL = memo(() => {
 	const [, setContext] = useContext(Context);
 	const ref = useRef();
+	const gl = useRef();
 	const [count, setCount] = useState(0);
 
 	useEffect(() => {
@@ -34,9 +36,17 @@ const WebGL = memo(() => {
 		setContext({ type: ACTION.modal, state: { enabled: true, body: `倒數${message}秒開始` } });
 	}, []);
 
+	const onJoyStickMove = useCallback((property) => {
+		gl.current.controller.moveJoystick(property);
+	}, []);
+
+	const onJoyStickStop = useCallback(() => {
+		gl.current.controller.stopJoystick();
+	}, []);
+
 	useEffect(() => {
 		setContext({ type: ACTION.loadingProcess, state: { enabled: true } });
-		const gl = new GL({
+		gl.current = new GL({
 			dom: ref.current,
 			onMushroomTrigger,
 			onModulesLoaded,
@@ -44,9 +54,14 @@ const WebGL = memo(() => {
 			onGameCountDown,
 			onGameOver,
 		});
-		return () => gl.webgl.enterframe.stop();
+		return () => gl.current.webgl?.enterframe.stop();
 	}, []);
 
-	return <div ref={ref} className='h-full w-full' />;
+	return (
+		<div className='h-full w-full'>
+			<div ref={ref} className='h-full w-full' />
+			<Joystick onJoyStickMove={onJoyStickMove} onJoyStickStop={onJoyStickStop} />
+		</div>
+	);
 });
 export default WebGL;

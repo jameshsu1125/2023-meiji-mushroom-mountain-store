@@ -3,7 +3,7 @@
 import * as CANNON from 'cannon-es';
 import GlbLoader from 'lesca-glb-loader';
 import * as THREE from 'three';
-import { CubeSize, ModelSize, bambooSize, gameRule } from './config';
+import { ControllerMode, CubeSize, ModelSize, bambooSize, gameRule } from './config';
 import Avatar from './models/character.glb';
 
 export default class Character {
@@ -173,9 +173,16 @@ export default class Character {
 		this.model.visible = v;
 	}
 
-	move(direct) {
-		if (this.isOut || !this.moveable) return;
-		if (!this.body && !this.model) return;
+	moveByJoystick({ angle }) {
+		this.rotate(angle - Math.PI);
+		this.walk();
+		const x = Math.cos(angle - Math.PI / 2) * 12 * this.speed;
+		const z = Math.sin(angle + Math.PI / 2) * 12 * this.speed;
+
+		return { x, z };
+	}
+
+	moveByKeyBoard({ direct }) {
 		const { ArrowLeft = 0, ArrowRight = 0, ArrowUp = 0, ArrowDown = 0 } = direct;
 
 		const x = ArrowLeft - ArrowRight;
@@ -199,6 +206,24 @@ export default class Character {
 			this.walk();
 		} else this.stop();
 
+		return { x, z };
+	}
+
+	move(controller) {
+		const { mode, direct, angle } = controller;
+		if (mode === ControllerMode.unset) {
+			this.stop();
+			return;
+		}
+
+		if (this.isOut || !this.moveable) return;
+		if (!this.body && !this.model) return;
+
+		const { x, z } =
+			mode === ControllerMode.keyboard
+				? this.moveByKeyBoard({ direct })
+				: this.moveByJoystick({ angle });
+
 		const { position } = this.body;
 		const clonePosition = { ...position };
 		clonePosition.x -= x * this.speed;
@@ -207,6 +232,10 @@ export default class Character {
 		this.body.velocity.z = 0;
 		this.body.position.x = clonePosition.x;
 		this.body.position.z = clonePosition.z;
+	}
+
+	kickOut() {
+		this.body.velocity.y = -10;
 	}
 
 	update() {

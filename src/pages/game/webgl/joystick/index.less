@@ -1,0 +1,11 @@
+.Joystick {
+	@apply absolute top-0 h-full w-full bg-transparent;
+
+	.panel {
+		@apply pointer-events-none absolute -ml-40 -mt-40 h-80 w-80 rounded-full bg-slate-400 opacity-40;
+
+		.stick {
+			@apply absolute left-1/2 top-1/2 -ml-16 -mt-16 h-32 w-32 rounded-full border-4 bg-yellow-500;
+		}
+	}
+}
