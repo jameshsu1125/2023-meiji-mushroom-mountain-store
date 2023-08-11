@@ -34,29 +34,15 @@ export const reducer = (state, action) => {
 
 export const MenuState = {
 	data: [
-		{
-			page: PAGE.landing,
-			name: '活動首頁',
-		},
-		{
-			page: PAGE.game,
-			name: '菇菇山營業中',
-		},
-		{
-			page: '#',
-			name: '登錄發票',
-		},
-		{
-			page: '#',
-			name: '贈品介紹',
-		},
-		{
-			page: '#',
-			name: '產品介紹',
-		},
-		{
-			page: '#',
-			name: '活動辦法',
-		},
+		{ page: PAGE.landing, name: '活動首頁' },
+		{ page: PAGE.game, name: '菇菇山營業中' },
+		{ page: '#', name: '登錄發票' },
+		{ page: '#', name: '贈品介紹' },
+		{ page: '#', name: '產品介紹' },
+		{ page: '#', name: '活動辦法' },
 	],
+};
+
+export const RespondBreakPoint = {
+	md: 1024,
 };

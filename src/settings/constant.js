@@ -40,3 +40,9 @@ export const TRANSITION = {
 	fadeOutEnd: 4,
 	loop: 5,
 };
+
+export const CONTROL_MODE = {
+	unset: 0,
+	keyboard: 1,
+	joystick: 2,
+};

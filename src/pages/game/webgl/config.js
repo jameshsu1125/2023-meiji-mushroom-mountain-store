@@ -76,9 +76,3 @@ export const gameRule = {
 		unset: 0,
 	},
 };
-
-export const ControllerMode = {
-	unset: 0,
-	keyboard: 1,
-	joystick: 2,
-};

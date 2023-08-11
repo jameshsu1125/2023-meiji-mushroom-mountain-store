@@ -1,7 +1,7 @@
 @import url('../../settings/config.less');
 .Navigation {
 	height: 80px;
-	@apply relative w-full bg-white;
+	@apply fixed z-50 w-full bg-white;
 
 	.logo {
 		width: image-width(@img) * @scale;
@@ -16,6 +16,10 @@
 	.menu {
 		button {
 			@apply px-3 font-MiMedium text-base text-gray;
+
+			&:hover {
+				@apply text-primary;
+			}
 		}
 
 		button:not(:last-child) {
@@ -59,7 +63,7 @@
 @media only screen and (max-width: @MD) {
 	.Navigation {
 		height: 134px;
-		box-shadow: 0 12px 0 #e5cf13;
+		box-shadow: 0 12px 0 rgba(0, 0, 0, 0.1);
 
 		.logo {
 			width: image-width(@img) * @scale;

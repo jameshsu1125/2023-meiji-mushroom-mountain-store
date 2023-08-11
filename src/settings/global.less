@@ -3,6 +3,8 @@
 @tailwind utilities;
 
 @import url('./fonts/stylesheet.css');
+@import url('./config.less');
+@import url('./animation.less');
 
 body {
 	margin: 0;
@@ -16,6 +18,13 @@ body {
 
 @layer components {
 	.App {
+		min-width: 768px;
 		@apply absolute h-full w-full;
+	}
+}
+
+@media only screen and (max-width: @MD) {
+	body {
+		background-size: 200%;
 	}
 }

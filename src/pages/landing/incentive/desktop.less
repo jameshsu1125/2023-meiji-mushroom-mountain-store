@@ -1,0 +1,467 @@
+@import url('../../../settings/config.less');
+
+.Desktop {
+	@apply w-full;
+
+	&::before {
+		content: '';
+		width: image-width(@img) * @scale;
+		height: image-height(@img) * @scale;
+		background-image: url(@img);
+		background-size: 100%;
+		top: 66%;
+		left: 50%;
+		margin-left: -750px;
+
+		animation: cloud_8_r15 20s ease-in-out infinite;
+		animation-duration: -5s;
+
+		@scale: 0.5;
+		@img: './img/cloud-0.png';
+		@apply absolute;
+	}
+
+	.symbols {
+		width: 100%;
+		left: 0;
+		@apply pointer-events-none absolute top-0 flex h-full justify-center overflow-x-hidden overflow-y-visible;
+
+		& > div {
+			@apply relative w-full max-w-7xl;
+
+			& > div {
+				background-size: 100%;
+				@apply absolute;
+			}
+
+			& > div:nth-child(1) {
+				width: image-width(@img) * @scale;
+				height: image-height(@img) * @scale;
+				background-image: url(@img);
+
+				bottom: 1px;
+				left: -31px;
+
+				@scale: 0.5;
+				@img: './img/character.png';
+			}
+
+			& > div:nth-child(2) {
+				width: image-width(@img) * @scale;
+				height: image-height(@img) * @scale;
+				background-image: url(@img);
+				background-size: 100%;
+				left: -120px;
+				top: 166px;
+
+				animation: cloud_8_r15 14s ease-in-out infinite;
+
+				@scale: 0.7;
+				@img: './img/cloud-0.png';
+			}
+
+			& > div:nth-child(3) {
+				width: image-width(@img) * @scale;
+				height: image-height(@img) * @scale;
+				background-image: url(@img);
+				background-size: 100%;
+				right: -104px;
+				top: 32px;
+
+				animation: cloud_8_r15 14s ease-in-out infinite reverse;
+				animation-duration: -5s;
+
+				@scale: 0.8;
+				@img: './img/cloud-0.png';
+			}
+		}
+	}
+
+	.remark {
+		bottom: -100px;
+		left: 0;
+
+		@apply absolute flex w-full items-center justify-center;
+
+		.dialog {
+			width: 69%;
+			@apply rounded-l-full rounded-r-full border-2 py-5 text-center font-MiMedium text-2xl;
+		}
+	}
+
+	.inner {
+		margin-top: -80px;
+		@apply flex w-full flex-col items-center justify-start;
+
+		.flag-brown {
+			@apply relative my-10 flex w-full justify-center;
+
+			& > .flag {
+				position: relative;
+				width: image-width(@img) * @scale;
+				height: image-height(@img) * @scale;
+				background-image: url(@img);
+				background-size: 100%;
+				filter: drop-shadow(0 5px 0 rgba(0, 0, 0, 0.1));
+
+				@scale: 0.5;
+				@img: './img/flag-brown.png';
+
+				@apply flex items-center justify-center font-MiMedium text-2xl text-white;
+
+				& > span {
+					@apply font-MiHeavy;
+				}
+
+				&::before,
+				&::after {
+					content: '';
+					width: 45%;
+					height: 1px;
+					top: 50%;
+
+					@apply absolute bg-quaternary;
+				}
+
+				&::before {
+					left: calc(~'100% + 20px');
+				}
+
+				&::after {
+					right: calc(~'100% + 20px');
+				}
+			}
+		}
+
+		.note {
+			@apply my-5 w-full text-center font-MiRegular text-sm;
+		}
+
+		.products {
+			max-width: 100%;
+			@apply flex w-full flex-wrap items-end justify-center;
+
+			.item {
+				@apply my-10 flex flex-col items-center justify-start space-y-4;
+
+				.img {
+					@apply mx-5 flex w-full items-center justify-center;
+
+					.amount {
+						@apply absolute left-1/2 flex h-28 w-28 items-center justify-center rounded-full font-MiHeavy text-5xl text-white;
+						& > div {
+							@apply flex flex-row items-end justify-center;
+
+							&::after {
+								content: '名';
+								@apply text-2xl;
+							}
+						}
+					}
+
+					.image-0 {
+						width: image-width(@img) * @scale;
+						height: image-height(@img) * @scale;
+
+						@scale: 0.5;
+						@img: './img/image-0.png';
+
+						@apply relative mx-7;
+
+						.amount {
+							left: 87%;
+							top: 14%;
+						}
+
+						&::after {
+							content: '';
+							background-image: url(@img);
+							background-size: 100%;
+							@apply absolute h-full w-full;
+						}
+					}
+
+					.image-1 {
+						width: image-width(@img) * @scale;
+						height: image-height(@img) * @scale;
+
+						@scale: 0.5;
+						@img: './img/image-1.png';
+
+						@apply relative;
+
+						.amount {
+							left: 79%;
+							top: 20%;
+						}
+
+						&::after {
+							content: '';
+							background-image: url(@img);
+							background-size: 100%;
+							@apply absolute h-full w-full;
+						}
+					}
+
+					.image-2 {
+						width: image-width(@img) * @scale;
+						height: image-height(@img) * @scale;
+
+						@scale: 0.5;
+						@img: './img/image-2.png';
+
+						@apply relative mx-4;
+
+						.amount {
+							left: 93%;
+							top: 5%;
+						}
+
+						&::after {
+							content: '';
+							background-image: url(@img);
+							background-size: 100%;
+							@apply absolute h-full w-full;
+						}
+					}
+
+					.image-both-0 {
+						width: image-width(@img) * @scale;
+						height: image-height(@img) * @scale;
+
+						@scale: 0.5;
+						@img: './img/image-both-0.png';
+
+						@apply relative mx-7;
+
+						.amount {
+							left: 91%;
+							top: -10%;
+						}
+
+						&::after {
+							content: '';
+							background-image: url(@img);
+							background-size: 100%;
+							@apply absolute h-full w-full;
+						}
+					}
+
+					.image-both-1 {
+						width: image-width(@img) * @scale;
+						height: image-height(@img) * @scale;
+						margin-top: 2px;
+
+						@scale: 0.5;
+						@img: './img/image-both-1.png';
+
+						@apply relative mx-10;
+
+						.amount {
+							left: 77%;
+							top: -20%;
+						}
+
+						&::after {
+							content: '';
+							background-image: url(@img);
+							background-size: 100%;
+							@apply absolute h-full w-full;
+						}
+					}
+
+					.image-both-2 {
+						width: image-width(@img) * @scale;
+						height: image-height(@img) * @scale;
+						margin-top: 10px;
+
+						@scale: 0.5;
+						@img: './img/image-both-2.png';
+
+						@apply relative mx-2;
+
+						.amount {
+							left: 67%;
+							top: -61%;
+						}
+
+						&::after {
+							content: '';
+							background-image: url(@img);
+							background-size: 100%;
+							@apply absolute h-full w-full;
+						}
+					}
+
+					.image-both-3 {
+						width: image-width(@img) * @scale;
+						height: image-height(@img) * @scale;
+
+						@scale: 0.5;
+						@img: './img/image-both-3.png';
+
+						@apply relative mx-7;
+
+						.amount {
+							left: 67%;
+							top: -15%;
+						}
+
+						&::after {
+							content: '';
+							background-image: url(@img);
+							background-size: 100%;
+							@apply absolute h-full w-full;
+						}
+					}
+
+					.image-both-4 {
+						width: image-width(@img) * @scale;
+						height: image-height(@img) * @scale;
+						margin-top: 20px;
+
+						@scale: 0.5;
+						@img: './img/image-both-4.png';
+
+						@apply relative mx-7;
+
+						.amount {
+							left: 75%;
+							top: -36%;
+						}
+
+						&::after {
+							content: '';
+							background-image: url(@img);
+							background-size: 100%;
+							@apply absolute h-full w-full;
+						}
+					}
+				}
+
+				.text {
+					@apply flex h-20 w-full flex-col items-center justify-start;
+
+					.name {
+						@apply flex flex-col items-center justify-center font-MiSemibold text-xl text-primary;
+					}
+
+					.price {
+						@apply font-MiRegular text-base;
+					}
+				}
+			}
+		}
+
+		.flag-red {
+			@apply relative my-10 flex w-full justify-center;
+
+			& > .flag {
+				position: relative;
+				width: image-width(@img) * @scale;
+				height: image-height(@img) * @scale;
+				background-image: url(@img);
+				background-size: 100%;
+				filter: drop-shadow(0 5px 0 rgba(0, 0, 0, 0.1));
+
+				@scale: 0.5;
+				@img: './img/flag-red.png';
+
+				@apply flex items-center justify-center font-MiMedium text-2xl text-white;
+
+				& > span {
+					@apply font-MiHeavy;
+				}
+
+				&::before,
+				&::after {
+					content: '';
+					width: 80%;
+					height: 1px;
+					top: 50%;
+
+					@apply absolute bg-secondary;
+				}
+
+				&::before {
+					left: calc(~'100% + 20px');
+				}
+
+				&::after {
+					right: calc(~'100% + 20px');
+				}
+			}
+
+			@media only screen and (max-width: @MD) {
+				& > .flag {
+					width: image-width(@img) * @scale;
+					height: image-height(@img) * @scale;
+
+					font-size: 2.5rem;
+
+					@scale: 0.8;
+					@img: './img/flag-red.png';
+
+					@apply mt-8;
+				}
+			}
+		}
+
+		.subtitle {
+			@apply flex w-full flex-row items-center justify-center space-y-0 font-MiMedium text-4xl;
+
+			& > div {
+				@apply flex flex-row items-center justify-center;
+			}
+
+			.round {
+				@apply mx-1 rounded-full bg-secondary p-2 font-MiHeavy text-4xl text-white;
+			}
+
+			.cross {
+				@apply relative h-14 w-14;
+
+				&::before {
+					content: '';
+					margin-left: -50%;
+					margin-top: -0.5px;
+					transform: rotate(45deg);
+					height: 1px;
+
+					@apply absolute left-1/2 top-1/2 w-full bg-primary;
+				}
+
+				&::after {
+					content: '';
+					margin-left: -50%;
+					margin-top: -0.5px;
+					transform: rotate(-45deg);
+					height: 1px;
+
+					@apply absolute left-1/2 top-1/2 w-full bg-primary;
+				}
+			}
+		}
+
+		.title {
+			@apply flex w-full justify-center;
+
+			&::after {
+				content: '';
+				width: image-width(@img) * @scale;
+				height: image-height(@img) * @scale;
+				background-image: url(@img);
+				background-size: 100%;
+
+				@scale: 0.5;
+				@img: './img/title.png';
+			}
+		}
+	}
+
+	@media only screen and (max-width: @MD) {
+		.inner {
+			margin-top: -470px;
+		}
+	}
+}

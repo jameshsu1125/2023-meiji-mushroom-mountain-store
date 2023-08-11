@@ -1,0 +1,161 @@
+@import url('../../../settings/config.less');
+
+.Home {
+	background-image: url('./img/hill.png');
+	background-position: calc(~'50% - 220px') bottom;
+	background-repeat: no-repeat;
+	overflow: hidden;
+
+	@apply w-full;
+
+	.product {
+		width: image-width(@img) * @scale;
+		height: image-height(@img) * @scale;
+		background-image: url(@img);
+		background-size: 100%;
+
+		@scale: 0.45;
+		@img: './img/product.png';
+	}
+
+	.hr {
+		height: 2px;
+		@apply mx-1 mb-3 bg-primary;
+	}
+
+	.prospect {
+		@apply pointer-events-none absolute left-0 top-0 z-20 hidden h-full w-full lg:block;
+
+		&::before {
+			width: image-width(@img) * @scale;
+			height: image-height(@img) * @scale;
+			background-image: url(@img);
+			background-size: 100%;
+			left: -270px;
+			bottom: -121px;
+			content: '';
+
+			@scale: 0.875;
+			@img: './img/tree.png';
+
+			@apply absolute;
+		}
+
+		&::after {
+			width: image-width(@img) * @scale;
+			height: image-height(@img) * @scale;
+			background-image: url(@img);
+			background-size: 100%;
+			right: -170px;
+			bottom: -58px;
+			content: '';
+
+			@scale: 0.875;
+			@img: './img/mushroomMan.png';
+
+			@apply absolute;
+		}
+
+		.cloud-1 {
+			position: absolute;
+			width: image-width(@img) * @scale;
+			height: image-height(@img) * @scale;
+			background-image: url(@img);
+			background-size: 100%;
+			left: -150px;
+			top: -270px;
+
+			animation: cloud_8_r15 15s ease-in-out infinite;
+
+			@scale: 0.9;
+			@img: './img/cloud-1.png';
+		}
+
+		.cloud-2 {
+			position: absolute;
+			width: image-width(@img) * @scale;
+			height: image-height(@img) * @scale;
+			background-image: url(@img);
+			background-size: 100%;
+			left: -219px;
+			top: -161px;
+
+			animation: cloud_8_r15 10s ease-in-out infinite;
+			animation-delay: -3s;
+			animation-direction: reverse;
+
+			@scale: 0.9;
+			@img: './img/cloud-2.png';
+		}
+
+		.cloud-3 {
+			position: absolute;
+			width: image-width(@img) * @scale;
+			height: image-height(@img) * @scale;
+			right: -109px;
+			top: -241px;
+
+			animation: cloud_8_r15 10s ease-in-out infinite;
+			animation-delay: -5s;
+
+			@scale: 0.9;
+			@img: './img/cloud-2.png';
+
+			&::after {
+				position: absolute;
+				content: '';
+				width: 100%;
+				height: 100%;
+				background-image: url(@img);
+				background-size: 100%;
+				top: 0;
+				transform: scale(-1, 1);
+			}
+		}
+	}
+
+	.buttonGroup {
+		bottom: 60px;
+		left: 50%;
+		margin-left: -50%;
+		@apply absolute h-0 w-full;
+
+		& > div {
+			@apply pointer-events-auto flex w-full flex-col items-center justify-center space-x-0 space-y-5 lg:flex-row lg:space-x-4 lg:space-y-0;
+		}
+	}
+
+	@media only screen and (max-width: @MD) {
+		.buttonGroup {
+			bottom: 30px;
+		}
+	}
+
+	.pattern {
+		width: image-width(@img) * @scale;
+		height: image-height(@img) * @scale;
+		background-image: url(@img);
+		background-size: 100%;
+		margin-left: 0 - image-width(@img) * @scale * 0.5;
+		left: 50%;
+		margin-top: 0 - image-height(@img) * @scale + 48px;
+
+		@scale: 0.6;
+		@img: './img/pattern.png';
+
+		@apply pointer-events-none absolute;
+	}
+
+	@media only screen and (max-width: @MD) {
+		.pattern {
+			width: image-width(@img) * @scale;
+			height: image-height(@img) * @scale;
+			margin-left: 0 - image-width(@img) * @scale * 0.5;
+			margin-top: 0 - image-height(@img) * @scale + 23px;
+			pointer-events: none;
+
+			@scale: 0.55;
+			@img: './img/pattern.png';
+		}
+	}
+}

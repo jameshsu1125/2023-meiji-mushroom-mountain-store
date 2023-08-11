@@ -1,0 +1,23 @@
+.Description {
+	overflow: hidden;
+	background-image: url('../home/img/hill.png');
+	background-position: calc(~'50% - 50px') bottom;
+	background-repeat: no-repeat;
+
+	@apply w-full pb-12;
+
+	.scroller {
+		overflow: scroll;
+		max-height: 500px;
+
+		@apply w-full px-5 font-MiNormal text-2xl lg:text-base;
+
+		p {
+			@apply my-7;
+		}
+
+		b {
+			@apply font-bold;
+		}
+	}
+}

@@ -1,0 +1,24 @@
+@import url('../../../settings/config.less');
+
+.Retail {
+	background-color: #fffcd9;
+	@apply w-full;
+
+	.logos {
+		padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+		width: 100%;
+		background-image: url(@img);
+		background-size: cover;
+
+		@img: './img/retail-lg.png';
+	}
+
+	@media only screen and (max-width: @MD) {
+		.logos {
+			padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+			background-image: url(@img);
+
+			@img: './img/retail-md.png';
+		}
+	}
+}

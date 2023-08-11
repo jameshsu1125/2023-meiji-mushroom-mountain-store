@@ -1,0 +1,148 @@
+@import url('../../../settings/config.less');
+
+.Product {
+	@apply relative w-full py-16 lg:bg-white;
+
+	.symbols {
+		margin-top: -100px;
+		height: calc(~'100% + 200px');
+		@apply absolute left-0 top-0 w-full overflow-hidden;
+
+		& > div {
+			position: absolute;
+		}
+
+		& > div:nth-child(1) {
+			top: 30px;
+			left: 50%;
+			margin-left: 350px;
+			width: image-width(@img) * @scale;
+			height: image-height(@img) * @scale;
+			background-image: url(@img);
+			background-size: 100%;
+			animation: cloud_8_r15 20s ease-in-out infinite;
+			animation-duration: -5s;
+
+			@scale: 0.5;
+			@img: './img/cloud-0.png';
+		}
+
+		@media only screen and (max-width: @MD) {
+			& > div:nth-child(1) {
+				top: 240px;
+				margin-left: -560px;
+				width: image-width(@img) * @scale;
+				height: image-height(@img) * @scale;
+
+				@scale: 0.8;
+				@img: './img/cloud-0.png';
+			}
+		}
+
+		& > div:nth-child(2) {
+			top: 77%;
+			left: 50%;
+			display: none;
+			margin-left: 200px;
+			width: image-width(@img) * @scale;
+			height: image-height(@img) * @scale;
+			background-image: url(@img);
+			background-size: 100%;
+			animation: cloud_8_r15 20s ease-in-out infinite;
+			animation-duration: -5s;
+
+			@scale: 0.7;
+			@img: './img/cloud-0.png';
+		}
+
+		@media only screen and (max-width: @MD) {
+			& > div:nth-child(2) {
+				display: block;
+			}
+		}
+
+		& > div:nth-child(3) {
+			top: 85%;
+			left: 50%;
+			display: none;
+			margin-left: -510px;
+			width: image-width(@img) * @scale;
+			height: image-height(@img) * @scale;
+			background-image: url(@img);
+			background-size: 100%;
+			animation: cloud_8_r15 20s ease-in-out infinite;
+			animation-duration: -5s;
+
+			@scale: 0.5;
+			@img: './img/cloud-0.png';
+		}
+
+		@media only screen and (max-width: @MD) {
+			& > div:nth-child(3) {
+				display: block;
+			}
+		}
+	}
+
+	.item {
+		@apply relative flex w-10/12 flex-col items-center justify-center space-y-4 px-20 py-10 lg:w-4/12 lg:p-5;
+
+		.img {
+			padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+			background-size: 100%;
+
+			@img: './img/product-0.png';
+			@apply relative w-full;
+
+			&::before {
+				position: absolute;
+				top: 50%;
+				left: 40%;
+				margin-top: 0 - image-height(@img) * @scale * 0.5;
+				margin-left: 0 - image-width(@img) * @scale * 0.5;
+				width: image-width(@img) * @scale;
+				height: image-height(@img) * @scale;
+				background-image: url(@img);
+				background-size: 100%;
+				content: '';
+
+				@scale: 1;
+				@img: './img/shadow.png';
+			}
+
+			&::after {
+				background-size: 100%;
+				content: '';
+				@apply absolute top-0 h-full w-full;
+			}
+		}
+
+		.strawberry {
+			@apply text-tertiary;
+		}
+
+		.text {
+			@apply relative flex w-full flex-col items-center justify-center space-y-8 lg:space-y-4;
+
+			.name {
+				@apply text-4xl lg:text-2xl;
+			}
+
+			.description {
+				@apply flex flex-col items-center justify-center space-y-2 font-MiRegular text-3xl lg:space-y-0 lg:text-lg;
+			}
+		}
+
+		.image-0 {
+			&::after {
+				background-image: url('./img/product-0.png');
+			}
+		}
+
+		.image-1 {
+			&::after {
+				background-image: url('./img/product-1.png');
+			}
+		}
+	}
+}

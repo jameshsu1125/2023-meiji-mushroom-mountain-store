@@ -3,8 +3,9 @@
 import * as CANNON from 'cannon-es';
 import GlbLoader from 'lesca-glb-loader';
 import * as THREE from 'three';
-import { ControllerMode, CubeSize, ModelSize, bambooSize, gameRule } from './config';
+import { CubeSize, ModelSize, bambooSize, gameRule } from './config';
 import Avatar from './models/character.glb';
+import { CONTROL_MODE } from '../../../settings/constant';
 
 export default class Character {
 	constructor({ webgl, onMushroomTrigger, onGameOver, collector, stopRender, onload }) {
@@ -211,7 +212,7 @@ export default class Character {
 
 	move(controller) {
 		const { mode, direct, angle } = controller;
-		if (mode === ControllerMode.unset) {
+		if (mode === CONTROL_MODE.unset) {
 			this.stop();
 			return;
 		}
@@ -220,7 +221,7 @@ export default class Character {
 		if (!this.body && !this.model) return;
 
 		const { x, z } =
-			mode === ControllerMode.keyboard
+			mode === CONTROL_MODE.keyboard
 				? this.moveByKeyBoard({ direct })
 				: this.moveByJoystick({ angle });
 

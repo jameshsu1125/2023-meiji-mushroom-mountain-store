@@ -1,9 +1,59 @@
 @font-face {
+    font-weight: 500;
+    font-style: normal;
     font-family: 'MiSans-medium';
     src: url('subset-MiSans-Medium.woff2') format('woff2'),
         url('subset-MiSans-Medium.woff') format('woff');
-    font-weight: 500;
-    font-style: normal;
+
     font-display: swap;
 }
 
+@font-face {
+    font-weight: bold;
+    font-style: normal;
+    font-family: 'MiSans-bold';
+    src: url('subset-MiSans-Bold.woff2') format('woff2'),
+        url('subset-MiSans-Bold.woff') format('woff');
+
+    font-display: swap;
+}
+
+@font-face {
+    font-weight: normal;
+    font-style: normal;
+    font-family: 'MiSans-regular';
+    src: url('subset-MiSans-Regular.woff2') format('woff2'),
+        url('subset-MiSans-Regular.woff') format('woff');
+
+    font-display: swap;
+}
+
+@font-face {
+    font-weight: 900;
+    font-style: normal;
+    font-family: 'MiSans-heavy';
+    src: url('subset-MiSans-Heavy.woff2') format('woff2'),
+        url('subset-MiSans-Heavy.woff') format('woff');
+
+    font-display: swap;
+}
+
+@font-face {
+    font-weight: 600;
+    font-style: normal;
+    font-family: 'MiSans-semibold';
+    src: url('subset-MiSans-Semibold.woff2') format('woff2'),
+    url('subset-MiSans-Semibold.woff') format('woff');
+
+    font-display: swap;
+}
+
+@font-face {
+    font-weight: normal;
+    font-style: normal;
+    font-family: 'MiSans-normal';
+    src: url('subset-MiSans-Normal.woff2') format('woff2'),
+        url('subset-MiSans-Normal.woff') format('woff');
+
+    font-display: swap;
+}
