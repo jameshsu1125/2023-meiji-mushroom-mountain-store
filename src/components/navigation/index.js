@@ -1,13 +1,10 @@
-import { memo, useCallback, useEffect, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { MenuState } from '../../settings/config';
 import Container from '../container';
 import Drawer from './drawer';
 import './index.less';
 
-const Logo = () => {
-	useEffect(() => {}, []);
-	return <div className='logo' />;
-};
+const Logo = () => <div className='logo' />;
 
 const MenuButton = ({ name, page, navigate }) => (
 	<button onClick={() => navigate?.(page)} type='button'>
