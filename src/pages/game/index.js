@@ -1,16 +1,28 @@
-import { memo, useState } from 'react';
-import { GameContext, GameState } from './config';
-import WebGL from './webgl';
+import { Suspense, lazy, memo, useMemo, useState } from 'react';
+import { GameContext, GamePage, GameState } from './config';
 
-const Landing = memo(() => {
+const Game = memo(() => {
 	const value = useState(GameState);
+	const { page } = value[0];
+
+	const Pages = useMemo(() => {
+		const [target] = Object.values(GamePage).filter((data) => data === page);
+		const Element = lazy(() => import(`.${target}/`));
+
+		if (target) {
+			return (
+				<Suspense fallback=''>
+					<Element />
+				</Suspense>
+			);
+		}
+		return '';
+	}, [page]);
 
 	return (
 		<GameContext.Provider value={value}>
-			<div className='Game'>
-				<WebGL />
-			</div>
+			<div className='Game'>{Pages}</div>
 		</GameContext.Provider>
 	);
 });
-export default Landing;
+export default Game;

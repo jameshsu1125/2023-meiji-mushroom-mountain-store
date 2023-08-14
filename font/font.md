@@ -10,6 +10,13 @@
 巧克力草莓口味
 台灣明治食品股份有限公司
 Copyright Taiwan Meiji Food Co., Ltd. All Right Reserved.
+登錄發票 抽 豪華回饋禮
+確認送出
+感謝您幫忙採菇
+回到主頁
+繼續登錄發票
+填單 抽 豪華回饋禮
+繼續採菇
 ```
 
 ### bold
@@ -24,6 +31,8 @@ Copyright Taiwan Meiji Food Co., Ltd. All Right Reserved.
 
 天天玩遊戲 天天登發票 累積多重好禮中獎率！
 明治香菇造型餅乾
+登錄發票 抽 豪華回饋禮
+填單 抽 豪華回饋禮
 ```
 
 ### regular
@@ -42,7 +51,14 @@ Copyright Taiwan Meiji Food Co., Ltd. All Right Reserved.
 粉嫩草莓搭配香脆餅乾
 酸甜可口、香氣濃郁
 少女心的你必嚐！
-
+欄位皆為必填
+請輸入真實姓名先生     小姐請選擇
+0123456789
+請輸入聯絡手機*欄位皆為必填
+請輸入E-mail
+*若無隨機碼，輸入0000即可
+已詳閱活動辦法及個人資料使用說明，參加本活動即表示同意公告之辦法及說明
+為確保您的中獎資格，請記得填寫正確資料，若資料填寫不正確以致贈禮無法順利寄達，恕不補寄
 
 ```
 
@@ -55,6 +71,7 @@ Copyright Taiwan Meiji Food Co., Ltd. All Right Reserved.
 1234567890名
 玩遊戲/登發票
 天天玩遊戲 天天登發票 累積多重好禮中獎率！
+
 ```
 
 ### semibold
@@ -71,6 +88,9 @@ Vitantonio 多功能計時鬆餅機
 LINE POINTS 100點
 購買通路
 活動辦法與注意事項
+*姓名*稱呼*年齡區間*手機*信箱*發票號碼*隨機碼
+您的資料已送出
+
 
 ```
 

@@ -8,12 +8,17 @@
 
 body {
 	margin: 0;
+	background-image: url('./img/bg.jpg');
+	background-size: 100%;
 
 	text-size-adjust: none;
 	overscroll-behavior: none;
-	background-image: url('./img/bg.jpg');
-	background-size: 100%;
+	scroll-behavior: smooth;
 	@apply bg-backgroundColor text-textColor;
+}
+
+html {
+	scroll-behavior: smooth;
 }
 
 @layer components {

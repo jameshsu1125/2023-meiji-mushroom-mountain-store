@@ -6,6 +6,7 @@ import Modal from '../components/modal';
 import { Context, initialState, reducer } from '../settings/config';
 import { ACTION, PAGE } from '../settings/constant';
 import '../settings/global.less';
+import Navigation from '../components/navigation';
 
 Click.install();
 
@@ -35,6 +36,7 @@ const App = () => {
 	return (
 		<div className='App'>
 			<Context.Provider {...{ value }}>
+				<Navigation />
 				<Pages />
 				{state[ACTION.loadingProcess].enabled && <LoadingProcess />}
 				{state[ACTION.modal].enabled && <Modal />}

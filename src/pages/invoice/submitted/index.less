@@ -1,0 +1,19 @@
+@import url('../../../settings/config.less');
+
+.InvoiceHome {
+	@apply w-full px-24 py-10;
+
+	.image {
+		width: image-width(@img) * @scale;
+		height: image-height(@img) * @scale;
+		background-image: url(@img);
+		background-size: 100%;
+
+		@scale: 0.6;
+		@img: './img/character.png';
+	}
+
+	.txt {
+		@apply font-MiSemibold text-5xl text-secondary;
+	}
+}

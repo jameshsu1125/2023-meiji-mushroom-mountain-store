@@ -1,12 +1,11 @@
 @import url('../../settings/config.less');
 
 .RegularButton {
-	transition: 0.05s;
-	max-width: 400px;
 	height: 100px;
 	background: rgb(102, 51, 51);
 	background: linear-gradient(0deg, rgba(102, 51, 51, 1) 50%, rgba(125, 85, 46, 1) 50.1%);
 	box-shadow: 0 5px 0 rgba(0, 0, 0, 0.1);
+	transition: 0.05s;
 
 	@apply z-10 flex w-full cursor-pointer flex-row justify-center rounded-3xl border-2 border-white;
 
@@ -28,9 +27,9 @@
 		& > div {
 			width: image-width(@img) * @scale;
 			height: image-height(@img) * @scale;
+
 			mask-image: url(@img);
 			mask-size: 100%;
-
 			@scale: 0.55;
 			@img: './img/arrow.svg';
 
@@ -39,13 +38,13 @@
 	}
 
 	&:hover {
-		transform: translateY(-2px);
 		box-shadow: 0 7px 0 rgba(0, 0, 0, 0.1);
+		transform: translateY(-2px);
 	}
 
 	&:active {
-		transform: translateY(5px);
 		box-shadow: 0 0 0 rgba(0, 0, 0, 0.1);
+		transform: translateY(5px);
 	}
 }
 

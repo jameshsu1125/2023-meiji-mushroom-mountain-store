@@ -4,7 +4,7 @@ export const LandingSteps = { unset: 0 };
 export const LandingState = { steps: LandingSteps.unset };
 export const LandingContext = createContext(LandingState);
 
-export const Sections = [
+export const LandingSections = [
 	{ src: '/home', name: '活動首頁' },
 	{ src: '/incentive', name: '贈品介紹' },
 	{ src: '/product', name: '產品介紹' },

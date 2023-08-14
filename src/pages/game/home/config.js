@@ -47,7 +47,7 @@ export const webglConfig = {
 		physicallyCorrectLights: false,
 	},
 	physics: true,
-	stats: true,
+	stats: false,
 };
 
 export const CubeSize = 2;

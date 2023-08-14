@@ -1,0 +1,56 @@
+@import url('../../../settings/config.less');
+
+.GameForm {
+	overflow: hidden;
+	margin-top: 80px;
+	min-height: calc(~'100vh - 80px');
+	background-image: url('../../landing/home/img/hill.png');
+	background-position: calc(~'50% - 120px') calc(~'100% + 300px');
+	background-size: 2400px;
+	background-repeat: no-repeat;
+	@apply w-full;
+
+	.title {
+		padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+		width: 100%;
+		background-image: url(@img);
+		background-size: cover;
+
+		@img: './img/title.png';
+	}
+
+	.subtitle {
+		@apply my-6 flex w-full justify-center px-16;
+
+		&::after {
+			padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+			width: 100%;
+			background-image: url(@img);
+			background-size: cover;
+			content: '';
+
+			@img: './img/subtitle.png';
+		}
+	}
+
+	.inputs {
+		@apply my-5;
+	}
+
+	.note {
+		color: #636363;
+		@apply mb-3 flex w-full flex-row justify-start text-left text-2xl;
+
+		&::before {
+			content: '*';
+			@apply text-secondary;
+		}
+	}
+}
+
+@media only screen and (max-width: @MD) {
+	.GameForm {
+		margin-top: 134px;
+		min-height: calc(~'100vh - 134px');
+	}
+}

@@ -9,20 +9,12 @@ import Cubes from './cubes';
 import Mushroom from './mushroom';
 
 export default class GL {
-	constructor({
-		dom,
-		onMushroomTrigger,
-		onModulesLoaded,
-		onGameTimeUp,
-		onGameCountDown,
-		onGameOver,
-	}) {
+	constructor({ dom, onMushroomTrigger, onModulesLoaded, onGameCountDown, onGameOver }) {
 		this.webgl = new Webgl(webglConfig);
 		this.webgl.controls.controls.enablePan = false;
 		dom.appendChild(this.webgl.render.domElement);
 		this.onMushroomTrigger = onMushroomTrigger;
 		this.onModulesLoaded = onModulesLoaded;
-		this.onGameTimeUp = onGameTimeUp;
 		this.onGameOver = onGameOver;
 		this.onGameCountDown = onGameCountDown;
 
@@ -49,7 +41,7 @@ export default class GL {
 		// updater
 		this.firstDelta = false;
 
-		this.addGUI();
+		// this.addGUI();
 		this.addMushroom();
 		this.addBamboo();
 		this.addCubes(onGameOver);
@@ -62,6 +54,10 @@ export default class GL {
 			renderer.renderer.setSize(window.innerWidth, window.innerHeight);
 		};
 		window.addEventListener('resize', onWindowResize, false);
+	}
+
+	reset(dom) {
+		dom.appendChild(this.webgl.render.domElement);
 	}
 
 	addController() {
@@ -167,7 +163,7 @@ export default class GL {
 			this.character?.update();
 			this.cubes?.update(currentDelta);
 
-			stats.end();
+			stats?.end();
 		});
 	}
 }

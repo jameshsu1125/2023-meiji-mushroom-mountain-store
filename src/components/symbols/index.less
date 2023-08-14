@@ -1,0 +1,43 @@
+.Symbols {
+	& > div {
+		width: image-width(@img) * @scale;
+		height: image-height(@img) * @scale;
+		background-image: url(@img);
+		background-size: 100%;
+		animation: cloud_8_r15 20s ease-in-out infinite;
+
+		@scale: 1;
+		@img: './img/cloud-1.png';
+		@apply absolute;
+	}
+
+	& > div:nth-child(1) {
+		top: 0%;
+		left: 50%;
+		margin-top: 370px;
+		margin-left: -460px;
+		animation-duration: -5s;
+	}
+
+	& > div:nth-child(2) {
+		top: 0%;
+		left: 50%;
+		margin-top: 160px;
+		margin-left: 301px;
+		width: image-width(@img) * @scale;
+		height: image-height(@img) * @scale;
+		animation-duration: -10s;
+
+		@scale: 0.8;
+		@img: './img/cloud-1.png';
+	}
+
+	& > div:nth-child(3) {
+		top: 0%;
+		left: 50%;
+		margin-top: 710px;
+		margin-left: 270px;
+		animation-duration: -10s;
+		animation-direction: reverse;
+	}
+}

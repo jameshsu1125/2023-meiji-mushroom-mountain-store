@@ -3,9 +3,13 @@ import GL from './gl';
 import { Context } from '../../../settings/config';
 import { ACTION } from '../../../settings/constant';
 import Joystick from './joystick';
+import { GameContext, GamePage } from '../config';
+
+let GLOBAL_WEBGL;
 
 const WebGL = memo(() => {
 	const [, setContext] = useContext(Context);
+	const [, setState] = useContext(GameContext);
 	const ref = useRef();
 	const gl = useRef();
 	const [count, setCount] = useState(0);
@@ -24,12 +28,11 @@ const WebGL = memo(() => {
 		setCount((S) => S + 1);
 	}, []);
 
-	const onGameTimeUp = useCallback(() => {
-		setContext({ type: ACTION.modal, state: { enabled: true, body: '時間到了', time: 10000 } });
-	}, []);
-
 	const onGameOver = useCallback(() => {
-		setContext({ type: ACTION.modal, state: { enabled: true, body: '出界了', time: 10000 } });
+		setContext({ type: ACTION.modal, state: { enabled: true, body: '出界了', time: 2000 } });
+		setTimeout(() => {
+			setState((S) => ({ ...S, page: GamePage.form }));
+		}, 2000);
 	}, []);
 
 	const onGameCountDown = useCallback((message) => {
@@ -46,14 +49,19 @@ const WebGL = memo(() => {
 
 	useEffect(() => {
 		setContext({ type: ACTION.loadingProcess, state: { enabled: true } });
-		gl.current = new GL({
-			dom: ref.current,
-			onMushroomTrigger,
-			onModulesLoaded,
-			onGameTimeUp,
-			onGameCountDown,
-			onGameOver,
-		});
+		if (!GLOBAL_WEBGL) {
+			GLOBAL_WEBGL = new GL({
+				dom: ref.current,
+				onMushroomTrigger,
+				onModulesLoaded,
+				onGameCountDown,
+				onGameOver,
+			});
+			gl.current = GLOBAL_WEBGL;
+		} else {
+			gl.current = GLOBAL_WEBGL;
+			gl.current.reset(ref.current);
+		}
 		return () => gl.current.webgl?.enterframe.stop();
 	}, []);
 

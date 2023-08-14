@@ -1,0 +1,30 @@
+@import url('../../../settings/config.less');
+
+.InvoiceHome {
+	@apply w-full px-24 py-10;
+
+	.inputs {
+		@apply my-5;
+	}
+
+	.title {
+		padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+		width: 100%;
+		background-image: url(@img);
+		background-size: cover;
+
+		@img: './img/title.png';
+
+		@apply my-6;
+	}
+
+	.note {
+		color: #636363;
+		@apply mb-3 flex w-full flex-row justify-start text-left text-2xl;
+
+		&::before {
+			content: '*';
+			@apply text-secondary;
+		}
+	}
+}
