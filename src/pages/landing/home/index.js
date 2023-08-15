@@ -5,7 +5,7 @@ import Dialog from '../../../components/dialog';
 import './index.less';
 import Container from '../../../components/container';
 import RegularButton from '../../../components/button';
-import { RespondBreakPoint } from '../../../settings/config';
+import { MenuState, RespondBreakPoint } from '../../../settings/config';
 
 const Prospect = ({ children }) => <div className='prospect'>{children}</div>;
 const Clouds = () => (
@@ -71,8 +71,22 @@ const Home = memo(() => {
 						</div>
 						<div className='buttonGroup'>
 							<div>
-								<RegularButton width='140px'>玩遊戲</RegularButton>
-								<RegularButton width='140px'>登錄發票</RegularButton>
+								<RegularButton
+									onClick={() => {
+										window.location.href = MenuState.data[1].page;
+									}}
+									width='140px'
+								>
+									玩遊戲
+								</RegularButton>
+								<RegularButton
+									width='140px'
+									onClick={() => {
+										window.location.href = MenuState.data[2].page;
+									}}
+								>
+									登錄發票
+								</RegularButton>
 							</div>
 						</div>
 						<Prospect>

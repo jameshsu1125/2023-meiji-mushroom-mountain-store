@@ -10,9 +10,9 @@
   <a href="https://github.com/jameshsu1125/2023-meiji-mushroom-mountain-store">
     <img src="./public/img/apple-touch-icon.png" alt="Logo" width=72 height=72>
   </a>
-  <h3 align="center">Logo</h3>
+  <h3 align="center">meiji</h3>
   <p align="center">
-    Short description   
+    2023 明治香菇山webGL遊戲試活動網站
   </p>
 </p>
 

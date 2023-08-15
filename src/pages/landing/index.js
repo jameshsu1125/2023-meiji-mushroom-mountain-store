@@ -23,7 +23,6 @@ const Landing = memo(() => {
 	const Pages = useMemo(() => {
 		const pages = LandingSections.map((target) => {
 			const Element = lazy(() => import(`.${target.src}/`));
-
 			if (Element) {
 				return (
 					<Suspense fallback='' key={target.src}>
