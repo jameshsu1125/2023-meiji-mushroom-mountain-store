@@ -4,7 +4,15 @@ import Container from '../container';
 import Drawer from './drawer';
 import './index.less';
 
-const Logo = () => <div className='logo' />;
+const Logo = () => (
+	<div
+		onClick={() => {
+			window.location.href = MenuState.data[0].page;
+		}}
+		className='logo'
+		role='none'
+	/>
+);
 
 const MenuButton = ({ name, page, navigate }) => (
 	<button onClick={() => navigate?.(page)} type='button'>
