@@ -4,15 +4,14 @@
 	@apply w-full;
 
 	&::before {
-		content: '';
+		top: 66%;
+		left: 50%;
+		margin-left: -750px;
 		width: image-width(@img) * @scale;
 		height: image-height(@img) * @scale;
 		background-image: url(@img);
 		background-size: 100%;
-		top: 66%;
-		left: 50%;
-		margin-left: -750px;
-
+		content: '';
 		animation: cloud_8_r15 20s ease-in-out infinite;
 		animation-duration: -5s;
 
@@ -22,8 +21,8 @@
 	}
 
 	.symbols {
-		width: 100%;
 		left: 0;
+		width: 100%;
 		@apply pointer-events-none absolute top-0 flex h-full justify-center overflow-x-hidden overflow-y-visible;
 
 		& > div {
@@ -35,25 +34,25 @@
 			}
 
 			& > div:nth-child(1) {
+				bottom: 20px;
+				left: -31px;
 				width: image-width(@img) * @scale;
 				height: image-height(@img) * @scale;
 				background-image: url(@img);
-
-				bottom: 1px;
-				left: -31px;
+				transform-origin: 50% 100%;
+				animation: Character_flap2 2s steps(1) infinite;
 
 				@scale: 0.5;
 				@img: './img/character.png';
 			}
 
 			& > div:nth-child(2) {
+				top: 166px;
+				left: -120px;
 				width: image-width(@img) * @scale;
 				height: image-height(@img) * @scale;
 				background-image: url(@img);
 				background-size: 100%;
-				left: -120px;
-				top: 166px;
-
 				animation: cloud_8_r15 14s ease-in-out infinite;
 
 				@scale: 0.7;
@@ -61,13 +60,12 @@
 			}
 
 			& > div:nth-child(3) {
+				top: 32px;
+				right: -104px;
 				width: image-width(@img) * @scale;
 				height: image-height(@img) * @scale;
 				background-image: url(@img);
 				background-size: 100%;
-				right: -104px;
-				top: 32px;
-
 				animation: cloud_8_r15 14s ease-in-out infinite reverse;
 				animation-duration: -5s;
 
@@ -115,10 +113,10 @@
 
 				&::before,
 				&::after {
-					content: '';
+					top: 50%;
 					width: 45%;
 					height: 1px;
-					top: 50%;
+					content: '';
 
 					@apply absolute bg-quaternary;
 				}
@@ -169,14 +167,14 @@
 						@apply relative mx-7;
 
 						.amount {
-							left: 87%;
 							top: 14%;
+							left: 87%;
 						}
 
 						&::after {
-							content: '';
 							background-image: url(@img);
 							background-size: 100%;
+							content: '';
 							@apply absolute h-full w-full;
 						}
 					}
@@ -191,14 +189,14 @@
 						@apply relative;
 
 						.amount {
-							left: 79%;
 							top: 20%;
+							left: 79%;
 						}
 
 						&::after {
-							content: '';
 							background-image: url(@img);
 							background-size: 100%;
+							content: '';
 							@apply absolute h-full w-full;
 						}
 					}
@@ -213,14 +211,14 @@
 						@apply relative mx-4;
 
 						.amount {
-							left: 93%;
 							top: 5%;
+							left: 93%;
 						}
 
 						&::after {
-							content: '';
 							background-image: url(@img);
 							background-size: 100%;
+							content: '';
 							@apply absolute h-full w-full;
 						}
 					}
@@ -235,22 +233,22 @@
 						@apply relative mx-7;
 
 						.amount {
-							left: 91%;
 							top: -10%;
+							left: 91%;
 						}
 
 						&::after {
-							content: '';
 							background-image: url(@img);
 							background-size: 100%;
+							content: '';
 							@apply absolute h-full w-full;
 						}
 					}
 
 					.image-both-1 {
+						margin-top: 2px;
 						width: image-width(@img) * @scale;
 						height: image-height(@img) * @scale;
-						margin-top: 2px;
 
 						@scale: 0.5;
 						@img: './img/image-both-1.png';
@@ -258,22 +256,22 @@
 						@apply relative mx-10;
 
 						.amount {
-							left: 77%;
 							top: -20%;
+							left: 77%;
 						}
 
 						&::after {
-							content: '';
 							background-image: url(@img);
 							background-size: 100%;
+							content: '';
 							@apply absolute h-full w-full;
 						}
 					}
 
 					.image-both-2 {
+						margin-top: 10px;
 						width: image-width(@img) * @scale;
 						height: image-height(@img) * @scale;
-						margin-top: 10px;
 
 						@scale: 0.5;
 						@img: './img/image-both-2.png';
@@ -281,14 +279,14 @@
 						@apply relative mx-2;
 
 						.amount {
-							left: 67%;
 							top: -61%;
+							left: 67%;
 						}
 
 						&::after {
-							content: '';
 							background-image: url(@img);
 							background-size: 100%;
+							content: '';
 							@apply absolute h-full w-full;
 						}
 					}
@@ -303,22 +301,22 @@
 						@apply relative mx-7;
 
 						.amount {
-							left: 67%;
 							top: -15%;
+							left: 67%;
 						}
 
 						&::after {
-							content: '';
 							background-image: url(@img);
 							background-size: 100%;
+							content: '';
 							@apply absolute h-full w-full;
 						}
 					}
 
 					.image-both-4 {
+						margin-top: 20px;
 						width: image-width(@img) * @scale;
 						height: image-height(@img) * @scale;
-						margin-top: 20px;
 
 						@scale: 0.5;
 						@img: './img/image-both-4.png';
@@ -326,14 +324,14 @@
 						@apply relative mx-7;
 
 						.amount {
-							left: 75%;
 							top: -36%;
+							left: 75%;
 						}
 
 						&::after {
-							content: '';
 							background-image: url(@img);
 							background-size: 100%;
+							content: '';
 							@apply absolute h-full w-full;
 						}
 					}
@@ -375,10 +373,10 @@
 
 				&::before,
 				&::after {
-					content: '';
+					top: 50%;
 					width: 80%;
 					height: 1px;
-					top: 50%;
+					content: '';
 
 					@apply absolute bg-secondary;
 				}
@@ -396,7 +394,6 @@
 				& > .flag {
 					width: image-width(@img) * @scale;
 					height: image-height(@img) * @scale;
-
 					font-size: 2.5rem;
 
 					@scale: 0.8;
@@ -422,21 +419,21 @@
 				@apply relative h-14 w-14;
 
 				&::before {
-					content: '';
-					margin-left: -50%;
 					margin-top: -0.5px;
-					transform: rotate(45deg);
+					margin-left: -50%;
 					height: 1px;
+					content: '';
+					transform: rotate(45deg);
 
 					@apply absolute left-1/2 top-1/2 w-full bg-primary;
 				}
 
 				&::after {
-					content: '';
-					margin-left: -50%;
 					margin-top: -0.5px;
-					transform: rotate(-45deg);
+					margin-left: -50%;
 					height: 1px;
+					content: '';
+					transform: rotate(-45deg);
 
 					@apply absolute left-1/2 top-1/2 w-full bg-primary;
 				}
@@ -447,11 +444,11 @@
 			@apply flex w-full justify-center;
 
 			&::after {
-				content: '';
 				width: image-width(@img) * @scale;
 				height: image-height(@img) * @scale;
 				background-image: url(@img);
 				background-size: 100%;
+				content: '';
 
 				@scale: 0.5;
 				@img: './img/title.png';

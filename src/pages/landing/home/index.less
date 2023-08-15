@@ -1,10 +1,10 @@
 @import url('../../../settings/config.less');
 
 .Home {
+	overflow: hidden;
 	background-image: url('./img/hill.png');
 	background-position: calc(~'50% - 220px') bottom;
 	background-repeat: no-repeat;
-	overflow: hidden;
 
 	@apply w-full;
 
@@ -27,12 +27,12 @@
 		@apply pointer-events-none absolute left-0 top-0 z-20 hidden h-full w-full lg:block;
 
 		&::before {
+			bottom: -121px;
+			left: -270px;
 			width: image-width(@img) * @scale;
 			height: image-height(@img) * @scale;
 			background-image: url(@img);
 			background-size: 100%;
-			left: -270px;
-			bottom: -121px;
 			content: '';
 
 			@scale: 0.875;
@@ -42,13 +42,15 @@
 		}
 
 		&::after {
+			right: -170px;
+			bottom: -58px;
 			width: image-width(@img) * @scale;
 			height: image-height(@img) * @scale;
 			background-image: url(@img);
 			background-size: 100%;
-			right: -170px;
-			bottom: -58px;
 			content: '';
+			transform-origin: 50% 80%;
+			animation: Character_flap 2s steps(1) infinite;
 
 			@scale: 0.875;
 			@img: './img/mushroomMan.png';
@@ -58,13 +60,12 @@
 
 		.cloud-1 {
 			position: absolute;
+			top: -270px;
+			left: -150px;
 			width: image-width(@img) * @scale;
 			height: image-height(@img) * @scale;
 			background-image: url(@img);
 			background-size: 100%;
-			left: -150px;
-			top: -270px;
-
 			animation: cloud_8_r15 15s ease-in-out infinite;
 
 			@scale: 0.9;
@@ -73,13 +74,12 @@
 
 		.cloud-2 {
 			position: absolute;
+			top: -161px;
+			left: -219px;
 			width: image-width(@img) * @scale;
 			height: image-height(@img) * @scale;
 			background-image: url(@img);
 			background-size: 100%;
-			left: -219px;
-			top: -161px;
-
 			animation: cloud_8_r15 10s ease-in-out infinite;
 			animation-delay: -3s;
 			animation-direction: reverse;
@@ -90,11 +90,10 @@
 
 		.cloud-3 {
 			position: absolute;
+			top: -241px;
+			right: -109px;
 			width: image-width(@img) * @scale;
 			height: image-height(@img) * @scale;
-			right: -109px;
-			top: -241px;
-
 			animation: cloud_8_r15 10s ease-in-out infinite;
 			animation-delay: -5s;
 
@@ -103,12 +102,12 @@
 
 			&::after {
 				position: absolute;
-				content: '';
+				top: 0;
 				width: 100%;
 				height: 100%;
 				background-image: url(@img);
 				background-size: 100%;
-				top: 0;
+				content: '';
 				transform: scale(-1, 1);
 			}
 		}
@@ -132,13 +131,13 @@
 	}
 
 	.pattern {
+		left: 50%;
+		margin-top: 0 - image-height(@img) * @scale + 48px;
+		margin-left: 0 - image-width(@img) * @scale * 0.5;
 		width: image-width(@img) * @scale;
 		height: image-height(@img) * @scale;
 		background-image: url(@img);
 		background-size: 100%;
-		margin-left: 0 - image-width(@img) * @scale * 0.5;
-		left: 50%;
-		margin-top: 0 - image-height(@img) * @scale + 48px;
 
 		@scale: 0.6;
 		@img: './img/pattern.png';
@@ -148,10 +147,10 @@
 
 	@media only screen and (max-width: @MD) {
 		.pattern {
+			margin-top: 0 - image-height(@img) * @scale + 23px;
+			margin-left: 0 - image-width(@img) * @scale * 0.5;
 			width: image-width(@img) * @scale;
 			height: image-height(@img) * @scale;
-			margin-left: 0 - image-width(@img) * @scale * 0.5;
-			margin-top: 0 - image-height(@img) * @scale + 23px;
 			pointer-events: none;
 
 			@scale: 0.55;

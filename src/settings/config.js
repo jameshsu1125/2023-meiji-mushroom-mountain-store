@@ -34,7 +34,7 @@ export const reducer = (state, action) => {
 
 export const MenuState = {
 	data: [
-		{ page: './', name: '活動首頁' },
+		{ page: './#', name: '活動首頁' },
 		{ page: './game.html', name: '菇菇山營業中' },
 		{ page: './invoice.html', name: '登錄發票' },
 		{ page: './#incentive', name: '贈品介紹' },
