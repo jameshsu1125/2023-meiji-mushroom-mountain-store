@@ -1,4 +1,5 @@
 import Click from 'lesca-click';
+import Fetcher, { contentType, formatType } from 'lesca-fetcher';
 import { lazy, memo, Suspense, useMemo, useReducer } from 'react';
 import { createRoot } from 'react-dom/client';
 import LoadingProcess from '../components/loadingProcess';
@@ -9,6 +10,11 @@ import { ACTION } from '../settings/constant';
 import '../settings/global.less';
 
 Click.install();
+Fetcher.install({
+	hostUrl: process.env.API,
+	contentType: contentType.JSON,
+	formatType: formatType.JSON,
+});
 
 const Pages = memo(() => {
 	const Page = useMemo(() => {

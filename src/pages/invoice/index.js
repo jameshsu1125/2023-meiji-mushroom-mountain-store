@@ -1,8 +1,8 @@
 import { Suspense, lazy, memo, useMemo, useState } from 'react';
 import Section from '../../components/section';
+import Symbols from '../../components/symbols';
 import { InvoiceContext, InvoicePage, InvoiceState } from './config';
 import './index.less';
-import Symbols from '../../components/symbols';
 
 const Invoice = memo(() => {
 	const value = useState(InvoiceState);

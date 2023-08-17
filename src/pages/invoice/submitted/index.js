@@ -1,3 +1,4 @@
+import Click from 'lesca-click';
 import OnloadProvider from 'lesca-react-onload';
 import QueryString from 'lesca-url-parameters';
 import useTween, { Bezier } from 'lesca-use-tween';
@@ -34,6 +35,7 @@ const InvoiceSubmitted = memo(() => {
 	const [transition, setTransition] = useState(TRANSITION.unset);
 	const [maxWidth, setMaxWidth] = useState({ maxWidth: '1024px' });
 	useEffect(() => {
+		Click.addPreventExcept('.InvoiceSubmitted');
 		const resize = () => {
 			const { innerWidth } = window;
 
@@ -48,7 +50,7 @@ const InvoiceSubmitted = memo(() => {
 
 	return (
 		<OnloadProvider onload={() => setTransition(TRANSITION.fadeIn)}>
-			<div className='InvoiceHome'>
+			<div className='InvoiceSubmitted'>
 				<Container {...{ ...maxWidth }}>
 					<div className='w-full space-y-36 py-28'>
 						<div className='flex w-full flex-col items-center justify-center space-y-10'>

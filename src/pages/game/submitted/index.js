@@ -1,3 +1,4 @@
+import Click from 'lesca-click';
 import OnloadProvider from 'lesca-react-onload';
 import QueryString from 'lesca-url-parameters';
 import useTween, { Bezier } from 'lesca-use-tween';
@@ -30,11 +31,12 @@ const Image = ({ transition }) => {
 	return <div className='image' style={style} />;
 };
 
-const InvoiceSubmitted = memo(() => {
+const GameSubmitted = memo(() => {
 	// const [, setState] = useContext(GameContext);
 	const [transition, setTransition] = useState(TRANSITION.unset);
 	const [maxWidth, setMaxWidth] = useState({ maxWidth: '1024px' });
 	useEffect(() => {
+		Click.addPreventExcept('.GameSubmitted');
 		const resize = () => {
 			const { innerWidth } = window;
 
@@ -49,7 +51,7 @@ const InvoiceSubmitted = memo(() => {
 
 	return (
 		<OnloadProvider onload={() => setTransition(TRANSITION.fadeIn)}>
-			<div className='InvoiceHome'>
+			<div className='GameSubmitted'>
 				<Container {...{ ...maxWidth }}>
 					<div className='w-full space-y-36 py-28'>
 						<div className='flex w-full flex-col items-center justify-center space-y-10'>
@@ -83,4 +85,4 @@ const InvoiceSubmitted = memo(() => {
 		</OnloadProvider>
 	);
 });
-export default InvoiceSubmitted;
+export default GameSubmitted;

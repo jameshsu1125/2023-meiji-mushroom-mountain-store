@@ -1,3 +1,4 @@
+import Click from 'lesca-click';
 import { Suspense, lazy, memo, useEffect, useMemo, useState } from 'react';
 import Section from '../../components/section';
 import { LandingContext, LandingSections, LandingState } from './config';
@@ -8,6 +9,7 @@ const Landing = memo(() => {
 	const value = useState(LandingState);
 
 	useEffect(() => {
+		Click.addPreventExcept('.Landing');
 		timeout = setTimeout(() => {
 			const target = document.getElementById(window.location.hash.slice(1));
 			if (target) window.scrollTo(0, target.getBoundingClientRect().top);

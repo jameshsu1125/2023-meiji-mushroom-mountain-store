@@ -34,3 +34,5 @@ const TransitionKeyFrame = memo(() => {
 	);
 });
 export default TransitionKeyFrame;
+
+export const EmptyString = (value) => value !== '';

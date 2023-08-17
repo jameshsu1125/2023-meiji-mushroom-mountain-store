@@ -11,7 +11,7 @@ const LoadingProcess = memo(() => {
 	const [context] = useContext(Context);
 	const data = context[ACTION.loadingProcess];
 	return (
-		<div className='absolute top-0 z-50 flex h-full w-full flex-col items-center justify-center space-y-3'>
+		<div className='fixed top-0 z-50 flex h-full w-full flex-col items-center justify-center space-y-3'>
 			<Background />
 			<ReactLoading className='relative' type={data.type} />
 			{data.body && <Text>{data.body}</Text>}

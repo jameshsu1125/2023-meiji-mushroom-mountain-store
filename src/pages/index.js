@@ -1,12 +1,12 @@
 import Click from 'lesca-click';
-import { lazy, memo, Suspense, useContext, useMemo, useReducer } from 'react';
+import { Suspense, lazy, memo, useContext, useMemo, useReducer } from 'react';
 import { createRoot } from 'react-dom/client';
 import LoadingProcess from '../components/loadingProcess';
 import Modal from '../components/modal';
+import Navigation from '../components/navigation';
 import { Context, initialState, reducer } from '../settings/config';
 import { ACTION, PAGE } from '../settings/constant';
 import '../settings/global.less';
-import Navigation from '../components/navigation';
 
 Click.install();
 
