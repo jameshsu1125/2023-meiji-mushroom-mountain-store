@@ -46,3 +46,9 @@ export const MenuState = {
 export const RespondBreakPoint = {
 	md: 1024,
 };
+
+export const DEFAULT_RESPOND = {
+	Result: true,
+	Data: { UserId: '' },
+	MessageList: [],
+};

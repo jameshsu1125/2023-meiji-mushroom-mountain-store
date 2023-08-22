@@ -1,5 +1,6 @@
+import Fetcher from 'lesca-fetcher';
 import { useContext, useState } from 'react';
-import { Context } from '../settings/config';
+import { Context, DEFAULT_RESPOND } from '../settings/config';
 import { ACTION, INVOICE_INFO_NAME, VALIDATE_INFO } from '../settings/constant';
 
 // prettier-ignore
@@ -7,10 +8,9 @@ const UN_CURRENT_FORMAT_MESSAGE = (forms) => `以下資料格式不正確或是�
 
 const useSaveInvoice = () => {
 	const [, setContext] = useContext(Context);
-
 	const [state, setState] = useState();
 
-	const fetch = (data) => {
+	const fetch = async (data) => {
 		const checked = Object.entries(data).map((item) => {
 			const check = VALIDATE_INFO[item[0]];
 			if (!check(item[1])) {
@@ -35,10 +35,12 @@ const useSaveInvoice = () => {
 		currentData[INVOICE_INFO_NAME.稱呼] = Number(currentData[INVOICE_INFO_NAME.稱呼]);
 		currentData[INVOICE_INFO_NAME.年齡區間] = Number(currentData[INVOICE_INFO_NAME.年齡區間]);
 
-		setTimeout(() => {
-			setState({ res: true, data: currentData });
-			setContext({ type: ACTION.loadingProcess, state: { enabled: false } });
-		}, 2000);
+		if (process.env.MODE === 'local') setTimeout(() => setState(DEFAULT_RESPOND), 2000);
+		else {
+			const respond = await Fetcher.post('/SaveInvoice', currentData);
+			setState(respond);
+		}
+		setContext({ type: ACTION.loadingProcess, state: { enabled: false } });
 	};
 	return [state, fetch];
 };

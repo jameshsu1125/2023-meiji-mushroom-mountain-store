@@ -20,8 +20,8 @@ const InvoiceHome = memo(() => {
 
 	useEffect(() => {
 		if (res) {
-			console.log(res);
-			setState((S) => ({ ...S, page: InvoicePage.submitted }));
+			if (res.Result) setState((S) => ({ ...S, page: InvoicePage.submitted }));
+			else alert(res.MessageList.join(', '));
 		}
 	}, [res]);
 

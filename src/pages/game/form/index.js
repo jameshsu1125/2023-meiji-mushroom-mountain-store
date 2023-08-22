@@ -21,7 +21,8 @@ const GameForm = memo(() => {
 	useEffect(() => {
 		if (res) {
 			console.log(res);
-			setState((S) => ({ ...S, page: GamePage.submitted }));
+			if (res.Result) setState((S) => ({ ...S, page: GamePage.submitted }));
+			else alert(res.MessageList.join(', '));
 		}
 	}, [res]);
 

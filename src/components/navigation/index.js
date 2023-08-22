@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 import { memo, useCallback, useState } from 'react';
 import { MenuState } from '../../settings/config';
 import Container from '../container';
@@ -5,12 +6,12 @@ import Drawer from './drawer';
 import './index.less';
 
 const Logo = () => (
-	<div
+	<button
 		onClick={() => {
 			window.location.href = MenuState.data[0].page;
 		}}
 		className='logo'
-		role='none'
+		type='button'
 	/>
 );
 
