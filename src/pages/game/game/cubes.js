@@ -164,12 +164,13 @@ export default class Cubes {
 				if (this.enabled) this.setMaterialByIndex();
 			}
 
-			if (currentDelta !== this.countdownSerial) {
-				if (this.countdownSerial < gameRule.startCountDown) {
-					this.countdownSerial = currentDelta;
-					this.onGameCountDown(gameRule.startCountDown - currentDelta + 1);
-				}
-			}
+			// TODO => CountDown
+			// if (currentDelta !== this.countdownSerial) {
+			// 	if (this.countdownSerial < gameRule.startCountDown) {
+			// 		this.countdownSerial = currentDelta;
+			// 		this.onGameCountDown(gameRule.startCountDown - currentDelta + 1);
+			// 	}
+			// }
 
 			[...new Array(this.numberOfBox).keys()].forEach((index) => {
 				const body = this.bodies[index];

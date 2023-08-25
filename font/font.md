@@ -33,6 +33,7 @@ Copyright Taiwan Meiji Food Co., Ltd. All Right Reserved.
 明治香菇造型餅乾
 登錄發票 抽 豪華回饋禮
 填單 抽 豪華回饋禮
+採菇達人請留步！
 ```
 
 ### regular

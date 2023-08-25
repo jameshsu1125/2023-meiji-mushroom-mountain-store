@@ -1,0 +1,14 @@
+@import url('../../settings/config.less');
+.Game {
+	padding-top: 80px;
+
+	overscroll-behavior: none;
+	scroll-behavior: smooth;
+
+	@apply w-full select-none h-full;
+}
+@media only screen and (max-width: @MD) {
+	.Game {
+		padding-top: 134px;
+	}
+}

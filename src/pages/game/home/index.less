@@ -1,0 +1,27 @@
+@import url('../../../settings/config.less');
+
+.GameHome {
+	overflow: hidden;
+	background-image: url('../../landing/home/img/hill.png');
+	background-position: calc(~'50% - 120px') calc(~'100% + 300px');
+	background-size: 2400px;
+	background-repeat: no-repeat;
+	@apply w-full h-full;
+
+	.title {
+		padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
+		width: 100%;
+		background-image: url(@img);
+		background-size: cover;
+
+		@img: './img/title.png';
+	}
+
+	.headline {
+		@apply font-MiBold text-5xl;
+	}
+
+	.subLine {
+		@apply font-MiNormal text-3xl w-full text-center flex flex-col items-center justify-center;
+	}
+}

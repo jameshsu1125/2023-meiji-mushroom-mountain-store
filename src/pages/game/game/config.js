@@ -13,9 +13,9 @@ export const webglConfig = {
 		azimuth: 0.25,
 	},
 	controls: {
-		distance: { min: 13, max: 13 },
-		polar: { min: 50, max: 50 },
-		azimuth: { min: 35, max: 35 },
+		distance: { min: 2.5, max: 2.5 },
+		polar: { min: 30, max: 30 },
+		azimuth: { min: -20, max: -20 },
 		default: {
 			polar: 50,
 			azimuth: 35,
@@ -58,7 +58,7 @@ export const bambooSize = 1;
 
 export const cubeData = { number: 0, index: 0, hasItem: '', drop: false };
 export const gameRule = {
-	startCountDown: 3,
+	startCountDown: 0,
 	maxMushroom: 3,
 	stay: 0,
 	cubes: [...new Array(9).keys()].map((index) => {
@@ -75,4 +75,14 @@ export const gameRule = {
 		mushroom: 3,
 		unset: 0,
 	},
+};
+
+export const ControlsDefaultProps = {
+	x: 0,
+	y: 0,
+	z: 0,
+	polar: 50,
+	azimuth: 35,
+	distance: 17,
+	duration: 5000,
 };

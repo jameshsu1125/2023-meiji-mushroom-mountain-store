@@ -1,75 +1,63 @@
-import { memo, useCallback, useContext, useEffect, useRef, useState } from 'react';
-import GL from './gl';
-import { Context } from '../../../settings/config';
+import OnloadProvider from 'lesca-react-onload';
+import { memo, useContext, useEffect, useState } from 'react';
+import RegularButton from '../../../components/button';
+import Container from '../../../components/container';
+import { Context, RespondBreakPoint } from '../../../settings/config';
+import { GameContext, GamePage, GameSteps } from '../config';
+import WebGL from '../game';
+import './index.less';
 import { ACTION } from '../../../settings/constant';
-import Joystick from './joystick';
-import { GameContext, GamePage } from '../config';
 
-let GLOBAL_WEBGL;
-
-const WebGL = memo(() => {
+const GameHome = memo(() => {
+	const [state, setState] = useContext(GameContext);
 	const [, setContext] = useContext(Context);
-	const [, setState] = useContext(GameContext);
-	const ref = useRef();
-	const gl = useRef();
-	const [count, setCount] = useState(0);
+	const [maxWidth, setMaxWidth] = useState({ maxWidth: '1024px' });
 
 	useEffect(() => {
-		if (count) {
-			setContext({ type: ACTION.modal, state: { enabled: true, body: `吃到 ${count} 蘑菇了` } });
+		if (state.steps === GameSteps.modelLoaded) {
+			setContext({ type: ACTION.loadingProcess, state: { enabled: false } });
 		}
-	}, [count]);
-
-	const onModulesLoaded = useCallback(() => {
-		setContext({ type: ACTION.loadingProcess, state: { enabled: false } });
-	}, []);
-
-	const onMushroomTrigger = useCallback(() => {
-		setCount((S) => S + 1);
-	}, []);
-
-	const onGameOver = useCallback(() => {
-		setContext({ type: ACTION.modal, state: { enabled: true, body: '出界了', time: 2000 } });
-		setTimeout(() => {
-			setState((S) => ({ ...S, page: GamePage.form }));
-		}, 2000);
-	}, []);
-
-	const onGameCountDown = useCallback((message) => {
-		setContext({ type: ACTION.modal, state: { enabled: true, body: `倒數${message}秒開始` } });
-	}, []);
-
-	const onJoyStickMove = useCallback((property) => {
-		gl.current.controller.moveJoystick(property);
-	}, []);
-
-	const onJoyStickStop = useCallback(() => {
-		gl.current.controller.stopJoystick();
-	}, []);
+	}, [state.steps]);
 
 	useEffect(() => {
 		setContext({ type: ACTION.loadingProcess, state: { enabled: true } });
-		if (!GLOBAL_WEBGL) {
-			GLOBAL_WEBGL = new GL({
-				dom: ref.current,
-				onMushroomTrigger,
-				onModulesLoaded,
-				onGameCountDown,
-				onGameOver,
-			});
-			gl.current = GLOBAL_WEBGL;
-		} else {
-			gl.current = GLOBAL_WEBGL;
-			gl.current.reset(ref.current);
-		}
-		return () => gl.current.webgl?.enterframe.stop();
+		const resize = () => {
+			const { innerWidth } = window;
+			if (innerWidth > RespondBreakPoint.md) setMaxWidth({ maxWidth: '500px' });
+			else setMaxWidth({ maxWidth: '1024px' });
+		};
+		resize();
+		window.addEventListener('resize', resize);
+		return () => window.removeEventListener('resize', resize);
 	}, []);
 
 	return (
-		<div className='h-full w-full'>
-			<div ref={ref} className='h-full w-full' />
-			<Joystick onJoyStickMove={onJoyStickMove} onJoyStickStop={onJoyStickStop} />
-		</div>
+		<OnloadProvider
+			onload={() => {
+				setState((S) => ({ ...S, steps: GameSteps.loaded }));
+			}}
+		>
+			<div className='GameHome'>
+				<div className='w-full h-full flex flex-col justify-center items-center'>
+					<Container {...maxWidth}>
+						<div className='w-full'>
+							<div className='title' />
+						</div>
+						<div className='w-full flex flex-col justify-start items-center space-y-5'>
+							<div className='headline'>採菇達人請留步！</div>
+							<div className='subLine'>
+								菇菇山開園大豐收～快忙翻啦（暈）
+								<br />
+								熱血的你，一起來幫菇太郎採收菇菇吧！
+								<br />
+								還有機會帶走豪華回饋禮噢～
+							</div>
+						</div>
+					</Container>
+				</div>
+				{state.steps === GameSteps.loaded && <WebGL />}
+			</div>
+		</OnloadProvider>
 	);
 });
-export default WebGL;
+export default GameHome;

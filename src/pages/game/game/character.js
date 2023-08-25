@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable no-bitwise */
 /* eslint-disable no-param-reassign */
 import * as CANNON from 'cannon-es';
@@ -43,6 +44,11 @@ export default class Character {
 		this.stop();
 	}
 
+	stand() {
+		const keyName = 'idle';
+		this.doActionByName(keyName);
+	}
+
 	down() {
 		const keyName = 'down';
 		this.doActionByName(keyName);
@@ -77,6 +83,12 @@ export default class Character {
 		if (this.actionName) this.actions[this.actionName].stop();
 		this.actions[keyName].play();
 		this.actionName = keyName;
+		const onActionEnd = () => {
+			this.stand();
+			this.actions[this.actionName].loop = THREE.LoopRepeat;
+		};
+		this.actions[this.actionName].loop = THREE.LoopOnce;
+		this.actions[this.actionName]._mixer.addEventListener('finished', onActionEnd);
 	}
 
 	addPhysics() {

@@ -1,5 +1,6 @@
 import { Suspense, lazy, memo, useMemo, useState } from 'react';
 import { GameContext, GamePage, GameState } from './config';
+import './index.less';
 
 const Game = memo(() => {
 	const value = useState(GameState);
