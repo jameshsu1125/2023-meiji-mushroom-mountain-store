@@ -14,17 +14,6 @@ export const PAGE = {
 	invoice: '/invoice',
 };
 
-export const LOADING_PROCESS_TYPE = [
-	'balls',
-	'bars',
-	'bubbles',
-	'cubes',
-	'cylon',
-	'spin',
-	'spinningBubbles',
-	'spokes',
-];
-
 export const MODAL = {
 	enabled: false,
 	body: '',
@@ -33,7 +22,6 @@ export const MODAL = {
 
 export const LOADING_PROCESS_STATE = {
 	enabled: false,
-	type: LOADING_PROCESS_TYPE[LOADING_PROCESS_TYPE.length - 1] || 'spokes',
 	body: '',
 };
 

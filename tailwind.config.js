@@ -26,6 +26,7 @@ module.exports = {
 			MiHeavy: ['MiSans-heavy', 'sans-serif'],
 			MiSemibold: ['MiSans-semibold', 'sans-serif'],
 			MiNormal: ['MiSans-normal', 'sans-serif'],
+			DIN: ['DIN', 'Aries Bold', 'sans-serif'],
 		},
 	},
 	plugins: [],

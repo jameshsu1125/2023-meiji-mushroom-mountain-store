@@ -1,0 +1,129 @@
+@import url('../../../settings/config.less');
+
+.Intro {
+	@apply w-full h-full;
+
+	.icon0 {
+		&::before {
+			content: '1';
+		}
+	}
+
+	.icon1 {
+		&::before {
+			content: '2';
+		}
+	}
+
+	.icon2 {
+		&::before {
+			content: '3';
+		}
+	}
+
+	.title {
+		@apply w-full flex justify-center flex-row items-center font-MiBold text-3xl;
+
+		&::before {
+			background: rgb(119, 86, 53);
+			background: linear-gradient(135deg, rgba(119, 86, 53, 1) 50%, rgba(87, 47, 14, 1) 50.1%);
+			@apply w-10 h-10 rounded-full flex justify-center items-center text-white m-3;
+		}
+	}
+
+	.subline {
+		min-height: 50px;
+		@apply w-full flex flex-row justify-center items-center font-MiMedium text-2xl;
+
+		span {
+			@apply font-MiBold;
+		}
+
+		.mushroom {
+			@apply relative w-12 h-12 rounded-full bg-white ml-3;
+
+			&::after {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin-top: 0 - image-height(@img) * @scale * 0.5 - 10px;
+				margin-left: 0 - image-width(@img) * @scale * 0.5 + 3px;
+				width: image-width(@img) * @scale;
+				height: image-height(@img) * @scale;
+				background-image: url(@img);
+				background-size: 100%;
+				content: '';
+
+				@scale: 0.39;
+				@img: './img/mushroom.png';
+			}
+		}
+
+		.bamboo {
+			@apply relative w-12 h-12 rounded-full bg-white m-3;
+
+			&::after {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin-top: 0 - image-height(@img) * @scale * 0.5 - 10px;
+				margin-left: 0 - image-width(@img) * @scale * 0.5 + 3px;
+				width: image-width(@img) * @scale;
+				height: image-height(@img) * @scale;
+				background-image: url(@img);
+				background-size: 100%;
+				content: '';
+
+				@scale: 0.39;
+				@img: './img/bamboo.png';
+			}
+		}
+	}
+
+	.demo {
+		padding-bottom: 100%;
+		width: 100%;
+		@apply bg-backgroundColor border-4 border-white rounded-2xl drop-shadow-2xl;
+	}
+
+	@media only screen and (max-width: @MD) {
+		.title {
+			@apply text-5xl;
+			&::before {
+				@apply w-16 h-16;
+			}
+		}
+
+		.subline {
+			@apply text-4xl;
+
+			.mushroom {
+				@apply w-20 h-20;
+
+				&::after {
+					margin-top: 0 - image-height(@img) * @scale * 0.5 - 12px;
+					margin-left: 0 - image-width(@img) * @scale * 0.5 + 1px;
+					width: image-width(@img) * @scale;
+					height: image-height(@img) * @scale;
+
+					@scale: 0.6;
+					@img: './img/mushroom.png';
+				}
+			}
+
+			.bamboo {
+				@apply w-20 h-20;
+
+				&::after {
+					margin-top: 0 - image-height(@img) * @scale * 0.5 - 12px;
+					margin-left: 0 - image-width(@img) * @scale * 0.5 + 1px;
+					width: image-width(@img) * @scale;
+					height: image-height(@img) * @scale;
+
+					@scale: 0.6;
+					@img: './img/bamboo.png';
+				}
+			}
+		}
+	}
+}

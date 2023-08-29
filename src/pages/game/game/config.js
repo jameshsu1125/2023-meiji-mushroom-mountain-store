@@ -1,10 +1,11 @@
 import * as THREE from 'three';
 import { CameraType } from 'lesca-webgl-threejs/lib/types';
+import { RespondBreakPoint } from '../../../settings/config';
 
 export const webglConfig = {
 	camera: { fov: 50, far: 75, type: CameraType.perspective },
 	sky: {
-		enabled: true,
+		enabled: false,
 		turbidity: 3.6,
 		rayleigh: 0.165,
 		mieCoefficient: 0,
@@ -40,11 +41,9 @@ export const webglConfig = {
 		debug: true,
 	},
 	renderer: {
-		alpha: false,
+		alpha: true,
 		shadowType: THREE.PCFSoftShadowMap,
 		exposure: 1,
-		outputEncoding: THREE.sRGBEncoding,
-		physicallyCorrectLights: false,
 	},
 	physics: true,
 	stats: false,
@@ -58,9 +57,10 @@ export const bambooSize = 1;
 
 export const cubeData = { number: 0, index: 0, hasItem: '', drop: false };
 export const gameRule = {
-	startCountDown: 0,
+	startCountDown: 3,
 	maxMushroom: 3,
 	stay: 0,
+	collideGroup: { box: 1, character: 2, bamboo: 2, mushroom: 3, unset: 0 },
 	cubes: [...new Array(9).keys()].map((index) => {
 		const cloneData = { ...cubeData };
 		if (index === 4) cloneData.number = 5 + Math.floor(Math.random() * 5);
@@ -68,21 +68,14 @@ export const gameRule = {
 		cloneData.index = index;
 		return cloneData;
 	}),
-	collideGroup: {
-		box: 1,
-		character: 2,
-		bamboo: 2,
-		mushroom: 3,
-		unset: 0,
-	},
 };
 
 export const ControlsDefaultProps = {
 	x: 0,
-	y: 0,
+	y: 1,
 	z: 0,
 	polar: 50,
 	azimuth: 35,
-	distance: 17,
+	distance: window.innerWidth >= RespondBreakPoint.md ? 14 : 17,
 	duration: 5000,
 };

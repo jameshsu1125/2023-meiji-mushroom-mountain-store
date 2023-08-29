@@ -8,5 +8,11 @@ export const GamePage = {
 	form: '/form',
 	submitted: '/submitted',
 };
-export const GameState = { steps: GameSteps.unset, page: GamePage.home };
+export const GameState = {
+	steps: GameSteps.unset,
+	page: GamePage.game,
+	score: 0,
+	countdown: false,
+	over: false,
+};
 export const GameContext = createContext(GameState);

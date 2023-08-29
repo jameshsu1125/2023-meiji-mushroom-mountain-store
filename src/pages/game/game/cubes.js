@@ -20,8 +20,8 @@ export default class Cubes {
 		this.onload = onload;
 		this.name = 'box';
 
-		this.serial = gameRule.startCountDown;
-		this.countdownSerial = 0;
+		this.serial = gameRule.startCountDown + 1;
+		this.countdownSerial = false;
 		this.enabled = true;
 
 		this.boxes = [];
@@ -163,14 +163,12 @@ export default class Cubes {
 				this.serial = currentDelta;
 				if (this.enabled) this.setMaterialByIndex();
 			}
-
-			// TODO => CountDown
-			// if (currentDelta !== this.countdownSerial) {
-			// 	if (this.countdownSerial < gameRule.startCountDown) {
-			// 		this.countdownSerial = currentDelta;
-			// 		this.onGameCountDown(gameRule.startCountDown - currentDelta + 1);
-			// 	}
-			// }
+			if (currentDelta !== this.countdownSerial) {
+				if (this.countdownSerial < gameRule.startCountDown + 1) {
+					this.countdownSerial = currentDelta;
+					this.onGameCountDown(gameRule.startCountDown - currentDelta);
+				}
+			}
 
 			[...new Array(this.numberOfBox).keys()].forEach((index) => {
 				const body = this.bodies[index];

@@ -1,0 +1,52 @@
+@import url('../../settings/config.less');
+
+.LoadingProcess {
+	.character {
+		width: image-width(@img) * @scale;
+		height: image-height(@img) * @scale;
+		background-image: url(@img);
+		background-size: 100%;
+
+		@scale: 0.6;
+		@img: './img/character.png';
+
+		@apply relative;
+	}
+
+	.dots {
+		@apply flex flex-row justify-center items-center relative space-x-4 pb-32 pt-10;
+
+		& > div {
+			background-color: #5b534c;
+			animation: LoadingProcess_10px_60p 1s ease-in-out infinite;
+			@apply w-5 h-5 rounded-full;
+		}
+
+		& > div:nth-child(1) {
+			animation-delay: -0.3s;
+		}
+
+		& > div:nth-child(2) {
+			animation-delay: -0.2s;
+		}
+
+		& > div:nth-child(3) {
+			animation-delay: -0.1s;
+		}
+	}
+
+	@media only screen and (max-width: @MD) {
+		.character {
+			width: image-width(@img) * @scale;
+			height: image-height(@img) * @scale;
+
+			@scale: 0.7;
+			@img: './img/character.png';
+		}
+		.dots {
+			& > div {
+				@apply w-6 h-6;
+			}
+		}
+	}
+}

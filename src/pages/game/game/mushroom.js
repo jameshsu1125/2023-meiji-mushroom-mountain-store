@@ -16,7 +16,7 @@ export default class Mushroom {
 		this.models = [];
 		this.bodies = [];
 
-		this.serial = gameRule.startCountDown;
+		this.serial = gameRule.startCountDown + 1;
 		this.enabled = true;
 		this.offset = { x: 0, z: 0 };
 

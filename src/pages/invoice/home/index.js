@@ -1,12 +1,11 @@
 import Click from 'lesca-click';
-import { memo, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import RegularButton from '../../../components/button';
-import Container from '../../../components/container';
+import { RespondContainer } from '../../../components/container';
 import RegularInput from '../../../components/input';
 import Remark from '../../../components/remark';
 import Terms from '../../../components/terms';
 import useSaveInvoice from '../../../hooks/useSaveInvoice';
-import { RespondBreakPoint } from '../../../settings/config';
 import { INVOICE_INFO_NAME } from '../../../settings/constant';
 import { InvoiceContext, InvoicePage } from '../config';
 import './index.less';
@@ -16,7 +15,6 @@ const InvoiceHome = memo(() => {
 	const [res, fetcher] = useSaveInvoice();
 	const [, setState] = useContext(InvoiceContext);
 	const labelName = useMemo(() => Object.entries(INVOICE_INFO_NAME).map((e) => e), []);
-	const [maxWidth, setMaxWidth] = useState({ maxWidth: '1024px' });
 
 	useEffect(() => {
 		if (res) {
@@ -27,14 +25,6 @@ const InvoiceHome = memo(() => {
 
 	useEffect(() => {
 		Click.addPreventExcept('.InvoiceHome');
-		const resize = () => {
-			const { innerWidth } = window;
-			if (innerWidth > RespondBreakPoint.md) setMaxWidth({ maxWidth: '500px' });
-			else setMaxWidth({ maxWidth: '1024px' });
-		};
-		resize();
-		window.addEventListener('resize', resize);
-		return () => window.removeEventListener('resize', resize);
 	}, []);
 
 	const onSubmit = useCallback((e) => {
@@ -48,7 +38,7 @@ const InvoiceHome = memo(() => {
 
 	return (
 		<div className='InvoiceHome'>
-			<Container {...{ ...maxWidth }}>
+			<RespondContainer>
 				<div className='title' />
 				<form onSubmit={onSubmit}>
 					<div className='inputs'>
@@ -97,7 +87,7 @@ const InvoiceHome = memo(() => {
 						確認送出
 					</RegularButton>
 				</form>
-			</Container>
+			</RespondContainer>
 		</div>
 	);
 });

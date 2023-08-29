@@ -1,39 +1,37 @@
 import UserAgent from 'lesca-user-agent';
 import { memo, useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { Context } from '../../../settings/config';
-import { ACTION } from '../../../settings/constant';
-import { GameContext, GameSteps } from '../config';
+import { GameContext, GamePage, GameSteps } from '../config';
+import CountDown from './countDown';
 import GL from './gl';
 import Joystick from './joystick';
+import Score from './score';
 
 let GLOBAL_WEBGL;
 
 const WebGL = memo(() => {
-	const [, setContext] = useContext(Context);
-	const [state, setState] = useContext(GameContext);
-
 	const ref = useRef();
 	const gl = useRef();
 
-	const [count, setCount] = useState(0);
+	const [state, setState] = useContext(GameContext);
+	const { score, countdown, over, page } = state;
 	const [device, setDevice] = useState(UserAgent.get() === 'mobile');
 
 	useEffect(() => {
-		if (count) {
-			setContext({ type: ACTION.modal, state: { enabled: true, body: `吃到 ${count} 蘑菇了` } });
-		}
-	}, [count]);
+		if (score) console.log(score);
+		if (over) console.log(over);
+	}, [score, over]);
 
 	const onModulesLoaded = useCallback(() => {
 		setState((S) => ({ ...S, steps: GameSteps.modelLoaded }));
+		if (page === GamePage.game) gl.current.start(ref.current);
 	}, []);
 
 	const onMushroomTrigger = useCallback(() => {
-		setCount((S) => S + 1);
+		setState((S) => ({ ...S, score: S.score + 1 }));
 	}, []);
 
 	const onGameOver = useCallback(() => {
-		console.log('game over');
+		setState((S) => ({ ...S, over: true }));
 	}, []);
 
 	const onCameraZoomOuted = useCallback(() => {
@@ -41,10 +39,9 @@ const WebGL = memo(() => {
 		setState((S) => ({ ...S, steps: GameSteps.didFadeIn }));
 	}, []);
 
-	// TODO => CountDown
-	// const onGameCountDown = useCallback((message) => {
-	// 	setContext({ type: ACTION.modal, state: { enabled: true, body: `倒數${message}秒開始` } });
-	// }, []);
+	const onGameCountDown = useCallback((time) => {
+		setState((S) => ({ ...S, countdown: time }));
+	}, []);
 
 	const onJoyStickMove = useCallback((property) => {
 		gl.current?.controller?.moveJoystick(property);
@@ -61,8 +58,7 @@ const WebGL = memo(() => {
 				onModulesLoaded,
 				onGameOver,
 				onCameraZoomOuted,
-				// TODO => CountDown
-				// onGameCountDown,
+				onGameCountDown,
 			});
 			gl.current = GLOBAL_WEBGL;
 		} else {
@@ -79,11 +75,13 @@ const WebGL = memo(() => {
 	}, []);
 
 	return (
-		<div className='h-full w-full'>
+		<div className='h-full w-full -mt-[134px] lg:-mt-[80px]'>
 			<div ref={ref} className='h-full w-full' />
+			{state.steps === GameSteps.didFadeIn && <Score />}
 			{device && state.steps === GameSteps.didFadeIn && (
 				<Joystick onJoyStickMove={onJoyStickMove} onJoyStickStop={onJoyStickStop} />
 			)}
+			{countdown !== false && <CountDown />}
 		</div>
 	);
 });

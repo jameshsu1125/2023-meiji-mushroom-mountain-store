@@ -1,7 +1,7 @@
 @import url('../../settings/config.less');
 
 .RegularButton {
-	height: 100px;
+	height: 80px;
 	background: rgb(102, 51, 51);
 	background: linear-gradient(0deg, rgba(102, 51, 51, 1) 50%, rgba(125, 85, 46, 1) 50.1%);
 	box-shadow: 0 5px 0 rgba(0, 0, 0, 0.1);
@@ -14,7 +14,7 @@
 	}
 
 	& > div:nth-child(1) {
-		@apply flex w-4/6 items-center justify-end pr-5 text-3xl font-medium tracking-wider;
+		@apply flex w-4/6 items-center justify-end pr-5 text-2xl font-medium tracking-wider;
 
 		& > div {
 			@apply text-white;
@@ -30,7 +30,7 @@
 
 			mask-image: url(@img);
 			mask-size: 100%;
-			@scale: 0.55;
+			@scale: 0.4;
 			@img: './img/arrow.svg';
 
 			@apply rounded-full bg-white;
@@ -51,5 +51,22 @@
 @media only screen and (max-width: @MD) {
 	.RegularButton {
 		max-width: 500px;
+		height: 120px;
+
+		& > div:nth-child(1) {
+			@apply text-4xl;
+		}
+
+		& > div:nth-child(2) {
+			@apply flex w-2/6 items-center justify-start;
+
+			& > div {
+				width: image-width(@img) * @scale;
+				height: image-height(@img) * @scale;
+
+				@scale: 0.55;
+				@img: './img/arrow.svg';
+			}
+		}
 	}
 }

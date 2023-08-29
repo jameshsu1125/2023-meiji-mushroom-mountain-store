@@ -1,19 +1,16 @@
 @import url('../../settings/config.less');
 
 .Invoice {
-	overflow: hidden;
-	margin-top: 80px;
-	min-height: calc(~'100vh - 80px');
-	background-image: url('../landing/home/img/hill.png');
-	background-position: calc(~'50% - 120px') calc(~'100% + 300px');
-	background-size: 2400px;
-	background-repeat: no-repeat;
-	@apply w-full;
+	padding-top: 80px;
+
+	overscroll-behavior: none;
+	scroll-behavior: smooth;
+
+	@apply w-full select-none h-full;
 }
 
 @media only screen and (max-width: @MD) {
 	.Invoice {
-		margin-top: 134px;
-		min-height: calc(~'100vh - 134px');
+		padding-top: 134px;
 	}
 }

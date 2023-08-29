@@ -8,5 +8,16 @@
 	}
 }
 
+.minHeight {
+	min-height: calc(~'100vh - 80px - 3rem');
+}
+
+.RespondContainer {
+	@apply w-full;
+}
+
 @media only screen and (max-width: @SM) {
+	.minHeight {
+		min-height: calc(~'100vh - 134px - 3rem');
+	}
 }

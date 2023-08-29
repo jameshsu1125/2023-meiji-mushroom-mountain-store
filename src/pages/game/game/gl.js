@@ -12,7 +12,7 @@ export default class GL {
 	constructor({
 		onMushroomTrigger,
 		onModulesLoaded,
-		/* onGameCountDown, */
+		onGameCountDown,
 		onGameOver,
 		onCameraZoomOuted,
 	}) {
@@ -22,9 +22,7 @@ export default class GL {
 		this.onModulesLoaded = onModulesLoaded;
 		this.onGameOver = onGameOver;
 		this.onCameraZoomOuted = onCameraZoomOuted;
-
-		// TODO => CountDOwn
-		// this.onGameCountDown = onGameCountDown;
+		this.onGameCountDown = onGameCountDown;
 
 		this.collector = new Collector();
 		this.cubes = null;

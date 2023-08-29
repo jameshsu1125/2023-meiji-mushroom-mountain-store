@@ -1,0 +1,13 @@
+.CountDown {
+	@apply absolute top-0 w-full h-full flex justify-center items-center pointer-events-none z-10;
+
+	&::before {
+		content: '';
+		@apply absolute w-full h-full bg-backgroundColor opacity-50 top-0;
+	}
+
+	& > div {
+		font-size: 17rem;
+		@apply font-DIN text-white;
+	}
+}

@@ -4,8 +4,7 @@ import QueryString from 'lesca-url-parameters';
 import useTween, { Bezier } from 'lesca-use-tween';
 import { memo, useContext, useEffect, useState } from 'react';
 import RegularButton from '../../../components/button';
-import Container from '../../../components/container';
-import { RespondBreakPoint } from '../../../settings/config';
+import { RespondContainer } from '../../../components/container';
 import { TRANSITION } from '../../../settings/constant';
 import { InvoiceContext, InvoicePage } from '../config';
 import './index.less';
@@ -33,25 +32,15 @@ const Image = ({ transition }) => {
 const InvoiceSubmitted = memo(() => {
 	const [, setState] = useContext(InvoiceContext);
 	const [transition, setTransition] = useState(TRANSITION.unset);
-	const [maxWidth, setMaxWidth] = useState({ maxWidth: '1024px' });
+
 	useEffect(() => {
 		Click.addPreventExcept('.InvoiceSubmitted');
-		const resize = () => {
-			const { innerWidth } = window;
-
-			if (innerWidth > RespondBreakPoint.md) {
-				setMaxWidth({ maxWidth: '500px' });
-			} else setMaxWidth({ maxWidth: '1024px' });
-		};
-		resize();
-		window.addEventListener('resize', resize);
-		return () => window.removeEventListener('resize', resize);
 	}, []);
 
 	return (
 		<OnloadProvider onload={() => setTransition(TRANSITION.fadeIn)}>
 			<div className='InvoiceSubmitted'>
-				<Container {...{ ...maxWidth }}>
+				<RespondContainer>
 					<div className='w-full space-y-36 py-28'>
 						<div className='flex w-full flex-col items-center justify-center space-y-10'>
 							<Image transition={transition} />
@@ -78,7 +67,7 @@ const InvoiceSubmitted = memo(() => {
 							</RegularButton>
 						</div>
 					</div>
-				</Container>
+				</RespondContainer>
 			</div>
 		</OnloadProvider>
 	);

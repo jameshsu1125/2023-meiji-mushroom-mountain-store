@@ -3,6 +3,7 @@ import Section from '../../components/section';
 import Symbols from '../../components/symbols';
 import { InvoiceContext, InvoicePage, InvoiceState } from './config';
 import './index.less';
+import Scrollable from '../../components/scrollable';
 
 const Invoice = memo(() => {
 	const value = useState(InvoiceState);
@@ -25,8 +26,10 @@ const Invoice = memo(() => {
 
 	return (
 		<div className='Invoice'>
-			<Symbols />
-			<InvoiceContext.Provider value={value}>{Pages}</InvoiceContext.Provider>
+			<Scrollable>
+				<Symbols />
+				<InvoiceContext.Provider value={value}>{Pages}</InvoiceContext.Provider>
+			</Scrollable>
 		</div>
 	);
 });

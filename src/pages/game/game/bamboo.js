@@ -15,7 +15,7 @@ export default class Bamboo {
 		this.model = null;
 		this.body = null;
 
-		this.serial = gameRule.startCountDown;
+		this.serial = gameRule.startCountDown + 1;
 		this.countdownSerial = 0;
 		this.enabled = true;
 		this.isTween = false;
