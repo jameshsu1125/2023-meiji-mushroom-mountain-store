@@ -1,7 +1,7 @@
 import useTween from 'lesca-use-tween';
 import { memo, useContext, useEffect, useMemo } from 'react';
 import { GameContext } from '../config';
-import './countdown1.less';
+import './countdown.less';
 
 const Countdown = memo(() => {
 	const [state, setState] = useContext(GameContext);
