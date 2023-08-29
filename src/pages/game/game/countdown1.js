@@ -1,9 +1,9 @@
 import useTween from 'lesca-use-tween';
 import { memo, useContext, useEffect, useMemo } from 'react';
 import { GameContext } from '../config';
-import './countDown.less';
+import './countdown1.less';
 
-const CountDown = memo(() => {
+const Countdown = memo(() => {
 	const [state, setState] = useContext(GameContext);
 	const { countdown } = state;
 
@@ -41,9 +41,9 @@ const CountDown = memo(() => {
 	}, [countdown]);
 
 	return (
-		<div className='CountDown'>
+		<div className='Countdown'>
 			<div style={style}>{currentCount}</div>
 		</div>
 	);
 });
-export default CountDown;
+export default Countdown;
