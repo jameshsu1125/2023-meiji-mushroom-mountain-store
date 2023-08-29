@@ -30,7 +30,7 @@ const Picture = ({ steps, setState }) => {
 					<div className='w-full'>
 						<RegularButton
 							maxWidth='100%'
-							width={window.innerWidth >= RespondBreakPoint.md ? '160px' : '190px'}
+							width={window.innerWidth >= RespondBreakPoint.md ? '160px' : '200px'}
 							onClick={() => {
 								setState((S) => ({ ...S, page: GamePage.intro }));
 							}}
@@ -47,7 +47,7 @@ const Picture = ({ steps, setState }) => {
 					<div className='w-full'>
 						<RegularButton
 							maxWidth='100%'
-							width={window.innerWidth >= RespondBreakPoint.md ? '160px' : '190px'}
+							width={window.innerWidth >= RespondBreakPoint.md ? '160px' : '200px'}
 							onClick={() => {
 								setState((S) => ({ ...S, page: GamePage.game }));
 							}}

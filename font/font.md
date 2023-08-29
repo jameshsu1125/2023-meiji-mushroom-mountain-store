@@ -25,6 +25,8 @@ Copyright Taiwan Meiji Food Co., Ltd. All Right Reserved.
 搶收菇菇的重任就交給你啦！
 點擊鍵盤
 朵
+你總共採了
+填單抽回饋禮
 ```
 
 ### bold
@@ -210,4 +212,12 @@ LINE POINTS 100點
 菇菇山開園大豐收～快忙翻啦（暈）
 熱血的你，一起來幫菇太郎採收菇菇吧！
 還有機會帶走豪華回饋禮噢～
+```
+
+### DIN
+
+```text
+GAME
+OVER
+0987654321GO!
 ```

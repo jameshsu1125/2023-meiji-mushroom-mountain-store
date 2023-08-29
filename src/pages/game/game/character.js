@@ -5,7 +5,7 @@ import * as CANNON from 'cannon-es';
 import GlbLoader from 'lesca-glb-loader';
 import * as THREE from 'three';
 import { CubeSize, ModelSize, bambooSize, gameRule } from './config';
-import Avatar from './models/character.glb';
+import Avatar from './models/character3.glb';
 import { CONTROL_MODE } from '../../../settings/constant';
 
 export default class Character {
@@ -56,7 +56,7 @@ export default class Character {
 
 	wave() {
 		if (this.isOut) return;
-		const keyName = 'wavehand';
+		const keyName = 'wave';
 		this.doActionByName(keyName);
 	}
 

@@ -21,10 +21,8 @@ const Countdown = memo(() => {
 							{
 								duration: 500,
 								onEnd: () => {
-									if (countdown === 0) {
-										setTimeout(() => {
-											setState((S) => ({ ...S, countdown: false }));
-										}, 500);
+									if (countdown <= 0) {
+										setTimeout(() => setState((S) => ({ ...S, countdown: false })), 500);
 									}
 								},
 							},

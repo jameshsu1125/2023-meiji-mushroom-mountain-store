@@ -68,6 +68,7 @@ export const gameRule = {
 		cloneData.index = index;
 		return cloneData;
 	}),
+	gameOverStayDuration: 2000,
 };
 
 export const ControlsDefaultProps = {

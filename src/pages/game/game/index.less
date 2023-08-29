@@ -1,0 +1,17 @@
+@import url('../../../settings/config.less');
+
+.WebGL {
+	margin-top: -80px;
+	background-image: url('../../landing/home/img/hill.png');
+	background-position: calc(~'50% - 120px') calc(~'100% + 300px');
+	background-size: 2400px;
+	background-repeat: no-repeat;
+
+	@apply w-full h-screen overflow-hidden relative;
+}
+
+@media only screen and (max-width: @MD) {
+	.WebGL {
+		margin-top: -134px;
+	}
+}

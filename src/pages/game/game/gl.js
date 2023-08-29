@@ -7,6 +7,7 @@ import { ControlsDefaultProps, webglConfig } from './config';
 import Controller from './controller';
 import Cubes from './cubes';
 import Mushroom from './mushroom';
+// import Cloud from './cloud';
 
 export default class GL {
 	constructor({
@@ -51,6 +52,7 @@ export default class GL {
 		this.addBamboo();
 		this.addCubes(onGameOver);
 		this.addCharacter(onMushroomTrigger, onGameOver);
+		// this.addCloud();
 
 		const onWindowResize = () => {
 			const { camera, renderer } = this.webgl;
@@ -134,6 +136,13 @@ export default class GL {
 			onload: this.onGLBLoaded,
 		});
 	}
+
+	// addCloud() {
+	// 	this.cloud = new Cloud({
+	// 		webgl: this.webgl,
+	// 		onload: this.onGLBLoaded,
+	// 	});
+	// }
 
 	addCubes(onGameOver) {
 		this.cubes = new Cubes({

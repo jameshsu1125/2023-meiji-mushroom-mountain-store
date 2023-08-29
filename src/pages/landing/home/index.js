@@ -75,12 +75,12 @@ const Home = memo(() => {
 									onClick={() => {
 										window.location.href = MenuState.data[1].page;
 									}}
-									width='140px'
+									width='160px'
 								>
 									玩遊戲
 								</RegularButton>
 								<RegularButton
-									width='140px'
+									width='160px'
 									onClick={() => {
 										window.location.href = MenuState.data[2].page;
 									}}

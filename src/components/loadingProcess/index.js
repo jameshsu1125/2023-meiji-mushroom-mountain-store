@@ -12,7 +12,7 @@ const LoadingProcess = memo(() => {
 	const data = context[ACTION.loadingProcess];
 
 	return (
-		<div className='LoadingProcess fixed top-0 z-50 flex h-full w-full flex-col items-center justify-center space-y-3'>
+		<div className='LoadingProcess fixed top-0 z-40 flex h-full w-full flex-col items-center justify-center space-y-3'>
 			<Background />
 			<div className='character' />
 			<div className='dots'>

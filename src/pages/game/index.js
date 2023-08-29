@@ -22,7 +22,14 @@ const Game = memo(() => {
 
 	return (
 		<GameContext.Provider value={value}>
-			<div className='Game'>{Pages}</div>
+			<div className='Game'>
+				<div className='symbols'>
+					{[...new Array(3).keys()].map((index) => (
+						<div key={`cloud${index}`} />
+					))}
+				</div>
+				{Pages}
+			</div>
 		</GameContext.Provider>
 	);
 });
