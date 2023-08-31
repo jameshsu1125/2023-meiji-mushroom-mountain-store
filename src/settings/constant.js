@@ -42,7 +42,7 @@ export const CONTROL_MODE = {
 
 export const USER_GENDER = {
 	先生: 100,
-	小姐: 100,
+	小姐: 200,
 };
 
 export const USER_AGE = {

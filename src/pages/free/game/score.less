@@ -1,0 +1,61 @@
+@import url('../../../settings/config.less');
+
+.Score {
+	top: 80px;
+	margin-top: 70px;
+	@apply absolute w-full;
+
+	.board {
+		height: 80px;
+		background: rgb(102, 51, 51);
+		background: linear-gradient(0deg, rgba(102, 51, 51, 1) 50%, rgba(125, 85, 46, 1) 50.1%);
+		box-shadow: 0 5px 0 rgba(0, 0, 0, 0.1);
+		transition: 0.05s;
+
+		@apply relative z-10 flex w-full flex-row justify-end rounded-3xl border-2 border-white;
+
+		& > div {
+			@apply pointer-events-none h-full text-4xl text-white;
+		}
+
+		& > div:nth-child(1) {
+			width: 45%;
+			@apply relative flex items-center justify-center font-DIN tracking-wider;
+		}
+
+		& > div:nth-child(2) {
+			@apply flex w-2/6 items-center justify-center font-MiMedium;
+		}
+
+		&::before {
+			top: 50%;
+			left: -50px;
+			margin-top: 0 - image-height(@img) * @scale * 0.5;
+			width: image-width(@img) * @scale;
+			height: image-height(@img) * @scale;
+			background-image: url(@img);
+			background-size: 100%;
+			content: '';
+
+			@scale: 0.7;
+			@img: './img/mushroom.png';
+			@apply absolute;
+		}
+	}
+}
+
+@media only screen and (max-width: @MD) {
+	.Score {
+		top: 134px;
+
+		.board {
+			max-width: 500px;
+			height: 120px;
+
+			& > div {
+				font-size: 3.5rem;
+				line-height: 1;
+			}
+		}
+	}
+}

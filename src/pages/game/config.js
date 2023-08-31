@@ -5,12 +5,13 @@ export const GamePage = {
 	home: '/home',
 	intro: '/intro',
 	game: '/game',
+	result: '/result',
 	form: '/form',
 	submitted: '/submitted',
 };
 export const GameState = {
 	steps: GameSteps.unset,
-	page: GamePage.game,
+	page: GamePage.home,
 	score: 0,
 	countdown: false,
 	over: false,

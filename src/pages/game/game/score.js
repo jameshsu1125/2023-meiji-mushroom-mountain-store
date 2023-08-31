@@ -15,6 +15,7 @@ const Board = ({ transition, children }) => {
 	}, [transition]);
 	return (
 		<div style={style} className='board'>
+			<div className='ico' />
 			<div>
 				<div>{children}</div>
 			</div>
@@ -28,9 +29,22 @@ const Score = memo(() => {
 	const { score } = state;
 	const [transition, setTransition] = useState(TRANSITION.unset);
 
+	const [scale, setScale] = useState(1);
+
+	useEffect(() => {
+		const resize = () => {
+			const radio = window.innerHeight / 808;
+
+			setScale(radio > 1 ? 1 : radio);
+		};
+		resize();
+		window.addEventListener('resize', resize);
+		return () => window.removeEventListener('resize', resize);
+	}, []);
+
 	return (
 		<OnloadProvider onload={() => setTransition(TRANSITION.fadeIn)}>
-			<div className='Score'>
+			<div className='Score' style={{ transform: `scale(${scale})` }}>
 				<RespondContainer fitHeight={false}>
 					<div className='px-20 flex justify-center'>
 						<Board transition={transition}>{score}</Board>

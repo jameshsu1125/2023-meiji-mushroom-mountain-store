@@ -1,0 +1,51 @@
+.Over {
+	@apply absolute top-0 w-full h-full z-10 overflow-hidden;
+
+	&::before {
+		content: '';
+		@apply absolute w-full h-full bg-backgroundColor opacity-50 top-0;
+	}
+
+	& > div {
+		@apply relative w-full h-full flex flex-col justify-center items-center;
+		& > div {
+			color: red;
+			font-size: 13rem;
+			line-height: 12rem;
+			@apply font-DIN relative;
+		}
+
+		& > div:nth-child(2) {
+			position: relative;
+
+			&::before,
+			&::after {
+				position: absolute;
+				bottom: 12px;
+				content: '';
+			}
+
+			&::before {
+				right: -37px;
+				width: image-width(@img) * @scale;
+				height: image-height(@img) * @scale;
+				background-image: url(@img);
+				background-size: 100%;
+
+				@scale: 0.8;
+				@img: './img/tree-0.png';
+			}
+
+			&::after {
+				right: -83px;
+				width: image-width(@img) * @scale;
+				height: image-height(@img) * @scale;
+				background-image: url(@img);
+				background-size: 100%;
+
+				@scale: 0.8;
+				@img: './img/tree-1.png';
+			}
+		}
+	}
+}

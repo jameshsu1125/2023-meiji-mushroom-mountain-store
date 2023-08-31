@@ -26,8 +26,10 @@ const Desktop = memo(({ margin }) => {
 					</div>
 					<div className='flag-red'>
 						<div className='flag'>
-							<span>發票登錄</span>
-							專屬限定
+							<div>
+								<span>發票登錄</span>
+								專屬限定
+							</div>
 						</div>
 					</div>
 					<div className='products'>

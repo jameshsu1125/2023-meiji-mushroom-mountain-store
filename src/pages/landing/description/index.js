@@ -36,7 +36,9 @@ const Description = memo(() => {
 								獎品包含「LG StanbyME 閨蜜機、iPad Air 5 64G（Wifi）、老爺酒店住宿券、FUJIFILM
 								instax mini Evo相機、Vitantonio 多功能計時鬆餅機、象印
 								分離式鐵板燒烤組、明治香菇先生精美周邊、LINE
-								POINTS」多項好禮，登錄越多發票，中獎機率越高！ *指定盒裝品項：
+								POINTS」多項好禮，登錄越多發票，中獎機率越高！
+								<br />
+								*指定盒裝品項：
 								<br />
 								明治香菇造型餅乾全系列商品
 								<br />
@@ -143,7 +145,7 @@ const Description = memo(() => {
 							<div className='my-5'>
 								【注意事項】
 								<br />
-								<ol className='list-inside list-decimal indent-5'>
+								<ol className='list-inside list-decimal pl-5'>
 									<li>
 										中獎者若為未滿 20
 										歲之未成年人者，須獲得法定監護人同意及代為領取，並應檢附戶籍謄本並填具法定代理人資料。若中獎者不願先行繳納資料及本項稅金，視同放棄中獎資格，且不得異議。

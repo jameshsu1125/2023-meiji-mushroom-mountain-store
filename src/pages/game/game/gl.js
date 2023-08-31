@@ -1,5 +1,6 @@
 import Tweener, { Bezier } from 'lesca-object-tweener';
 import Webgl from 'lesca-webgl-threejs';
+import * as THREE from 'three';
 import Bamboo from './bamboo';
 import Character from './character';
 import Collector from './collector';
@@ -7,7 +8,6 @@ import { ControlsDefaultProps, webglConfig } from './config';
 import Controller from './controller';
 import Cubes from './cubes';
 import Mushroom from './mushroom';
-// import Cloud from './cloud';
 
 export default class GL {
 	constructor({
@@ -19,11 +19,13 @@ export default class GL {
 	}) {
 		this.webgl = new Webgl(webglConfig);
 		this.webgl.controls.controls.enablePan = false;
+		this.webgl.render.outputEncoding = THREE.sRGBEncoding;
 		this.onMushroomTrigger = onMushroomTrigger;
 		this.onModulesLoaded = onModulesLoaded;
 		this.onGameOver = onGameOver;
 		this.onCameraZoomOuted = onCameraZoomOuted;
 		this.onGameCountDown = onGameCountDown;
+		// this.debuger = this.webgl.addCannonDebuger();
 
 		this.collector = new Collector();
 		this.cubes = null;
@@ -31,6 +33,10 @@ export default class GL {
 		this.mushroom = null;
 		this.bamboo = null;
 		this.controller = null;
+		this.moreLights = [
+			{ x: 3, y: 1.5, z: 3 },
+			{ x: -3, y: 1.5, z: 3 },
+		];
 
 		// controls
 		this.lookTarget = { x: 0, y: 2, z: 0 };
@@ -52,7 +58,7 @@ export default class GL {
 		this.addBamboo();
 		this.addCubes(onGameOver);
 		this.addCharacter(onMushroomTrigger, onGameOver);
-		// this.addCloud();
+		this.addMoreLight();
 
 		const onWindowResize = () => {
 			const { camera, renderer } = this.webgl;
@@ -61,6 +67,20 @@ export default class GL {
 			renderer.renderer.setSize(window.innerWidth, window.innerHeight);
 		};
 		window.addEventListener('resize', onWindowResize, false);
+	}
+
+	addMoreLight() {
+		const { scene } = this.webgl;
+		this.moreLights.forEach((position) => {
+			const light = new THREE.PointLight(
+				webglConfig.light.point.color,
+				1,
+				webglConfig.light.point.distance,
+			);
+			light.position.set(position.x, position.y, position.z);
+			light.castShadow = false;
+			scene.add(light);
+		});
 	}
 
 	start(dom) {
@@ -137,23 +157,16 @@ export default class GL {
 		});
 	}
 
-	// addCloud() {
-	// 	this.cloud = new Cloud({
-	// 		webgl: this.webgl,
-	// 		onload: this.onGLBLoaded,
-	// 	});
-	// }
-
 	addCubes(onGameOver) {
 		this.cubes = new Cubes({
 			webgl: this.webgl,
 			onGameOver,
 			collector: this.collector,
 			onGameCountDown: this.onGameCountDown,
-			stopRender: () => {
+			stopRender: (dropIndex) => {
 				this.controller?.stop();
-				this.bamboo.stop();
-				this.mushroom.stop();
+				this.bamboo.stop(dropIndex);
+				this.mushroom.stop(dropIndex);
 				this.cubes.stop();
 				this.character.kickOut();
 			},
@@ -174,6 +187,7 @@ export default class GL {
 			}
 			if (this.controller) this.character.move(this.controller);
 			this.character.update();
+			// this.debuger?.update();
 		});
 		enterframe.play();
 	}

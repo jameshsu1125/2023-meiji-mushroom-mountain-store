@@ -36,21 +36,16 @@ const Character = ({ transition }) => {
 	return <div style={style} className='character' />;
 };
 
-const Button = ({ transition, setState }) => {
+const Button = ({ transition, children, delay = 0 }) => {
 	const [style, setStyle] = useTween({ opacity: 0, y: 50 });
 	useEffect(() => {
 		if (transition === TRANSITION.fadeIn) {
-			setStyle({ opacity: 1, y: 0 }, { duration: 700, delay: 1300 });
+			setStyle({ opacity: 1, y: 0 }, { duration: 700, delay: delay + 1300 });
 		}
 	}, [transition]);
 	return (
-		<div style={style} className='w-full flex justify-center px-28 mt-32 lg:px-10'>
-			<RegularButton
-				maxWidth='100%'
-				onClick={() => setState((S) => ({ ...S, page: GamePage.form }))}
-			>
-				填單抽回饋禮
-			</RegularButton>
+		<div style={style} className='w-full'>
+			{children}
 		</div>
 	);
 };
@@ -68,7 +63,26 @@ const Result = memo(() => {
 							<Character transition={transition} />
 							<Text transition={transition} />
 							<Score transition={transition} score={score} />
-							<Button transition={transition} setState={setState} />
+							<div className='w-full flex flex-col items-center justify-center px-28 mt-12 pb-10 lg:px-10 space-y-4'>
+								<Button transition={transition}>
+									<RegularButton
+										maxWidth='100%'
+										width='160px'
+										onClick={() => setState((S) => ({ ...S, page: GamePage.form }))}
+									>
+										填單抽回饋禮
+									</RegularButton>
+								</Button>
+								<Button transition={transition}>
+									<RegularButton
+										maxWidth='100%'
+										width='160px'
+										onClick={() => window.location.reload()}
+									>
+										再玩一次
+									</RegularButton>
+								</Button>
+							</div>
 						</div>
 					</RespondContainer>
 				</Scrollable>

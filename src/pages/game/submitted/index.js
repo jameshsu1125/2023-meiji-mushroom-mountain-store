@@ -4,10 +4,10 @@ import QueryString from 'lesca-url-parameters';
 import useTween, { Bezier } from 'lesca-use-tween';
 import { memo, useEffect, useState } from 'react';
 import RegularButton from '../../../components/button';
-import Container from '../../../components/container';
-import { RespondBreakPoint } from '../../../settings/config';
+import { RespondContainer } from '../../../components/container';
 import { TRANSITION } from '../../../settings/constant';
 import './index.less';
+import Scrollable from '../../../components/scrollable';
 
 const Text = ({ transition }) => {
 	const [style, setStyle] = useTween({ opacity: 0, y: 30 });
@@ -34,54 +34,46 @@ const Image = ({ transition }) => {
 const GameSubmitted = memo(() => {
 	// const [, setState] = useContext(GameContext);
 	const [transition, setTransition] = useState(TRANSITION.unset);
-	const [maxWidth, setMaxWidth] = useState({ maxWidth: '1024px' });
+
 	useEffect(() => {
 		Click.addPreventExcept('.GameSubmitted');
-		const resize = () => {
-			const { innerWidth } = window;
-
-			if (innerWidth > RespondBreakPoint.md) {
-				setMaxWidth({ maxWidth: '500px' });
-			} else setMaxWidth({ maxWidth: '1024px' });
-		};
-		resize();
-		window.addEventListener('resize', resize);
-		return () => window.removeEventListener('resize', resize);
 	}, []);
 
 	return (
 		<OnloadProvider onload={() => setTransition(TRANSITION.fadeIn)}>
-			<div className='GameSubmitted'>
-				<Container {...{ ...maxWidth }}>
-					<div className='w-full space-y-36 py-28'>
-						<div className='flex w-full flex-col items-center justify-center space-y-10'>
-							<Image transition={transition} />
-							<Text transition={transition} />
+			<Scrollable>
+				<div className='GameSubmitted'>
+					<RespondContainer>
+						<div className='w-full space-y-36 py-28'>
+							<div className='flex w-full flex-col items-center justify-center space-y-10'>
+								<Image transition={transition} />
+								<Text transition={transition} />
+							</div>
+							<div className='w-full space-y-5'>
+								<RegularButton
+									width='170px'
+									maxWidth='100%'
+									onClick={() => {
+										window.location.href = QueryString.root();
+									}}
+								>
+									回到主頁
+								</RegularButton>
+								<RegularButton
+									width='170px'
+									maxWidth='100%'
+									onClick={() => {
+										// setState((S) => ({ ...S, page: GamePage.home }));
+										window.location.reload();
+									}}
+								>
+									繼續採菇
+								</RegularButton>
+							</div>
 						</div>
-						<div className='w-full space-y-5'>
-							<RegularButton
-								width='170px'
-								maxWidth='100%'
-								onClick={() => {
-									window.location.href = QueryString.root();
-								}}
-							>
-								回到主頁
-							</RegularButton>
-							<RegularButton
-								width='170px'
-								maxWidth='100%'
-								onClick={() => {
-									// setState((S) => ({ ...S, page: GamePage.home }));
-									window.location.reload();
-								}}
-							>
-								繼續採菇
-							</RegularButton>
-						</div>
-					</div>
-				</Container>
-			</div>
+					</RespondContainer>
+				</div>
+			</Scrollable>
 		</OnloadProvider>
 	);
 });

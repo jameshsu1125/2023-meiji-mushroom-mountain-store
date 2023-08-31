@@ -20,15 +20,15 @@ export default class Character {
 		this.mixer = null;
 		this.actions = {};
 		this.actionName = 'idle';
-		this.delta = 0.03;
-		this.speed = 0.08;
+		this.delta = 0.03 * 0.8;
+		this.speed = 0.08 * 0.8;
 		this.isOut = false;
 		this.moveable = true;
 		this.bounce = true;
 
 		this.property = {
 			size: CubeSize,
-			position: { x: 0, y: CubeSize - 0.4, z: 0 },
+			position: { x: 0, y: CubeSize - 0.5, z: 0 },
 			correction: { x: 0, y: -0.38, z: 0 },
 		};
 
@@ -58,6 +58,16 @@ export default class Character {
 		if (this.isOut) return;
 		const keyName = 'wave';
 		this.doActionByName(keyName);
+
+		const onActionEnd = () => {
+			this.stand();
+			this.actions[this.actionName].loop = THREE.LoopRepeat;
+			Object.keys(this.actions).forEach((key) => {
+				this.actions[key].loop = THREE.LoopRepeat;
+			});
+		};
+		this.actions[this.actionName].loop = THREE.LoopOnce;
+		this.actions[this.actionName]._mixer.addEventListener('finished', onActionEnd);
 	}
 
 	walk() {
@@ -83,12 +93,6 @@ export default class Character {
 		if (this.actionName) this.actions[this.actionName].stop();
 		this.actions[keyName].play();
 		this.actionName = keyName;
-		const onActionEnd = () => {
-			this.stand();
-			this.actions[this.actionName].loop = THREE.LoopRepeat;
-		};
-		this.actions[this.actionName].loop = THREE.LoopOnce;
-		this.actions[this.actionName]._mixer.addEventListener('finished', onActionEnd);
 	}
 
 	addPhysics() {
@@ -228,7 +232,6 @@ export default class Character {
 			this.stop();
 			return;
 		}
-
 		if (this.isOut || !this.moveable) return;
 		if (!this.body && !this.model) return;
 
@@ -249,6 +252,7 @@ export default class Character {
 
 	kickOut() {
 		this.body.velocity.y = -10;
+		this.setMoveable(false);
 	}
 
 	update() {

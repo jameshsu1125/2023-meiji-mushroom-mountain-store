@@ -2,13 +2,7 @@
 
 .GameForm {
 	overflow: hidden;
-	margin-top: 80px;
-	min-height: calc(~'100vh - 80px');
-	background-image: url('../../landing/home/img/hill.png');
-	background-position: calc(~'50% - 120px') calc(~'100% + 300px');
-	background-size: 2400px;
-	background-repeat: no-repeat;
-	@apply w-full;
+	@apply w-full h-full;
 
 	.title {
 		padding-bottom: (unit(image-height(@img) / unit(image-width(@img))) * 100%);
@@ -45,12 +39,5 @@
 			content: '*';
 			@apply text-secondary;
 		}
-	}
-}
-
-@media only screen and (max-width: @MD) {
-	.GameForm {
-		margin-top: 134px;
-		min-height: calc(~'100vh - 134px');
 	}
 }

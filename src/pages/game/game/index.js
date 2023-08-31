@@ -1,10 +1,12 @@
 import UserAgent from 'lesca-user-agent';
 import { memo, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { GameContext, GamePage, GameSteps } from '../config';
-import CountDown from './countDown';
+import Countdown from './countdown';
 import GL from './gl';
 import Joystick from './joystick';
+import Over from './over';
 import Score from './score';
+import './index.less';
 
 let GLOBAL_WEBGL;
 
@@ -13,13 +15,8 @@ const WebGL = memo(() => {
 	const gl = useRef();
 
 	const [state, setState] = useContext(GameContext);
-	const { score, countdown, over, page } = state;
+	const { countdown, over, page } = state;
 	const [device, setDevice] = useState(UserAgent.get() === 'mobile');
-
-	useEffect(() => {
-		if (score) console.log(score);
-		if (over) console.log(over);
-	}, [score, over]);
 
 	const onModulesLoaded = useCallback(() => {
 		setState((S) => ({ ...S, steps: GameSteps.modelLoaded }));
@@ -75,13 +72,14 @@ const WebGL = memo(() => {
 	}, []);
 
 	return (
-		<div className='h-full w-full -mt-[134px] lg:-mt-[80px]'>
+		<div className='WebGL'>
 			<div ref={ref} className='h-full w-full' />
 			{state.steps === GameSteps.didFadeIn && <Score />}
 			{device && state.steps === GameSteps.didFadeIn && (
 				<Joystick onJoyStickMove={onJoyStickMove} onJoyStickStop={onJoyStickStop} />
 			)}
-			{countdown !== false && <CountDown />}
+			{countdown !== false && <Countdown />}
+			{over && <Over />}
 		</div>
 	);
 });

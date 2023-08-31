@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { CameraType } from 'lesca-webgl-threejs/lib/types';
 import { RespondBreakPoint } from '../../../settings/config';
+import { shuffleArray } from './misc';
 
 export const webglConfig = {
 	camera: { fov: 50, far: 75, type: CameraType.perspective },
@@ -27,15 +28,15 @@ export const webglConfig = {
 	},
 	light: {
 		ambient: {
-			color: 0xc8dbf4,
-			intensity: 1,
+			color: 0xffff51,
+			intensity: 0.6,
 		},
 		point: {
-			color: 0xf4c8c8,
-			intensity: 0.9,
+			color: 0xffffff,
+			intensity: 0.1,
 			distance: 100,
 			decay: 0.5,
-			position: { x: 0, y: 8, z: 0 },
+			position: { x: 2, y: 10, z: 0 },
 		},
 		shadowMapSize: 1024,
 		debug: true,
@@ -43,7 +44,7 @@ export const webglConfig = {
 	renderer: {
 		alpha: true,
 		shadowType: THREE.PCFSoftShadowMap,
-		exposure: 1,
+		exposure: 0.9,
 	},
 	physics: true,
 	stats: false,
@@ -55,6 +56,8 @@ export const ModelSize = 0.6;
 export const mushroomSize = 1;
 export const bambooSize = 1;
 
+const currentArray = shuffleArray([...new Array(9).keys()].map((index) => (index + 1) % 9));
+
 export const cubeData = { number: 0, index: 0, hasItem: '', drop: false };
 export const gameRule = {
 	startCountDown: 3,
@@ -64,7 +67,10 @@ export const gameRule = {
 	cubes: [...new Array(9).keys()].map((index) => {
 		const cloneData = { ...cubeData };
 		if (index === 4) cloneData.number = 5 + Math.floor(Math.random() * 5);
-		else cloneData.number = 2 + Math.floor(Math.random() * 8);
+		else {
+			cloneData.number =
+				currentArray[index] <= 0 ? 5 + Math.floor(Math.random() * 5) : currentArray[index];
+		}
 		cloneData.index = index;
 		return cloneData;
 	}),

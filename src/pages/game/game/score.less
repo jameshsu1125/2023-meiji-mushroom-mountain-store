@@ -3,6 +3,7 @@
 .Score {
 	top: 80px;
 	margin-top: 70px;
+	transform-origin: center -130px;
 	@apply absolute w-full;
 
 	.board {
@@ -14,20 +15,20 @@
 
 		@apply relative z-10 flex w-full flex-row justify-end rounded-3xl border-2 border-white;
 
-		& > div {
+		& > div:not(.ico) {
 			@apply pointer-events-none h-full text-4xl text-white;
 		}
 
-		& > div:nth-child(1) {
+		& > div:nth-child(2) {
 			width: 45%;
 			@apply relative flex items-center justify-center font-DIN tracking-wider;
 		}
 
-		& > div:nth-child(2) {
+		& > div:nth-child(3) {
 			@apply flex w-2/6 items-center justify-center font-MiMedium;
 		}
 
-		&::before {
+		& > .ico {
 			top: 50%;
 			left: -50px;
 			margin-top: 0 - image-height(@img) * @scale * 0.5;
@@ -52,7 +53,7 @@
 			max-width: 500px;
 			height: 120px;
 
-			& > div {
+			& > div:not(.ico) {
 				font-size: 3.5rem;
 				line-height: 1;
 			}

@@ -23,6 +23,7 @@ export default class Cubes {
 		this.serial = gameRule.startCountDown + 1;
 		this.countdownSerial = false;
 		this.enabled = true;
+		this.currentDropIndex = 999;
 
 		this.boxes = [];
 		this.bodies = [];
@@ -67,6 +68,7 @@ export default class Cubes {
 		topTexture.wrapS = THREE.RepeatWrapping;
 		topTexture.wrapT = THREE.RepeatWrapping;
 		topTexture.repeat.set(1, 1 / 10);
+		topTexture.encoding = THREE.sRGBEncoding;
 
 		const { scene } = this.webgl;
 		const group = new THREE.Group();
@@ -75,7 +77,7 @@ export default class Cubes {
 		const sideMaterial = new THREE.MeshStandardMaterial({ map: sideTexture });
 
 		this.boxes = [...new Array(this.numberOfBox).keys()].map((i) => {
-			const topMaterial = new THREE.MeshStandardMaterial({ map: topTexture.clone() });
+			const topMaterial = new THREE.MeshBasicMaterial({ map: topTexture.clone() });
 			topMaterial.map.offset.set(0, (1 / 10) * (this.numberOfBox - this.collector.data[i].number));
 			const mesh = new THREE.Mesh(geometry, [
 				sideMaterial,
@@ -103,6 +105,18 @@ export default class Cubes {
 		group.position.z = 0 - 1 * (this.size + this.gapSize);
 		scene.add(group);
 		this.onload(this.name);
+		this.addShadow();
+	}
+
+	addShadow() {
+		const { scene } = this.webgl;
+		const geometry = new THREE.BoxBufferGeometry(6.22, 6.22, 0.01);
+		const material = new THREE.ShadowMaterial({ opacity: 0.2 });
+		const ground = new THREE.Mesh(geometry, material);
+		ground.position.y = 1;
+		ground.rotation.x = Math.PI / 2;
+		ground.receiveShadow = true;
+		scene.add(ground);
 	}
 
 	visible(v) {
@@ -113,11 +127,16 @@ export default class Cubes {
 
 	stop() {
 		this.enabled = false;
+		this.bodies.forEach((body, index) => {
+			if (index !== this.currentDropIndex) {
+				body.position.y = -100;
+			}
+		});
 	}
 
 	out() {
 		this.onGameOver();
-		this.stopRender();
+		this.stopRender(this.currentDropIndex);
 	}
 
 	updateMaterial() {
@@ -137,6 +156,7 @@ export default class Cubes {
 					body.updateMassProperties();
 					body.type = CANNON.Body.DYNAMIC;
 					body.velocity.set(0, -10, 0);
+					this.currentDropIndex = i;
 					this.out();
 				} else {
 					this.collector.data[i].number = 10;
@@ -179,11 +199,19 @@ export default class Cubes {
 					z: -this.size - this.gapSize,
 					y: 0,
 				};
-				box.position.copy({
-					x: position.x - correction.x,
-					y: position.y - correction.y,
-					z: position.z - correction.z,
-				});
+				if (this.enabled) {
+					box.position.copy({
+						x: position.x - correction.x,
+						y: position.y - correction.y,
+						z: position.z - correction.z,
+					});
+				} else if (index === this.currentDropIndex) {
+					box.position.copy({
+						x: position.x - correction.x,
+						y: position.y - correction.y,
+						z: position.z - correction.z,
+					});
+				}
 			});
 		}
 	}
