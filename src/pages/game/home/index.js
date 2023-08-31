@@ -1,3 +1,4 @@
+import Click from 'lesca-click';
 import OnloadProvider from 'lesca-react-onload';
 import useTween, { Bezier, TweenProvider } from 'lesca-use-tween';
 import { memo, useContext, useEffect, useState } from 'react';
@@ -110,14 +111,17 @@ const Title = ({ steps }) => {
 const GameHome = memo(() => {
 	const [state, setState] = useContext(GameContext);
 	const [, setContext] = useContext(Context);
+	const [instruct, setInstruct] = useState(false);
 
 	useEffect(() => {
 		if (state.steps === GameSteps.modelLoaded) {
 			setContext({ type: ACTION.loadingProcess, state: { enabled: false } });
+			setInstruct(true);
 		}
 	}, [state.steps]);
 
 	useEffect(() => {
+		Click.addPreventExcept('.GameHome');
 		setContext({ type: ACTION.loadingProcess, state: { enabled: true } });
 	}, []);
 
@@ -128,7 +132,7 @@ const GameHome = memo(() => {
 			}}
 		>
 			<div className='GameHome'>
-				<Scrollable>
+				<Scrollable instruct={instruct}>
 					<RespondContainer>
 						<div className='w-full flex justify-center'>
 							<Title steps={state.steps} />

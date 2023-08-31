@@ -67,16 +67,16 @@ const Result = memo(() => {
 								<Button transition={transition}>
 									<RegularButton
 										maxWidth='100%'
-										width='160px'
+										width='235px'
 										onClick={() => setState((S) => ({ ...S, page: GamePage.form }))}
 									>
 										填單抽回饋禮
 									</RegularButton>
 								</Button>
-								<Button transition={transition}>
+								<Button transition={transition} delay={100}>
 									<RegularButton
 										maxWidth='100%'
-										width='160px'
+										width='235px'
 										onClick={() => window.location.reload()}
 									>
 										再玩一次

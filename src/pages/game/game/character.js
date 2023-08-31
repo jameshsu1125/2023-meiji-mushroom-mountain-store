@@ -191,10 +191,11 @@ export default class Character {
 	}
 
 	moveByJoystick({ angle }) {
-		this.rotate(angle - Math.PI);
+		const currentAngle = angle + (Math.PI / 180) * 30;
+		this.rotate(currentAngle - Math.PI);
 		this.walk();
-		const x = Math.cos(angle - Math.PI / 2) * 12 * this.speed;
-		const z = Math.sin(angle + Math.PI / 2) * 12 * this.speed;
+		const x = Math.cos(currentAngle - Math.PI / 2) * 12 * this.speed;
+		const z = Math.sin(currentAngle + Math.PI / 2) * 12 * this.speed;
 
 		return { x, z };
 	}

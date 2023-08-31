@@ -1,13 +1,14 @@
+import Click from 'lesca-click';
 import OnloadProvider from 'lesca-react-onload';
-import { memo, useContext, useMemo, useState } from 'react';
+import { memo, useContext, useEffect, useMemo, useState } from 'react';
 import { RespondContainer } from '../../../components/container';
 import Scrollable from '../../../components/scrollable';
 import { TRANSITION } from '../../../settings/constant';
 import { GameContext } from '../config';
 import { Info, IntroState } from './config';
-import Steps from './steps';
-import './index.less';
 import IntroEnd from './end';
+import './index.less';
+import Steps from './steps';
 
 const Intro = memo(() => {
 	const [, setGameState] = useContext(GameContext);
@@ -15,6 +16,9 @@ const Intro = memo(() => {
 	const { step } = state;
 	const data = useMemo(() => Info[step], [step]);
 	const [transition, setTransition] = useState(TRANSITION.unset);
+	useEffect(() => {
+		Click.addPreventExcept('.Intro');
+	}, []);
 	return (
 		<OnloadProvider onload={() => setTransition(TRANSITION.fadeIn)}>
 			<div className='Intro'>
