@@ -1,25 +1,28 @@
 import { memo, useEffect, useRef } from 'react';
 import './index.less';
+import UserAgent from 'lesca-user-agent';
 
 let timeout;
 
 const Scrollable = memo(({ children, instruct = false }) => {
 	const ref = useRef();
 	useEffect(() => {
-		if (instruct) {
-			timeout = setTimeout(() => {
-				ref.current?.scrollTo(0, 800);
-				setTimeout(() => {
-					ref.current?.scrollTo(0, 0);
-				}, 800);
-			}, 2000);
+		if (UserAgent.get() === 'desktop') {
+			if (instruct) {
+				timeout = setTimeout(() => {
+					ref.current?.scrollTo(0, 800);
+					setTimeout(() => {
+						ref.current?.scrollTo(0, 0);
+					}, 800);
+				}, 2000);
 
-			const scroll = () => {
-				clearTimeout(timeout);
-				ref.current.removeEventListener('scroll', scroll);
-			};
+				const scroll = () => {
+					clearTimeout(timeout);
+					ref.current.removeEventListener('scroll', scroll);
+				};
 
-			ref.current.addEventListener('scroll', scroll);
+				ref.current.addEventListener('scroll', scroll);
+			}
 		}
 		return () => clearTimeout(timeout);
 	}, [instruct]);

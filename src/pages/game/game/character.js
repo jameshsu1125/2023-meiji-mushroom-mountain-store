@@ -20,8 +20,8 @@ export default class Character {
 		this.mixer = null;
 		this.actions = {};
 		this.actionName = 'idle';
-		this.delta = 0.03 * 0.8;
-		this.speed = 0.08 * 0.8;
+		this.delta = 0.03 * 1;
+		this.speed = 0.08 * 1;
 		this.isOut = false;
 		this.moveable = true;
 		this.bounce = true;
@@ -123,7 +123,7 @@ export default class Character {
 			if (name === 'bamboo') {
 				const { position: p1 } = event.body;
 				const { position: p2 } = target;
-				const forceScale = (-5 / bambooSize) * 0.6;
+				const forceScale = (-5 / bambooSize) * 0.3;
 
 				const dx = p1.x - p2.x > 0 ? 1 : -1;
 				const dz = p1.z - p2.z > 0 ? 1 : -1;
@@ -247,6 +247,12 @@ export default class Character {
 		clonePosition.z -= z * this.speed;
 		this.body.velocity.x = 0;
 		this.body.velocity.z = 0;
+
+		if (clonePosition.x > 3) clonePosition.x = 3;
+		if (clonePosition.x < -3) clonePosition.x = -3;
+		if (clonePosition.z < -3) clonePosition.z = -3;
+		if (clonePosition.z > 3) clonePosition.z = 3;
+
 		this.body.position.x = clonePosition.x;
 		this.body.position.z = clonePosition.z;
 	}
