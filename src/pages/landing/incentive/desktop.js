@@ -55,9 +55,11 @@ const Desktop = memo(({ margin }) => {
 					</div>
 					<div className='note'>*老爺酒店聯合住宿券使用辦法以活動網站為準</div>
 					<div className='flag-brown'>
-						<div className='flag'>
-							<span>玩遊戲/登發票</span>
-							都可抽
+						<div>
+							<div className='flag'>
+								<span>玩遊戲/登發票</span>
+								都可抽
+							</div>
 						</div>
 					</div>
 					<div className='products'>

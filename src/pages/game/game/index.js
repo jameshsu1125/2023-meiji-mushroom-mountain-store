@@ -1,12 +1,12 @@
 import UserAgent from 'lesca-user-agent';
 import { memo, useCallback, useContext, useEffect, useRef, useState } from 'react';
-import { GameContext, GamePage, GameSteps } from '../config';
+import { GameContext, GamePage, GameSteps, SoundsTrackName } from '../config';
 import Countdown from './countdown';
 import GL from './gl';
+import './index.less';
 import Joystick from './joystick';
 import Over from './over';
 import Score from './score';
-import './index.less';
 
 let GLOBAL_WEBGL;
 
@@ -15,7 +15,7 @@ const WebGL = memo(() => {
 	const gl = useRef();
 
 	const [state, setState] = useContext(GameContext);
-	const { countdown, over, page } = state;
+	const { countdown, over, page, soundsLoaded, sounds } = state;
 	const [device, setDevice] = useState(UserAgent.get() === 'mobile');
 
 	const onModulesLoaded = useCallback(() => {
@@ -25,10 +25,17 @@ const WebGL = memo(() => {
 
 	const onMushroomTrigger = useCallback(() => {
 		setState((S) => ({ ...S, score: S.score + 1 }));
+		sounds.tracks[SoundsTrackName.mushroom].sound.play();
+	}, []);
+
+	const onBambooTrigger = useCallback(() => {
+		sounds.tracks[SoundsTrackName.bamboo].sound.play();
 	}, []);
 
 	const onGameOver = useCallback(() => {
 		setState((S) => ({ ...S, over: true }));
+		sounds.tracks[SoundsTrackName.move].sound.stop();
+		sounds.tracks[SoundsTrackName.falling].sound.play();
 	}, []);
 
 	const onCameraZoomOuted = useCallback(() => {
@@ -49,9 +56,13 @@ const WebGL = memo(() => {
 	}, []);
 
 	useEffect(() => {
+		const resize = () => setDevice(UserAgent.get() === 'mobile');
+		window.addEventListener('resize', resize);
+
 		if (!GLOBAL_WEBGL) {
 			GLOBAL_WEBGL = new GL({
 				onMushroomTrigger,
+				onBambooTrigger,
 				onModulesLoaded,
 				onGameOver,
 				onCameraZoomOuted,
@@ -62,14 +73,19 @@ const WebGL = memo(() => {
 			gl.current = GLOBAL_WEBGL;
 			gl.current.start(ref.current);
 		}
-		return () => gl.current.webgl?.enterframe.stop();
+
+		return () => {
+			gl.current.webgl?.enterframe.stop();
+			window.removeEventListener('resize', resize);
+		};
 	}, []);
 
 	useEffect(() => {
-		const resize = () => setDevice(UserAgent.get() === 'mobile');
-		window.addEventListener('resize', resize);
-		return () => window.removeEventListener('resize', resize);
-	}, []);
+		if (soundsLoaded) {
+			sounds.tracks[SoundsTrackName.bgm].sound.play();
+			gl.current.setCharacterMoveSoundTrack(sounds.tracks[SoundsTrackName.move].sound);
+		}
+	}, [soundsLoaded]);
 
 	return (
 		<div className='WebGL'>
@@ -80,6 +96,7 @@ const WebGL = memo(() => {
 			)}
 			{countdown !== false && <Countdown />}
 			{over && <Over />}
+			{soundsLoaded && <div className='absolute top-0 left-0'>icon</div>}
 		</div>
 	);
 });

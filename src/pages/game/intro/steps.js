@@ -26,7 +26,12 @@ const Steps = memo(({ transition, step, data, setState, setTransition, setGameSt
 					index={1}
 					transition={transition}
 					onClick={() => {
-						setGameState((S) => ({ ...S, page: GamePage.game }));
+						setGameState((S) => {
+							S.sounds?.loadSound?.(() => {
+								setGameState((SS) => ({ ...SS, soundsLoaded: true }));
+							});
+							return { ...S, page: GamePage.game };
+						});
 					}}
 				>
 					開始採菇

@@ -8,24 +8,25 @@ import Symbols from '../../../components/symbols';
 import Terms from '../../../components/terms';
 import useSaveUserInfo from '../../../hooks/useSaveUserInfo';
 import { USER_INFO_NAME } from '../../../settings/constant';
-import { GameContext, GamePage } from '../config';
+import { GameContext, GamePage, SoundsTrackName } from '../config';
 import './index.less';
 import Scrollable from '../../../components/scrollable';
 
 const GameForm = memo(() => {
 	const termRef = useRef();
 	const [res, fetcher] = useSaveUserInfo();
-	const [, setState] = useContext(GameContext);
+	const [state, setState] = useContext(GameContext);
+	const { sounds } = state;
 	const labelName = useMemo(() => Object.entries(USER_INFO_NAME).map((e) => e), []);
 	useEffect(() => {
 		if (res) {
-			console.log(res);
 			if (res.Result) setState((S) => ({ ...S, page: GamePage.submitted }));
 			else alert(res.MessageList.join(', '));
 		}
 	}, [res]);
 
 	useEffect(() => {
+		sounds.tracks[SoundsTrackName.bgm].sound.fade(sounds.sounds[0].volume, 0, 1000);
 		Click.addPreventExcept('.GameForm');
 	}, []);
 

@@ -20,6 +20,7 @@ const Picture = ({ steps, setState }) => {
 			setStyle({ opacity: 1, y: 0 }, { duration: 500, delay: 800, onEnd: () => setDidFaded(true) });
 		}
 	}, [steps]);
+
 	return (
 		<div style={style} className='pic'>
 			<div>
@@ -50,7 +51,12 @@ const Picture = ({ steps, setState }) => {
 							maxWidth='100%'
 							width={window.innerWidth >= RespondBreakPoint.md ? '160px' : '200px'}
 							onClick={() => {
-								setState((S) => ({ ...S, page: GamePage.game }));
+								setState((S) => {
+									S.sounds?.loadSound?.(() => {
+										setState((SS) => ({ ...SS, soundsLoaded: true }));
+									});
+									return { ...S, page: GamePage.game };
+								});
 							}}
 						>
 							開始採菇
@@ -143,7 +149,6 @@ const GameHome = memo(() => {
 							<Picture steps={state.steps} setState={setState} />
 						</div>
 					</RespondContainer>
-
 					{state.steps === GameSteps.loaded && <WebGL />}
 				</Scrollable>
 			</div>

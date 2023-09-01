@@ -12,6 +12,7 @@ import Mushroom from './mushroom';
 export default class GL {
 	constructor({
 		onMushroomTrigger,
+		onBambooTrigger,
 		onModulesLoaded,
 		onGameCountDown,
 		onGameOver,
@@ -57,7 +58,7 @@ export default class GL {
 		this.addMushroom();
 		this.addBamboo();
 		this.addCubes(onGameOver);
-		this.addCharacter(onMushroomTrigger, onGameOver);
+		this.addCharacter(onMushroomTrigger, onBambooTrigger, onGameOver);
 		this.addMoreLight();
 
 		const onWindowResize = () => {
@@ -67,6 +68,10 @@ export default class GL {
 			renderer.renderer.setSize(window.innerWidth, window.innerHeight);
 		};
 		window.addEventListener('resize', onWindowResize, false);
+	}
+
+	setCharacterMoveSoundTrack(track) {
+		this.character.setCharacterMoveSoundTrack(track);
 	}
 
 	addMoreLight() {
@@ -141,10 +146,11 @@ export default class GL {
 		});
 	}
 
-	addCharacter(onMushroomTrigger, onGameOver) {
+	addCharacter(onMushroomTrigger, onBambooTrigger, onGameOver) {
 		this.character = new Character({
 			webgl: this.webgl,
 			onMushroomTrigger,
+			onBambooTrigger,
 			onGameOver,
 			collector: this.collector,
 			stopRender: () => {

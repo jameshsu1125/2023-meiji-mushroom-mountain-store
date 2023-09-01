@@ -45,7 +45,18 @@ const Button = ({ transition, setTransition }) => {
 		} else if (transition === TRANSITION.fadeOut) {
 			setStyle(
 				{ opacity: 0, y: 50 },
-				{ duration: 500, delay: 50, onEnd: () => setState((S) => ({ ...S, page: GamePage.game })) },
+				{
+					duration: 500,
+					delay: 50,
+					onEnd: () => {
+						setState((S) => {
+							S.sounds?.loadSound?.(() => {
+								setState((SS) => ({ ...SS, soundsLoaded: true }));
+							});
+							return { ...S, page: GamePage.game };
+						});
+					},
+				},
 			);
 		}
 	}, [transition]);

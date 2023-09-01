@@ -167,7 +167,7 @@ export default class Bamboo {
 
 	update(delta) {
 		if (this.model) {
-			const currentDelta = easingDelta(delta, 'linear');
+			const currentDelta = easingDelta(delta);
 			if (currentDelta > this.serial) {
 				this.serial = currentDelta;
 				this.setPositionByIndex();

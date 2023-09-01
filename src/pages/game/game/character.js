@@ -9,9 +9,18 @@ import Avatar from './models/character3.glb';
 import { CONTROL_MODE } from '../../../settings/constant';
 
 export default class Character {
-	constructor({ webgl, onMushroomTrigger, onGameOver, collector, stopRender, onload }) {
+	constructor({
+		webgl,
+		onMushroomTrigger,
+		onBambooTrigger,
+		onGameOver,
+		collector,
+		stopRender,
+		onload,
+	}) {
 		this.webgl = webgl;
 		this.onMushroomTrigger = onMushroomTrigger;
+		this.onBambooTrigger = onBambooTrigger;
 		this.onGameOver = onGameOver;
 		this.collector = collector;
 		this.stopRender = stopRender;
@@ -25,6 +34,8 @@ export default class Character {
 		this.isOut = false;
 		this.moveable = true;
 		this.bounce = true;
+		this.track = false;
+		this.trackID = false;
 
 		this.property = {
 			size: CubeSize,
@@ -39,6 +50,10 @@ export default class Character {
 		this.update();
 	}
 
+	setCharacterMoveSoundTrack(track) {
+		this.track = track;
+	}
+
 	setMoveable(bool) {
 		this.moveable = bool;
 		this.stop();
@@ -47,6 +62,7 @@ export default class Character {
 	stand() {
 		const keyName = 'idle';
 		this.doActionByName(keyName);
+		if (this.trackID) this.track?.pause(this.trackID);
 	}
 
 	down() {
@@ -74,12 +90,13 @@ export default class Character {
 		if (this.isOut) return;
 		const keyName = 'run';
 		this.doActionByName(keyName);
+		if (this.trackID) this.track?.play(this.trackID);
+		else this.trackID = this.track?.play();
 	}
 
 	stop() {
 		if (!this.model || this.isOut) return;
-		const keyName = 'idle';
-		this.doActionByName(keyName);
+		this.stand();
 	}
 
 	rotate(rotation = 0) {
@@ -135,6 +152,8 @@ export default class Character {
 
 				requestAnimationFrame(() => {
 					target.velocity.set(velocity.x, velocity.y, velocity.z);
+					if (this.trackID) this.track?.pause(this.trackID);
+					this.onBambooTrigger();
 				});
 			} else {
 				const { body } = event;
