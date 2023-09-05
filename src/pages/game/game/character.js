@@ -104,7 +104,12 @@ export default class Character {
 		this.moveable = true;
 
 		this.body.position.copy(this.property.position);
+		this.body.type = CANNON.Body.STATIC;
 		this.rotate(0);
+	}
+
+	replay() {
+		this.body.type = CANNON.Body.DYNAMIC;
 	}
 
 	rotate(rotation = 0) {
@@ -135,6 +140,8 @@ export default class Character {
 		const onCollide = (event) => {
 			const { name } = event.body;
 			const { target } = event;
+
+			console.log(name);
 
 			if (name.indexOf('box') >= 0) {
 				target.velocity.setZero();
