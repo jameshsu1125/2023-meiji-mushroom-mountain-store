@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import { gameRule } from './config';
+import { cubeData, currentArray, gameRule } from './config';
 
 export default class DataCollector {
 	constructor() {
@@ -11,7 +11,16 @@ export default class DataCollector {
 	}
 
 	reset() {
-		this.data = [...gameRule.cubes];
+		this.data = [...new Array(9).keys()].map((index) => {
+			const cloneData = { ...cubeData };
+			if (index === 4) cloneData.number = 5 + Math.floor(Math.random() * 5);
+			else {
+				cloneData.number =
+					currentArray[index] <= 0 ? 5 + Math.floor(Math.random() * 5) : currentArray[index];
+			}
+			cloneData.index = index;
+			return cloneData;
+		});
 		this.stay = 4;
 		this.mushroomData = [];
 	}

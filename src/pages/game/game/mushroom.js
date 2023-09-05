@@ -52,6 +52,28 @@ export default class Mushroom {
 		if (dropIndex) this.currentDrop = dropIndex;
 	}
 
+	reset() {
+		this.serial = gameRule.startCountDown + 1;
+		this.enabled = true;
+		this.offset = { x: 0, z: 0 };
+		this.currentDrop = 999;
+
+		this.bodies.forEach((body, index) => {
+			body.position.y = -100;
+			body.position.x = 0;
+			body.position.z = 0;
+			const model = this.models[index];
+			const { position } = this.bodies[index];
+			const { correction } = this.property;
+			model.position.copy({
+				x: position.x + correction.x,
+				y: position.y + correction.y,
+				z: position.z + correction.z,
+			});
+			body.type = CANNON.Body.STATIC;
+		});
+	}
+
 	init() {
 		const { y, size, gap, offset } = this.property;
 		this.position = [...new Array(9).keys()].map((i) => {
@@ -135,6 +157,7 @@ export default class Mushroom {
 			16,
 			1,
 		);
+
 		this.bodies = [...new Array(gameRule.maxMushroom).keys()].map(() => {
 			const body = new CANNON.Body({
 				mass: 100,
@@ -145,6 +168,7 @@ export default class Mushroom {
 				collisionFilterMask: gameRule.collideGroup.box | gameRule.collideGroup.character,
 			});
 			body.name = this.name;
+			body.position.y = -100;
 			world.addBody(body);
 			return body;
 		});
@@ -164,6 +188,7 @@ export default class Mushroom {
 
 					this.models = [...new Array(gameRule.maxMushroom).keys()].map(() => {
 						const currentModel = model.clone();
+						currentModel.position.y = -5;
 						this.webgl.scene.add(currentModel);
 						return currentModel;
 					});

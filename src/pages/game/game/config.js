@@ -6,7 +6,7 @@ import { shuffleArray } from './misc';
 export const webglConfig = {
 	camera: { fov: 50, far: 75, type: CameraType.perspective },
 	sky: {
-		enabled: false,
+		enabled: true,
 		turbidity: 3.6,
 		rayleigh: 0.165,
 		mieCoefficient: 0,
@@ -56,7 +56,7 @@ export const ModelSize = 0.6;
 export const mushroomSize = 1;
 export const bambooSize = 1;
 
-const currentArray = shuffleArray([...new Array(9).keys()].map((index) => (index + 1) % 9));
+export const currentArray = shuffleArray([...new Array(9).keys()].map((index) => (index + 1) % 9));
 
 export const cubeData = { number: 0, index: 0, hasItem: '', drop: false };
 export const gameRule = {

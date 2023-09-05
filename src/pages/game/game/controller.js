@@ -15,9 +15,13 @@ export default class Controller {
 	}
 
 	reset() {
-		this.enabled = true;
+		this.enabled = false;
 		this.mode = CONTROL_MODE.unset;
 		this.direct = {};
+	}
+
+	replay() {
+		this.enabled = true;
 	}
 
 	stop() {

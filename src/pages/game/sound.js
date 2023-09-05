@@ -10,7 +10,7 @@ export default class Sounds {
 		this.onLoaded = () => {};
 		this.tracks = {};
 		this.sounds = [
-			{ url: bgm, name: SoundsTrackName.bgm, loop: true, volume: 0 },
+			{ url: bgm, name: SoundsTrackName.bgm, loop: true, volume: 0.5 },
 			{ url: bamboo, name: SoundsTrackName.bamboo, loop: false, volume: 1 },
 			{ url: mushroom, name: SoundsTrackName.mushroom, loop: false, volume: 1 },
 			{ url: falling, name: SoundsTrackName.falling, loop: false, volume: 1 },

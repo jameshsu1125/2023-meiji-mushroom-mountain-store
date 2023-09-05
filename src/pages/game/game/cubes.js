@@ -32,7 +32,7 @@ export default class Cubes {
 		this.size = CubeSize;
 		this.gapSize = CubeGapSize;
 
-		this.addBoxes();
+		this.addTexture();
 	}
 
 	addPhysics({ col, row, i }) {
@@ -62,20 +62,26 @@ export default class Cubes {
 		this.bodies.push(body);
 	}
 
-	async addBoxes() {
-		const topTexture = await loadTexture(TopImage);
-		const sideTexture = await loadTexture(SizeImage);
-		topTexture.wrapS = THREE.RepeatWrapping;
-		topTexture.wrapT = THREE.RepeatWrapping;
-		topTexture.repeat.set(1, 1 / 10);
-		topTexture.encoding = THREE.sRGBEncoding;
+	async addTexture() {
+		this.topTexture = await loadTexture(TopImage);
+		this.sideTexture = await loadTexture(SizeImage);
 
+		this.topTexture.wrapS = THREE.RepeatWrapping;
+		this.topTexture.wrapT = THREE.RepeatWrapping;
+		this.topTexture.repeat.set(1, 1 / 10);
+		this.topTexture.encoding = THREE.sRGBEncoding;
+
+		this.addBox();
+	}
+
+	addBox(replay) {
+		const { sideTexture, topTexture } = this;
 		const { scene } = this.webgl;
 		const group = new THREE.Group();
 		const geometry = new THREE.BoxGeometry(this.size, this.size, this.size);
 		const underSideMaterial = new THREE.MeshLambertMaterial({ color: 0x190e05 });
 		const sideMaterial = new THREE.MeshStandardMaterial({ map: sideTexture });
-
+		this.bodies = [];
 		this.boxes = [...new Array(this.numberOfBox).keys()].map((i) => {
 			const topMaterial = new THREE.MeshBasicMaterial({ map: topTexture.clone() });
 			topMaterial.map.offset.set(0, (1 / 10) * (this.numberOfBox - this.collector.data[i].number));
@@ -96,6 +102,7 @@ export default class Cubes {
 			mesh.receiveShadow = true;
 			mesh.position.set(x, 0, z);
 			group.add(mesh);
+			group.name = 'boxes';
 
 			this.addPhysics({ col, row, i });
 			return mesh;
@@ -104,8 +111,10 @@ export default class Cubes {
 		group.position.x = 0 - 1 * (this.size + this.gapSize);
 		group.position.z = 0 - 1 * (this.size + this.gapSize);
 		scene.add(group);
-		this.onload(this.name);
-		this.addShadow();
+		if (!replay) {
+			this.onload(this.name);
+			this.addShadow();
+		}
 	}
 
 	addShadow() {
@@ -135,7 +144,7 @@ export default class Cubes {
 	}
 
 	out() {
-		this.onGameOver();
+		this.onGameOver('cube');
 		this.stopRender(this.currentDropIndex);
 	}
 
@@ -145,28 +154,11 @@ export default class Cubes {
 		this.enabled = true;
 		this.currentDropIndex = 999;
 
-		this.boxes.forEach((mesh, i) => {
-			const col = Math.floor(i / 3);
-			const row = i % 3;
-			const x = (i % 3) * this.size + row * this.gapSize;
-			const z = Math.floor(i / 3) * this.size + col * this.gapSize;
-			mesh.position.set(x, 0, z);
+		const { scene } = this.webgl;
 
-			const body = this.bodies[i];
-			const offsetX = 1 * (this.size + this.gapSize);
-			const offsetZ = 1 * (this.size + this.gapSize);
-			const x1 = (i % 3) * this.size + row * this.gapSize - offsetX;
-			const z1 = Math.floor(i / 3) * this.size + col * this.gapSize - offsetZ;
-			body.position.set(x1, 0, z1);
-			body.type = CANNON.Body.STATIC;
-		});
-		this.setMaterialByIndex();
-	}
-
-	replay() {
-		this.bodies.forEach((body) => {
-			body.type = CANNON.Body.DYNAMIC;
-		});
+		const selectedObject = scene.getObjectByName('boxes');
+		scene.remove(selectedObject);
+		this.addBox(true);
 	}
 
 	updateMaterial() {
@@ -182,8 +174,7 @@ export default class Cubes {
 				if (stay === i) {
 					this.collector.data[i].drop = true;
 					const body = this.bodies[i];
-					body.mass = 10000;
-					body.updateMassProperties();
+
 					body.type = CANNON.Body.DYNAMIC;
 					body.velocity.set(0, -10, 0);
 					this.currentDropIndex = i;
@@ -235,6 +226,7 @@ export default class Cubes {
 						y: position.y - correction.y,
 						z: position.z - correction.z,
 					});
+					box.quaternion.copy(body.quaternion);
 				} else if (index === this.currentDropIndex) {
 					box.position.copy({
 						x: position.x - correction.x,

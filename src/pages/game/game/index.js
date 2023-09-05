@@ -33,14 +33,15 @@ const WebGL = memo(() => {
 		sounds.tracks[SoundsTrackName.bamboo].sound.play();
 	}, []);
 
-	const onGameOver = useCallback(() => {
+	const onGameOver = useCallback((t) => {
+		console.log(t);
 		setState((S) => ({ ...S, over: true }));
 		sounds.tracks[SoundsTrackName.move]?.sound.stop();
 		sounds.tracks[SoundsTrackName.falling]?.sound.play();
 	}, []);
 
 	const onCameraZoomOuted = useCallback(() => {
-		gl.current.begin(replay);
+		gl.current.begin();
 		setState((S) => ({ ...S, steps: GameSteps.didFadeIn }));
 	}, []);
 

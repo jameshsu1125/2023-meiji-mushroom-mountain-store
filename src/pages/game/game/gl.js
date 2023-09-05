@@ -26,7 +26,7 @@ export default class GL {
 		this.onGameOver = onGameOver;
 		this.onCameraZoomOuted = onCameraZoomOuted;
 		this.onGameCountDown = onGameCountDown;
-		this.debuger = this.webgl.addCannonDebuger();
+		// this.debuger = this.webgl.addCannonDebuger();
 
 		this.collector = new Collector();
 		this.cubes = null;
@@ -94,7 +94,12 @@ export default class GL {
 	reset() {
 		this.gameStart = false;
 		this.firstDelta = false;
+
+		this.controller.reset();
 		this.collector.reset();
+
+		this.mushroom.reset();
+		this.bamboo.reset();
 		this.cubes.reset();
 		this.character.reset();
 		this.webgl.controls.set(this.from);
@@ -138,11 +143,7 @@ export default class GL {
 
 	begin(replay) {
 		if (!replay) this.addController();
-		else {
-			this.controller.reset();
-			this.character.replay();
-			this.cubes.replay();
-		}
+		else this.controller.replay();
 
 		this.gameStart = true;
 	}
@@ -214,12 +215,11 @@ export default class GL {
 					this.mushroom?.update(currentDelta);
 					this.cubes?.update(currentDelta);
 				}
-				if (this.controller) this.character.move(this.controller);
+				if (this.controller?.enabled) this.character.move(this.controller);
 				this.character.update();
-				this.debuger?.update();
+				// this.debuger?.update();
 			});
-		}
-		enterframe.reset();
+		} else enterframe.reset();
 		enterframe.play();
 	}
 }

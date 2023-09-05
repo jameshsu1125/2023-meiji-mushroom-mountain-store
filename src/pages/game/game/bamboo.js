@@ -58,6 +58,17 @@ export default class Bamboo {
 		this.tweener = new Tweener();
 	}
 
+	reset() {
+		this.currentIndex = null;
+		this.serial = gameRule.startCountDown + 1;
+		this.currentDrop = 999;
+		this.countdownSerial = 0;
+		this.enabled = true;
+		this.isTween = false;
+		this.offset = { x: 0, z: 0 };
+		this.hide();
+	}
+
 	stop(dropIndex) {
 		if (dropIndex) this.currentDrop = dropIndex;
 		this.enabled = false;
@@ -65,6 +76,7 @@ export default class Bamboo {
 
 	hide() {
 		this.body.position.set(10, 10, 10);
+		this.body.type = CANNON.Body.STATIC;
 		this.model.visible = false;
 	}
 
@@ -106,9 +118,11 @@ export default class Bamboo {
 					this.isTween = true;
 					this.body.type = CANNON.Body.STATIC;
 					this.body.velocity.setZero();
+					this.body.quaternion.setFromEuler(0, 0, 0);
 				},
 				onUpdate: (e) => {
 					this.body.position.copy({ x: e.x + this.offset.x, y: e.y, z: e.z + this.offset.z });
+					this.body.quaternion.setFromEuler(0, 0, 0);
 				},
 				onComplete: (e) => {
 					this.body.position.copy({ x: e.x + this.offset.x, y: e.y, z: e.z + this.offset.z });

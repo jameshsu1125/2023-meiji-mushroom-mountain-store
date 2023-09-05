@@ -39,7 +39,7 @@ export default class Character {
 
 		this.property = {
 			size: CubeSize,
-			position: { x: 0, y: 1.6, z: 0 },
+			position: { x: 0, y: 1.5, z: 0 },
 			correction: { x: 0, y: -0.38, z: 0 },
 		};
 
@@ -103,13 +103,11 @@ export default class Character {
 		this.isOut = false;
 		this.moveable = true;
 
-		this.body.position.copy(this.property.position);
-		this.body.type = CANNON.Body.STATIC;
+		// this.body.position.copy(this.property.position);
 		this.rotate(0);
-	}
-
-	replay() {
-		this.body.type = CANNON.Body.DYNAMIC;
+		this.addPhysics();
+		this.wave();
+		this.update();
 	}
 
 	rotate(rotation = 0) {
@@ -129,7 +127,7 @@ export default class Character {
 		const { world, physicsImpactMaterial } = this.webgl;
 		const cylinderShape = new CANNON.Sphere(0.4);
 		this.body = new CANNON.Body({
-			mass: 100,
+			mass: 1,
 			shape: cylinderShape,
 			type: CANNON.Body.DYNAMIC,
 			material: physicsImpactMaterial,
@@ -140,8 +138,6 @@ export default class Character {
 		const onCollide = (event) => {
 			const { name } = event.body;
 			const { target } = event;
-
-			console.log(name);
 
 			if (name.indexOf('box') >= 0) {
 				target.velocity.setZero();
@@ -307,14 +303,14 @@ export default class Character {
 			this.model.position.copy(p);
 			this.mixer?.update(this.delta);
 
-			if (this.isOut) return;
-			if (position.y <= 1.25) {
-				this.isOut = true;
-				this.down();
-				this.collector.stay = 999;
-				this.stopRender();
-				this.onGameOver();
-			}
+			// if (this.isOut) return;
+			// if (position.y <= 1.25) {
+			// 	this.isOut = true;
+			// 	this.down();
+			// 	this.collector.stay = 999;
+			// 	this.stopRender();
+			// 	this.onGameOver('character');
+			// }
 		}
 	}
 }
