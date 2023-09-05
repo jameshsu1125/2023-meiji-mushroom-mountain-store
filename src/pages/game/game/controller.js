@@ -14,6 +14,12 @@ export default class Controller {
 		this.addEvents();
 	}
 
+	reset() {
+		this.enabled = true;
+		this.mode = CONTROL_MODE.unset;
+		this.direct = {};
+	}
+
 	stop() {
 		this.enabled = false;
 	}

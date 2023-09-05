@@ -6,7 +6,7 @@ import GlbLoader from 'lesca-glb-loader';
 import Tweener from 'lesca-object-tweener';
 import { CubeGapSize, CubeSize, gameRule, mushroomSize } from './config';
 import { easingDelta, shuffleArray } from './misc';
-import mushroom from './models/mushroom.glb';
+import mushroom from './models/mushroom2.glb';
 
 export default class Mushroom {
 	constructor({ webgl, collector, onload }) {
@@ -20,8 +20,13 @@ export default class Mushroom {
 		this.enabled = true;
 		this.offset = { x: 0, z: 0 };
 
+		this.once = false;
+
+		this.currentDrop = 999;
+
 		this.getOffset = () => {
-			const paddingCubeSize = CubeSize * 0.8;
+			// const paddingCubeSize = CubeSize * 0.8;
+			const paddingCubeSize = CubeSize * 0.6;
 			this.offset.x = 0 - paddingCubeSize * 0.5 + Math.random() * paddingCubeSize;
 			this.offset.z = 0 - paddingCubeSize * 0.5 + Math.random() * paddingCubeSize;
 		};
@@ -44,8 +49,9 @@ export default class Mushroom {
 		this.randomPosition = () => Math.floor(Math.random() * 9);
 	}
 
-	stop() {
+	stop(dropIndex) {
 		this.enabled = false;
+		if (dropIndex) this.currentDrop = dropIndex;
 	}
 
 	init() {
@@ -63,6 +69,9 @@ export default class Mushroom {
 	setPositionByIndex() {
 		if (!this.enabled) return;
 
+		if (this.once) return;
+		this.once = true;
+
 		const [aliveCubes] = shuffleArray(
 			this.collector.data.filter((e, i) => {
 				if (!e.drop) {
@@ -75,7 +84,8 @@ export default class Mushroom {
 		);
 
 		if (!aliveCubes) return;
-		const { index } = aliveCubes;
+		// const { index } = aliveCubes;
+		const index = 4;
 		this.collector.setMushroomIndex(index);
 		const position = this.position[index];
 		position.y = this.property.y - 0.6;
@@ -83,6 +93,7 @@ export default class Mushroom {
 		const tweener = this.tweeners[targetIndex];
 		const body = this.bodies[targetIndex];
 		const model = this.models[targetIndex];
+		model.dropIndex = index;
 
 		if (!tweener) return;
 		tweener
@@ -101,7 +112,9 @@ export default class Mushroom {
 					body.type = CANNON.Body.STATIC;
 					body.collisionFilterMask = gameRule.collideGroup.unset;
 					body.velocity.setZero();
-					// body.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), 0);
+					model.rotation.y = Math.random(Math.PI * 2);
+					model.rotation.x = (Math.PI / 180) * (-10 + Math.random() * 20);
+					model.rotation.z = (Math.PI / 180) * (-10 + Math.random() * 20);
 				},
 				onUpdate: (e) => {
 					body.position.copy({ x: e.x + this.offset.x, y: e.y, z: e.z + this.offset.z });
@@ -176,6 +189,7 @@ export default class Mushroom {
 	update(delta) {
 		if (this.models.length !== 0) {
 			const currentDelta = easingDelta(delta, 'linear');
+
 			if (currentDelta > this.serial) {
 				this.serial = currentDelta;
 				this.setPositionByIndex();
@@ -185,11 +199,19 @@ export default class Mushroom {
 				const model = this.models[index];
 				const { position } = this.bodies[index];
 				const { correction } = this.property;
-				model.position.copy({
-					x: position.x + correction.x,
-					y: position.y + correction.y,
-					z: position.z + correction.z,
-				});
+				if (this.enabled) {
+					model.position.copy({
+						x: position.x + correction.x,
+						y: position.y + correction.y,
+						z: position.z + correction.z,
+					});
+				} else if (this.currentDrop === model.dropIndex) {
+					model.position.copy({
+						x: position.x + correction.x,
+						y: position.y + correction.y,
+						z: position.z + correction.z,
+					});
+				}
 			});
 		}
 	}

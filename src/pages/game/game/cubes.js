@@ -139,6 +139,36 @@ export default class Cubes {
 		this.stopRender(this.currentDropIndex);
 	}
 
+	reset() {
+		this.serial = gameRule.startCountDown + 1;
+		this.countdownSerial = false;
+		this.enabled = true;
+		this.currentDropIndex = 999;
+
+		this.boxes.forEach((mesh, i) => {
+			const col = Math.floor(i / 3);
+			const row = i % 3;
+			const x = (i % 3) * this.size + row * this.gapSize;
+			const z = Math.floor(i / 3) * this.size + col * this.gapSize;
+			mesh.position.set(x, 0, z);
+
+			const body = this.bodies[i];
+			const offsetX = 1 * (this.size + this.gapSize);
+			const offsetZ = 1 * (this.size + this.gapSize);
+			const x1 = (i % 3) * this.size + row * this.gapSize - offsetX;
+			const z1 = Math.floor(i / 3) * this.size + col * this.gapSize - offsetZ;
+			body.position.set(x1, 0, z1);
+			body.type = CANNON.Body.STATIC;
+		});
+		this.setMaterialByIndex();
+	}
+
+	replay() {
+		this.bodies.forEach((body) => {
+			body.type = CANNON.Body.DYNAMIC;
+		});
+	}
+
 	updateMaterial() {
 		this.boxes.forEach((box, i) => {
 			const { map } = box.material[2];

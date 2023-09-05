@@ -28,13 +28,11 @@ const Score = memo(() => {
 	const [state] = useContext(GameContext);
 	const { score } = state;
 	const [transition, setTransition] = useState(TRANSITION.unset);
-
 	const [scale, setScale] = useState(1);
 
 	useEffect(() => {
 		const resize = () => {
 			const radio = window.innerHeight / 808;
-
 			setScale(radio > 1 ? 1 : radio);
 		};
 		resize();
@@ -45,8 +43,8 @@ const Score = memo(() => {
 	return (
 		<OnloadProvider onload={() => setTransition(TRANSITION.fadeIn)}>
 			<div className='Score' style={{ transform: `scale(${scale})` }}>
-				<RespondContainer fitHeight={false}>
-					<div className='px-20 flex justify-center'>
+				<RespondContainer maxWidth='500px' fitHeight={false}>
+					<div className='pl-20 flex justify-center flex-row items-center'>
 						<Board transition={transition}>{score}</Board>
 					</div>
 				</RespondContainer>

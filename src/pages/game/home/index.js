@@ -1,10 +1,9 @@
-import Click from 'lesca-click';
 import OnloadProvider from 'lesca-react-onload';
 import useTween, { Bezier, TweenProvider } from 'lesca-use-tween';
 import { memo, useContext, useEffect, useState } from 'react';
 import RegularButton from '../../../components/button';
 import { RespondContainer } from '../../../components/container';
-import Scrollable from '../../../components/scrollable';
+import useScale from '../../../hooks/useScale';
 import { Context, RespondBreakPoint } from '../../../settings/config';
 import { ACTION } from '../../../settings/constant';
 import { GameContext, GamePage, GameSteps } from '../config';
@@ -117,17 +116,15 @@ const Title = ({ steps }) => {
 const GameHome = memo(() => {
 	const [state, setState] = useContext(GameContext);
 	const [, setContext] = useContext(Context);
-	const [instruct, setInstruct] = useState(false);
+	const [scale] = useScale();
 
 	useEffect(() => {
 		if (state.steps === GameSteps.modelLoaded) {
 			setContext({ type: ACTION.loadingProcess, state: { enabled: false } });
-			setInstruct(true);
 		}
 	}, [state.steps]);
 
 	useEffect(() => {
-		Click.addPreventExcept('.GameHome');
 		setContext({ type: ACTION.loadingProcess, state: { enabled: true } });
 	}, []);
 
@@ -138,9 +135,12 @@ const GameHome = memo(() => {
 			}}
 		>
 			<div className='GameHome'>
-				<Scrollable instruct={instruct}>
-					<RespondContainer>
-						<div className='w-full flex justify-center'>
+				<RespondContainer>
+					<div
+						className='w-full'
+						style={{ transform: `scale(${scale})`, transformOrigin: 'center top' }}
+					>
+						<div className='w-full flex justify-center mt-5'>
 							<Title steps={state.steps} />
 						</div>
 						<div className='w-full flex flex-col justify-start items-center my-2'>
@@ -148,9 +148,9 @@ const GameHome = memo(() => {
 							<Subline steps={state.steps} />
 							<Picture steps={state.steps} setState={setState} />
 						</div>
-					</RespondContainer>
-					{state.steps === GameSteps.loaded && <WebGL />}
-				</Scrollable>
+					</div>
+				</RespondContainer>
+				{state.steps === GameSteps.loaded && <WebGL />}
 			</div>
 		</OnloadProvider>
 	);

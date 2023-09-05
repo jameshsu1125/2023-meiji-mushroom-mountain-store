@@ -1,4 +1,3 @@
-import * as dat from 'dat.gui';
 import Tweener, { Bezier } from 'lesca-object-tweener';
 import Webgl from 'lesca-webgl-threejs';
 import * as THREE from 'three';
@@ -13,6 +12,7 @@ import Mushroom from './mushroom';
 export default class GL {
 	constructor({
 		onMushroomTrigger,
+		onBambooTrigger,
 		onModulesLoaded,
 		onGameCountDown,
 		onGameOver,
@@ -21,16 +21,14 @@ export default class GL {
 		this.webgl = new Webgl(webglConfig);
 		this.webgl.controls.controls.enablePan = false;
 		this.webgl.render.outputEncoding = THREE.sRGBEncoding;
-		// this.webgl.render.outputEncoding = THREE.LinearEncoding;
 		this.onMushroomTrigger = onMushroomTrigger;
 		this.onModulesLoaded = onModulesLoaded;
 		this.onGameOver = onGameOver;
 		this.onCameraZoomOuted = onCameraZoomOuted;
 		this.onGameCountDown = onGameCountDown;
-		this.moreLights = [
-			{ x: 3, y: 1.5, z: 3 },
-			{ x: -3, y: 1.5, z: 3 },
-		];
+		console.log(this.webgl);
+		this.webgl.world.gravity.y = -8;
+		// this.debuger = this.webgl.addCannonDebuger();
 
 		this.collector = new Collector();
 		this.cubes = null;
@@ -38,9 +36,13 @@ export default class GL {
 		this.mushroom = null;
 		this.bamboo = null;
 		this.controller = null;
+		this.moreLights = [
+			{ x: 3, y: 1.5, z: 3 },
+			{ x: -3, y: 1.5, z: 3 },
+		];
 
 		// controls
-		this.lookTarget = { x: 0, y: 0, z: 0 };
+		this.lookTarget = { x: 0, y: 2, z: 0 };
 		this.webgl.controls.lookAt(this.lookTarget);
 
 		// loader
@@ -58,8 +60,7 @@ export default class GL {
 		this.addMushroom();
 		this.addBamboo();
 		this.addCubes(onGameOver);
-		this.addCharacter(onMushroomTrigger, onGameOver);
-		this.addGUI();
+		this.addCharacter(onMushroomTrigger, onBambooTrigger, onGameOver);
 		this.addMoreLight();
 
 		const onWindowResize = () => {
@@ -69,6 +70,10 @@ export default class GL {
 			renderer.renderer.setSize(window.innerWidth, window.innerHeight);
 		};
 		window.addEventListener('resize', onWindowResize, false);
+	}
+
+	setCharacterMoveSoundTrack(track) {
+		this.character.setCharacterMoveSoundTrack(track);
 	}
 
 	addMoreLight() {
@@ -82,51 +87,14 @@ export default class GL {
 			light.position.set(position.x, position.y, position.z);
 			light.castShadow = false;
 			scene.add(light);
-
-			// const helper = new THREE.PointLightHelper(light);
-			// scene.add(helper);
 		});
-	}
-
-	addGUI() {
-		const gui = new dat.GUI();
-		const ambientLight = gui.addFolder('全域光(無陰影)');
-		const { color } = this.webgl.scene.children[0];
-		color.intensity = webglConfig.light.ambient.intensity;
-
-		ambientLight.add(color, 'r', 0.0, 1.0, 0.1);
-		ambientLight.add(color, 'g', 0.0, 1.0, 0.1);
-		ambientLight.add(color, 'b', 0.0, 1.0, 0.1);
-		ambientLight.add(color, 'intensity', 0.1, 5, 0.1).onChange((v) => {
-			this.webgl.scene.children[0].intensity = v;
-		});
-
-		const pointLight = gui.addFolder('太陽光(有陰影)');
-		const { color: color2, position } = this.webgl.scene.children[1];
-		color2.intensity = webglConfig.light.point.intensity;
-
-		pointLight.add(color2, 'r', 0.0, 1.0, 0.1);
-		pointLight.add(color2, 'g', 0.0, 1.0, 0.1);
-		pointLight.add(color2, 'b', 0.0, 1.0, 0.1);
-		pointLight.add(color2, 'intensity', 0.1, 5, 0.1).onChange((v) => {
-			this.webgl.scene.children[1].intensity = v;
-		});
-
-		pointLight.add(position, 'x', -10.0, 10.0, 0.1);
-		pointLight.add(position, 'y', 0.0, 10.0, 0.1);
-		pointLight.add(position, 'z', -10.0, 10.0, 0.1);
-
-		const { render } = this.webgl;
-
-		ambientLight.add(render, 'toneMappingExposure', 0, 2, 0.1);
 	}
 
 	start(dom) {
 		dom.appendChild(this.webgl.render.domElement);
 		this.update();
 		this.character.wave();
-		this.begin();
-		// this.zoomOut();
+		this.zoomOut();
 	}
 
 	zoomOut() {
@@ -180,10 +148,11 @@ export default class GL {
 		});
 	}
 
-	addCharacter(onMushroomTrigger, onGameOver) {
+	addCharacter(onMushroomTrigger, onBambooTrigger, onGameOver) {
 		this.character = new Character({
 			webgl: this.webgl,
 			onMushroomTrigger,
+			onBambooTrigger,
 			onGameOver,
 			collector: this.collector,
 			stopRender: () => {
@@ -202,10 +171,10 @@ export default class GL {
 			onGameOver,
 			collector: this.collector,
 			onGameCountDown: this.onGameCountDown,
-			stopRender: () => {
+			stopRender: (dropIndex) => {
 				this.controller?.stop();
-				this.bamboo.stop();
-				this.mushroom.stop();
+				this.bamboo.stop(dropIndex);
+				this.mushroom.stop(dropIndex);
 				this.cubes.stop();
 				this.character.kickOut();
 			},
@@ -226,6 +195,7 @@ export default class GL {
 			}
 			if (this.controller) this.character.move(this.controller);
 			this.character.update();
+			// this.debuger?.update();
 		});
 		enterframe.play();
 	}

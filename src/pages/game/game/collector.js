@@ -10,6 +10,12 @@ export default class DataCollector {
 		this.mushroomData = [];
 	}
 
+	reset() {
+		this.data = [...gameRule.cubes];
+		this.stay = 4;
+		this.mushroomData = [];
+	}
+
 	setBambooIndex(index) {
 		this.data.forEach((item) => {
 			if (item.hasItem === this.bambooName) item.hasItem = '';

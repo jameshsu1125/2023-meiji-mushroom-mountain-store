@@ -39,7 +39,7 @@ export default class Character {
 
 		this.property = {
 			size: CubeSize,
-			position: { x: 0, y: CubeSize - 0.5, z: 0 },
+			position: { x: 0, y: 1.6, z: 0 },
 			correction: { x: 0, y: -0.38, z: 0 },
 		};
 
@@ -90,13 +90,21 @@ export default class Character {
 		if (this.isOut) return;
 		const keyName = 'run';
 		this.doActionByName(keyName);
-		if (this.trackID) this.track?.play(this.trackID);
-		else this.trackID = this.track?.play();
+		if (this.trackID) this.track?.play?.(this.trackID);
+		else this.trackID = this.track?.play?.();
 	}
 
 	stop() {
 		if (!this.model || this.isOut) return;
 		this.stand();
+	}
+
+	reset() {
+		this.isOut = false;
+		this.moveable = true;
+
+		this.body.position.copy(this.property.position);
+		this.rotate(0);
 	}
 
 	rotate(rotation = 0) {

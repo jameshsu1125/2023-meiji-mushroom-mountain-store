@@ -10,12 +10,13 @@ export default class Sounds {
 		this.onLoaded = () => {};
 		this.tracks = {};
 		this.sounds = [
-			{ url: bgm, name: SoundsTrackName.bgm, loop: true, volume: 0.5 },
+			{ url: bgm, name: SoundsTrackName.bgm, loop: true, volume: 0 },
 			{ url: bamboo, name: SoundsTrackName.bamboo, loop: false, volume: 1 },
 			{ url: mushroom, name: SoundsTrackName.mushroom, loop: false, volume: 1 },
 			{ url: falling, name: SoundsTrackName.falling, loop: false, volume: 1 },
 			{ url: move, name: SoundsTrackName.move, loop: true, volume: 1 },
 		];
+		this.isMute = false;
 	}
 
 	eachSoundLoad(name) {
@@ -42,5 +43,27 @@ export default class Sounds {
 				return [data.name, { sound, loaded: false }];
 			}),
 		);
+	}
+
+	mute() {
+		Object.values(this.tracks).forEach((item) => {
+			const { sound } = item;
+			sound.volume(0);
+		});
+	}
+
+	unmute() {
+		Object.entries(this.tracks).forEach((item) => {
+			const [name, data] = item;
+			const [track] = this.sounds.filter((each) => String(each.name) === name);
+			const { volume } = track;
+			data.sound.volume(volume);
+		});
+	}
+
+	switch() {
+		this.isMute = !this.isMute;
+		if (this.isMute) this.mute();
+		else this.unmute();
 	}
 }

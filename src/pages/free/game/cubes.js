@@ -23,6 +23,7 @@ export default class Cubes {
 		this.serial = gameRule.startCountDown + 1;
 		this.countdownSerial = false;
 		this.enabled = true;
+		this.currentDropIndex = 999;
 
 		this.boxes = [];
 		this.bodies = [];
@@ -76,10 +77,7 @@ export default class Cubes {
 		const sideMaterial = new THREE.MeshStandardMaterial({ map: sideTexture });
 
 		this.boxes = [...new Array(this.numberOfBox).keys()].map((i) => {
-			const topMaterial = new THREE.MeshBasicMaterial({
-				map: topTexture.clone(),
-				// color: 0x7cbd28,
-			});
+			const topMaterial = new THREE.MeshBasicMaterial({ map: topTexture.clone() });
 			topMaterial.map.offset.set(0, (1 / 10) * (this.numberOfBox - this.collector.data[i].number));
 			const mesh = new THREE.Mesh(geometry, [
 				sideMaterial,
@@ -113,13 +111,11 @@ export default class Cubes {
 	addShadow() {
 		const { scene } = this.webgl;
 		const geometry = new THREE.BoxBufferGeometry(6.22, 6.22, 0.01);
-		// const material = new THREE.MeshLambertMaterial({ color: 0xff0000 });
 		const material = new THREE.ShadowMaterial({ opacity: 0.2 });
 		const ground = new THREE.Mesh(geometry, material);
 		ground.position.y = 1;
 		ground.rotation.x = Math.PI / 2;
 		ground.receiveShadow = true;
-
 		scene.add(ground);
 	}
 
@@ -131,11 +127,16 @@ export default class Cubes {
 
 	stop() {
 		this.enabled = false;
+		this.bodies.forEach((body, index) => {
+			if (index !== this.currentDropIndex) {
+				body.position.y = -100;
+			}
+		});
 	}
 
 	out() {
 		this.onGameOver();
-		this.stopRender();
+		this.stopRender(this.currentDropIndex);
 	}
 
 	updateMaterial() {
@@ -147,19 +148,20 @@ export default class Cubes {
 			map.offset.setY(n / 10);
 
 			if (n === this.numberOfBox) {
-				// const { stay } = this.collector;
-				// if (stay === i) {
-				// 	this.collector.data[i].drop = true;
-				// 	const body = this.bodies[i];
-				// 	body.mass = 10000;
-				// 	body.updateMassProperties();
-				// 	body.type = CANNON.Body.DYNAMIC;
-				// 	body.velocity.set(0, -10, 0);
-				// 	this.out();
-				// } else {
-				this.collector.data[i].number = 10;
-				map.offset.setY(1);
-				// }
+				const { stay } = this.collector;
+				if (stay === i) {
+					this.collector.data[i].drop = true;
+					const body = this.bodies[i];
+					body.mass = 10000;
+					body.updateMassProperties();
+					body.type = CANNON.Body.DYNAMIC;
+					body.velocity.set(0, -0.1, 0);
+					this.currentDropIndex = i;
+					this.out();
+				} else {
+					this.collector.data[i].number = 10;
+					map.offset.setY(1);
+				}
 			}
 		});
 	}
@@ -197,11 +199,19 @@ export default class Cubes {
 					z: -this.size - this.gapSize,
 					y: 0,
 				};
-				box.position.copy({
-					x: position.x - correction.x,
-					y: position.y - correction.y,
-					z: position.z - correction.z,
-				});
+				if (this.enabled) {
+					box.position.copy({
+						x: position.x - correction.x,
+						y: position.y - correction.y,
+						z: position.z - correction.z,
+					});
+				} else if (index === this.currentDropIndex) {
+					box.position.copy({
+						x: position.x - correction.x,
+						y: position.y - correction.y,
+						z: position.z - correction.z,
+					});
+				}
 			});
 		}
 	}

@@ -26,7 +26,7 @@ export default class GL {
 		this.onGameOver = onGameOver;
 		this.onCameraZoomOuted = onCameraZoomOuted;
 		this.onGameCountDown = onGameCountDown;
-		// this.debuger = this.webgl.addCannonDebuger();
+		this.debuger = this.webgl.addCannonDebuger();
 
 		this.collector = new Collector();
 		this.cubes = null;
@@ -42,6 +42,9 @@ export default class GL {
 		// controls
 		this.lookTarget = { x: 0, y: 2, z: 0 };
 		this.webgl.controls.lookAt(this.lookTarget);
+
+		const { controls } = this.webgl;
+		this.from = { ...controls.get(), ...this.lookTarget };
 
 		// loader
 		this.loaderData = {};
@@ -88,16 +91,28 @@ export default class GL {
 		});
 	}
 
-	start(dom) {
-		dom.appendChild(this.webgl.render.domElement);
-		this.update();
+	reset() {
+		this.gameStart = false;
+		this.firstDelta = false;
+		this.collector.reset();
+		this.cubes.reset();
+		this.character.reset();
+		this.webgl.controls.set(this.from);
+		this.webgl.controls.lookAt(this.from);
+	}
+
+	start(dom, replay) {
+		if (replay) {
+			this.reset();
+		}
+		this.update(replay);
 		this.character.wave();
 		this.zoomOut();
+		dom.appendChild(this.webgl.render.domElement);
 	}
 
 	zoomOut() {
-		const { controls } = this.webgl;
-		const from = { ...controls.get(), ...this.lookTarget };
+		const { from } = this;
 		const to = { ...ControlsDefaultProps };
 		delete to.duration;
 
@@ -105,6 +120,7 @@ export default class GL {
 			this.webgl.controls.set(value);
 			this.webgl.controls.lookAt(value);
 		};
+
 		const tweener = new Tweener({
 			from,
 			to,
@@ -120,8 +136,14 @@ export default class GL {
 		tweener.play();
 	}
 
-	begin() {
-		this.addController();
+	begin(replay) {
+		if (!replay) this.addController();
+		else {
+			this.controller.reset();
+			this.character.replay();
+			this.cubes.replay();
+		}
+
 		this.gameStart = true;
 	}
 
@@ -180,21 +202,24 @@ export default class GL {
 		});
 	}
 
-	update() {
+	update(replay) {
 		const { enterframe } = this.webgl;
-		enterframe.add((e) => {
-			const { delta } = e;
-			if (this.gameStart) {
-				if (this.firstDelta === false) this.firstDelta = delta;
-				const currentDelta = delta - this.firstDelta;
-				this.bamboo?.update(currentDelta);
-				this.mushroom?.update(currentDelta);
-				this.cubes?.update(currentDelta);
-			}
-			if (this.controller) this.character.move(this.controller);
-			this.character.update();
-			// this.debuger?.update();
-		});
+		if (!replay) {
+			enterframe.add((e) => {
+				const { delta } = e;
+				if (this.gameStart) {
+					if (this.firstDelta === false) this.firstDelta = delta;
+					const currentDelta = delta - this.firstDelta;
+					this.bamboo?.update(currentDelta);
+					this.mushroom?.update(currentDelta);
+					this.cubes?.update(currentDelta);
+				}
+				if (this.controller) this.character.move(this.controller);
+				this.character.update();
+				this.debuger?.update();
+			});
+		}
+		enterframe.reset();
 		enterframe.play();
 	}
 }

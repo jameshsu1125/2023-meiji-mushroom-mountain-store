@@ -1,7 +1,7 @@
 @import url('../../../settings/config.less');
 
 .GameHome {
-	@apply w-full h-full;
+	@apply w-full h-full overflow-hidden;
 
 	.title {
 		width: image-width(@img) * @scale;
@@ -39,7 +39,7 @@
 
 		& > div {
 			max-width: 500px;
-			@apply w-full flex justify-center flex-col items-center space-y-5 pb-0;
+			@apply w-full flex justify-center flex-col items-center space-y-5 pb-0 font-DIN;
 		}
 	}
 

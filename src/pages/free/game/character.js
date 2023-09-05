@@ -9,9 +9,18 @@ import Avatar from './models/character3.glb';
 import { CONTROL_MODE } from '../../../settings/constant';
 
 export default class Character {
-	constructor({ webgl, onMushroomTrigger, onGameOver, collector, stopRender, onload }) {
+	constructor({
+		webgl,
+		onMushroomTrigger,
+		onBambooTrigger,
+		onGameOver,
+		collector,
+		stopRender,
+		onload,
+	}) {
 		this.webgl = webgl;
 		this.onMushroomTrigger = onMushroomTrigger;
+		this.onBambooTrigger = onBambooTrigger;
 		this.onGameOver = onGameOver;
 		this.collector = collector;
 		this.stopRender = stopRender;
@@ -20,15 +29,17 @@ export default class Character {
 		this.mixer = null;
 		this.actions = {};
 		this.actionName = 'idle';
-		this.delta = 0.03;
-		this.speed = 0.08;
+		this.delta = 0.03 * 1;
+		this.speed = 0.08 * 1;
 		this.isOut = false;
 		this.moveable = true;
 		this.bounce = true;
+		this.track = false;
+		this.trackID = false;
 
 		this.property = {
 			size: CubeSize,
-			position: { x: 0, y: CubeSize - 0.62, z: 0 },
+			position: { x: 0, y: CubeSize - 0.5, z: 0 },
 			correction: { x: 0, y: -0.38, z: 0 },
 		};
 
@@ -39,6 +50,10 @@ export default class Character {
 		this.update();
 	}
 
+	setCharacterMoveSoundTrack(track) {
+		this.track = track;
+	}
+
 	setMoveable(bool) {
 		this.moveable = bool;
 		this.stop();
@@ -47,6 +62,7 @@ export default class Character {
 	stand() {
 		const keyName = 'idle';
 		this.doActionByName(keyName);
+		if (this.trackID) this.track?.pause(this.trackID);
 	}
 
 	down() {
@@ -58,18 +74,29 @@ export default class Character {
 		if (this.isOut) return;
 		const keyName = 'wave';
 		this.doActionByName(keyName);
+
+		const onActionEnd = () => {
+			this.stand();
+			this.actions[this.actionName].loop = THREE.LoopRepeat;
+			Object.keys(this.actions).forEach((key) => {
+				this.actions[key].loop = THREE.LoopRepeat;
+			});
+		};
+		this.actions[this.actionName].loop = THREE.LoopOnce;
+		this.actions[this.actionName]._mixer.addEventListener('finished', onActionEnd);
 	}
 
 	walk() {
 		if (this.isOut) return;
 		const keyName = 'run';
 		this.doActionByName(keyName);
+		if (this.trackID) this.track?.play?.(this.trackID);
+		else this.trackID = this.track?.play?.();
 	}
 
 	stop() {
 		if (!this.model || this.isOut) return;
-		const keyName = 'idle';
-		this.doActionByName(keyName);
+		this.stand();
 	}
 
 	rotate(rotation = 0) {
@@ -83,12 +110,6 @@ export default class Character {
 		if (this.actionName) this.actions[this.actionName].stop();
 		this.actions[keyName].play();
 		this.actionName = keyName;
-		const onActionEnd = () => {
-			this.stand();
-			this.actions[this.actionName].loop = THREE.LoopRepeat;
-		};
-		// this.actions[this.actionName].loop = THREE.LoopOnce;
-		this.actions[this.actionName]._mixer.addEventListener('finished', onActionEnd);
 	}
 
 	addPhysics() {
@@ -119,7 +140,7 @@ export default class Character {
 			if (name === 'bamboo') {
 				const { position: p1 } = event.body;
 				const { position: p2 } = target;
-				const forceScale = (-5 / bambooSize) * 0.6;
+				const forceScale = (-5 / bambooSize) * 0.3;
 
 				const dx = p1.x - p2.x > 0 ? 1 : -1;
 				const dz = p1.z - p2.z > 0 ? 1 : -1;
@@ -131,13 +152,15 @@ export default class Character {
 
 				requestAnimationFrame(() => {
 					target.velocity.set(velocity.x, velocity.y, velocity.z);
+					if (this.trackID) this.track?.pause(this.trackID);
+					this.onBambooTrigger();
 				});
 			} else {
 				const { body } = event;
 
 				body.type = CANNON.Body.STATIC;
 				body.velocity.setZero();
-				body.position.y = -1;
+				body.position.y = -100;
 				setTimeout(() => {
 					body.position.y = -1000;
 					// body.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), 0);
@@ -152,13 +175,13 @@ export default class Character {
 				}, 500);
 			}
 		};
-		// this.body.addEventListener('collide', onCollide);
-		// world.addBody(this.body);
+		this.body.addEventListener('collide', onCollide);
+		world.addBody(this.body);
 	}
 
 	addCharacter() {
 		return new Promise((resolve, reject) => {
-			GlbLoader(Avatar, { receiveShadow: false })
+			GlbLoader(Avatar)
 				.then((e) => {
 					const { model, gltf } = e;
 					gltf.scene.traverse((child) => {
@@ -187,10 +210,11 @@ export default class Character {
 	}
 
 	moveByJoystick({ angle }) {
-		this.rotate(angle - Math.PI);
+		const currentAngle = angle + (Math.PI / 180) * 30;
+		this.rotate(currentAngle - Math.PI);
 		this.walk();
-		const x = Math.cos(angle - Math.PI / 2) * 12 * this.speed;
-		const z = Math.sin(angle + Math.PI / 2) * 12 * this.speed;
+		const x = Math.cos(currentAngle - Math.PI / 2) * 12 * this.speed;
+		const z = Math.sin(currentAngle + Math.PI / 2) * 12 * this.speed;
 
 		return { x, z };
 	}
@@ -228,7 +252,6 @@ export default class Character {
 			this.stop();
 			return;
 		}
-
 		if (this.isOut || !this.moveable) return;
 		if (!this.body && !this.model) return;
 
@@ -243,12 +266,19 @@ export default class Character {
 		clonePosition.z -= z * this.speed;
 		this.body.velocity.x = 0;
 		this.body.velocity.z = 0;
+
+		if (clonePosition.x > 3) clonePosition.x = 3;
+		if (clonePosition.x < -3) clonePosition.x = -3;
+		if (clonePosition.z < -3) clonePosition.z = -3;
+		if (clonePosition.z > 3) clonePosition.z = 3;
+
 		this.body.position.x = clonePosition.x;
 		this.body.position.z = clonePosition.z;
 	}
 
 	kickOut() {
 		this.body.velocity.y = -10;
+		this.setMoveable(false);
 	}
 
 	update() {

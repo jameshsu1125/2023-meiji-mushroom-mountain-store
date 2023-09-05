@@ -7,6 +7,7 @@ import './index.less';
 import Joystick from './joystick';
 import Over from './over';
 import Score from './score';
+import Switcher from './switcher';
 
 let GLOBAL_WEBGL;
 
@@ -15,12 +16,12 @@ const WebGL = memo(() => {
 	const gl = useRef();
 
 	const [state, setState] = useContext(GameContext);
-	const { countdown, over, page, soundsLoaded, sounds } = state;
+	const { countdown, over, page, soundsLoaded, sounds, replay } = state;
 	const [device, setDevice] = useState(UserAgent.get() === 'mobile');
 
 	const onModulesLoaded = useCallback(() => {
 		setState((S) => ({ ...S, steps: GameSteps.modelLoaded }));
-		if (page === GamePage.game) gl.current.start(ref.current);
+		if (page === GamePage.game) gl.current.start(ref.current, replay);
 	}, []);
 
 	const onMushroomTrigger = useCallback(() => {
@@ -34,12 +35,12 @@ const WebGL = memo(() => {
 
 	const onGameOver = useCallback(() => {
 		setState((S) => ({ ...S, over: true }));
-		sounds.tracks[SoundsTrackName.move].sound.stop();
-		sounds.tracks[SoundsTrackName.falling].sound.play();
+		sounds.tracks[SoundsTrackName.move]?.sound.stop();
+		sounds.tracks[SoundsTrackName.falling]?.sound.play();
 	}, []);
 
 	const onCameraZoomOuted = useCallback(() => {
-		gl.current.begin();
+		gl.current.begin(replay);
 		setState((S) => ({ ...S, steps: GameSteps.didFadeIn }));
 	}, []);
 
@@ -71,7 +72,7 @@ const WebGL = memo(() => {
 			gl.current = GLOBAL_WEBGL;
 		} else {
 			gl.current = GLOBAL_WEBGL;
-			gl.current.start(ref.current);
+			gl.current.start(ref.current, replay);
 		}
 
 		return () => {
@@ -81,22 +82,22 @@ const WebGL = memo(() => {
 	}, []);
 
 	useEffect(() => {
-		if (soundsLoaded) {
+		if (soundsLoaded && !replay) {
 			sounds.tracks[SoundsTrackName.bgm].sound.play();
 			gl.current.setCharacterMoveSoundTrack(sounds.tracks[SoundsTrackName.move].sound);
 		}
-	}, [soundsLoaded]);
+	}, [soundsLoaded, replay]);
 
 	return (
 		<div className='WebGL'>
 			<div ref={ref} className='h-full w-full' />
 			{state.steps === GameSteps.didFadeIn && <Score />}
+			{countdown !== false && <Countdown />}
 			{device && state.steps === GameSteps.didFadeIn && (
 				<Joystick onJoyStickMove={onJoyStickMove} onJoyStickStop={onJoyStickStop} />
 			)}
-			{countdown !== false && <Countdown />}
 			{over && <Over />}
-			{soundsLoaded && <div className='absolute top-0 left-0'>icon</div>}
+			{soundsLoaded && <Switcher />}
 		</div>
 	);
 });

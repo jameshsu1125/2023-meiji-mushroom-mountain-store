@@ -14,6 +14,8 @@ export default class Bamboo {
 		this.name = 'bamboo';
 		this.model = null;
 		this.body = null;
+		this.currentDrop = 999;
+		this.currentIndex = null;
 
 		this.serial = gameRule.startCountDown + 1;
 		this.countdownSerial = 0;
@@ -28,7 +30,7 @@ export default class Bamboo {
 			offset: { x: (CubeSize + CubeGapSize) * -1, z: (CubeSize + CubeGapSize) * -1 },
 			correction: {
 				x: (-0.07 / 0.6) * bambooSize,
-				y: (-0.22 / 0.6) * bambooSize,
+				y: (-0.25 / 0.6) * bambooSize,
 				z: (0.115 / 0.6) * bambooSize,
 			},
 		};
@@ -56,7 +58,8 @@ export default class Bamboo {
 		this.tweener = new Tweener();
 	}
 
-	stop() {
+	stop(dropIndex) {
+		if (dropIndex) this.currentDrop = dropIndex;
 		this.enabled = false;
 	}
 
@@ -81,7 +84,9 @@ export default class Bamboo {
 
 		if (!aliveCubes) return;
 
-		const { index } = aliveCubes;
+		// const { index } = aliveCubes;
+		const index = 4;
+		this.currentIndex = index;
 		this.collector.setBambooIndex(index);
 		const position = this.position[index];
 		position.y = this.property.y - 0.6;
@@ -94,7 +99,7 @@ export default class Bamboo {
 					...position,
 					y: this.property.y - (0.6 / 0.6) * bambooSize,
 				},
-				to: { ...position, y: this.property.y + 0.1 },
+				to: { ...position, y: this.property.y },
 				duration: 500,
 				onStart: () => {
 					this.getOffset();
@@ -171,11 +176,20 @@ export default class Bamboo {
 
 			const { position } = this.body;
 			const { correction } = this.property;
-			this.model.position.copy({
-				x: position.x + correction.x,
-				y: position.y + correction.y,
-				z: position.z + correction.z,
-			});
+
+			if (this.enabled) {
+				this.model.position.copy({
+					x: position.x + correction.x,
+					y: position.y + correction.y,
+					z: position.z + correction.z,
+				});
+			} else if (this.currentDrop === this.currentIndex) {
+				this.model.position.copy({
+					x: position.x + correction.x,
+					y: position.y + correction.y,
+					z: position.z + correction.z,
+				});
+			}
 		}
 	}
 }

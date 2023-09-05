@@ -27,6 +27,7 @@ export const GameState = {
 	score: 0,
 	countdown: false,
 	over: false,
+	replay: false,
 };
 
 export const GameContext = createContext(GameState);

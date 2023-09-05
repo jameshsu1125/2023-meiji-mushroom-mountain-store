@@ -1,8 +1,7 @@
-import Click from 'lesca-click';
 import OnloadProvider from 'lesca-react-onload';
-import { memo, useContext, useEffect, useMemo, useState } from 'react';
+import { memo, useContext, useMemo, useState } from 'react';
 import { RespondContainer } from '../../../components/container';
-import Scrollable from '../../../components/scrollable';
+import useScale from '../../../hooks/useScale';
 import { TRANSITION } from '../../../settings/constant';
 import { GameContext } from '../config';
 import { Info, IntroState } from './config';
@@ -16,26 +15,26 @@ const Intro = memo(() => {
 	const { step } = state;
 	const data = useMemo(() => Info[step], [step]);
 	const [transition, setTransition] = useState(TRANSITION.unset);
-	useEffect(() => {
-		Click.addPreventExcept('.Intro');
-	}, []);
+	const [scale] = useScale();
+
 	return (
 		<OnloadProvider onload={() => setTransition(TRANSITION.fadeIn)}>
-			<div className='Intro'>
-				<Scrollable>
-					<RespondContainer>
-						{(step < 3 && (
-							<Steps
-								step={step}
-								transition={transition}
-								data={data}
-								setState={setState}
-								setTransition={setTransition}
-								setGameState={setGameState}
-							/>
-						)) || <IntroEnd />}
-					</RespondContainer>
-				</Scrollable>
+			<div
+				className='Intro'
+				style={{ transform: `scale(${scale})`, transformOrigin: 'center top' }}
+			>
+				<RespondContainer>
+					{(step < 3 && (
+						<Steps
+							step={step}
+							transition={transition}
+							data={data}
+							setState={setState}
+							setTransition={setTransition}
+							setGameState={setGameState}
+						/>
+					)) || <IntroEnd />}
+				</RespondContainer>
 			</div>
 		</OnloadProvider>
 	);
