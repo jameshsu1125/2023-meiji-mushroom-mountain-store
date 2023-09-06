@@ -36,6 +36,7 @@ export default class Character {
 		this.bounce = true;
 		this.track = false;
 		this.trackID = false;
+		this.collideEvent = false;
 
 		this.property = {
 			size: CubeSize,
@@ -102,8 +103,7 @@ export default class Character {
 	reset() {
 		this.isOut = false;
 		this.moveable = true;
-
-		// this.body.position.copy(this.property.position);
+		this.body?.removeEventListener('collide', this.collideEvent);
 		this.rotate(0);
 		this.addPhysics();
 		this.wave();
@@ -135,7 +135,7 @@ export default class Character {
 		});
 		this.body.position.copy(this.property.position);
 
-		const onCollide = (event) => {
+		this.collideEvent = (event) => {
 			const { name } = event.body;
 			const { target } = event;
 
@@ -186,7 +186,8 @@ export default class Character {
 				}, 500);
 			}
 		};
-		this.body.addEventListener('collide', onCollide);
+
+		this.body.addEventListener('collide', this.collideEvent);
 		world.addBody(this.body);
 	}
 
@@ -302,15 +303,6 @@ export default class Character {
 			p.z += correction.z;
 			this.model.position.copy(p);
 			this.mixer?.update(this.delta);
-
-			// if (this.isOut) return;
-			// if (position.y <= 1.25) {
-			// 	this.isOut = true;
-			// 	this.down();
-			// 	this.collector.stay = 999;
-			// 	this.stopRender();
-			// 	this.onGameOver('character');
-			// }
 		}
 	}
 }

@@ -33,8 +33,7 @@ const WebGL = memo(() => {
 		sounds.tracks[SoundsTrackName.bamboo].sound.play();
 	}, []);
 
-	const onGameOver = useCallback((t) => {
-		console.log(t);
+	const onGameOver = useCallback(() => {
 		setState((S) => ({ ...S, over: true }));
 		sounds.tracks[SoundsTrackName.move]?.sound.stop();
 		sounds.tracks[SoundsTrackName.falling]?.sound.play();

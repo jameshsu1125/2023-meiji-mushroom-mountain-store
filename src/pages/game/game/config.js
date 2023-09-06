@@ -6,7 +6,7 @@ import { shuffleArray } from './misc';
 export const webglConfig = {
 	camera: { fov: 50, far: 75, type: CameraType.perspective },
 	sky: {
-		enabled: true,
+		enabled: false,
 		turbidity: 3.6,
 		rayleigh: 0.165,
 		mieCoefficient: 0,
