@@ -26,7 +26,11 @@ const GameForm = memo(() => {
 	}, [res]);
 
 	useEffect(() => {
-		sounds?.tracks[SoundsTrackName.bgm]?.sound.fade(sounds.sounds[0].volume, 0, 1000);
+		sounds?.tracks[SoundsTrackName.bgm]?.sound.fade(
+			sounds.isMute ? 0 : sounds.sounds[0].volume,
+			0,
+			1000,
+		);
 		Click.addPreventExcept('.GameForm');
 	}, []);
 
