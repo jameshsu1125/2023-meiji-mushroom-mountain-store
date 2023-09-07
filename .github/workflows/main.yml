@@ -1,0 +1,35 @@
+name: Publish Website to Web Hosting
+on:
+  push:
+    branches:
+      - gh-pages
+jobs:
+  FTP-Deploy-Action:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Get latest code
+        uses: actions/checkout@v2
+
+      - name: FTP-Deploy-Action
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: 2023/
+          port: 21
+          exclude: |
+            **/.html*
+            **/.js*
+            **/.css*
+            **/.jpg*
+            **/.gif*
+            **/.png*
+            **/.svg*
+            **/.woff*
+            **/.woff2*
+            **/.gif*
+            **/.mp3*
+            **/.mp4*
+            **/.glb*
