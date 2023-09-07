@@ -18,7 +18,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: 2023/
-          local-dir: ./dist
+          local-dir: ./dist/
           port: 21
           exclude: |
             **/.html*
