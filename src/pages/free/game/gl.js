@@ -26,7 +26,6 @@ export default class GL {
 		this.onGameOver = onGameOver;
 		this.onCameraZoomOuted = onCameraZoomOuted;
 		this.onGameCountDown = onGameCountDown;
-		console.log(this.webgl);
 		this.webgl.world.gravity.y = -8;
 		// this.debuger = this.webgl.addCannonDebuger();
 
@@ -94,7 +93,10 @@ export default class GL {
 		dom.appendChild(this.webgl.render.domElement);
 		this.update();
 		this.character.wave();
-		this.zoomOut();
+
+		this.addController();
+		this.gameStart = true;
+		// this.zoomOut();
 	}
 
 	zoomOut() {

@@ -1,7 +1,6 @@
 import UserAgent from 'lesca-user-agent';
 import { memo, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { GameContext, GamePage, GameSteps, SoundsTrackName } from '../config';
-import Countdown from './countdown';
 import GL from './gl';
 import './index.less';
 import Joystick from './joystick';
@@ -16,7 +15,7 @@ const WebGL = memo(() => {
 	const gl = useRef();
 
 	const [state, setState] = useContext(GameContext);
-	const { countdown, over, page, soundsLoaded, sounds } = state;
+	const { over, page, soundsLoaded, sounds } = state;
 	const [device, setDevice] = useState(UserAgent.get() === 'mobile');
 
 	const onModulesLoaded = useCallback(() => {
@@ -94,7 +93,6 @@ const WebGL = memo(() => {
 		<div className='WebGL'>
 			<div ref={ref} className='h-full w-full' />
 			{state.steps === GameSteps.didFadeIn && <Score />}
-			{countdown !== false && <Countdown />}
 			{device && state.steps === GameSteps.didFadeIn && (
 				<Joystick onJoyStickMove={onJoyStickMove} onJoyStickStop={onJoyStickStop} />
 			)}

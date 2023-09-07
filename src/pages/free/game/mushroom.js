@@ -192,7 +192,7 @@ export default class Mushroom {
 
 			if (currentDelta > this.serial) {
 				this.serial = currentDelta;
-				this.setPositionByIndex();
+				// this.setPositionByIndex();
 			}
 
 			[...new Array(gameRule.maxMushroom).keys()].forEach((index) => {

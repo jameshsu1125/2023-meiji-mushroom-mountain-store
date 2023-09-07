@@ -148,20 +148,22 @@ export default class Cubes {
 			map.offset.setY(n / 10);
 
 			if (n === this.numberOfBox) {
-				const { stay } = this.collector;
-				if (stay === i) {
-					this.collector.data[i].drop = true;
-					const body = this.bodies[i];
-					body.mass = 10000;
-					body.updateMassProperties();
-					body.type = CANNON.Body.DYNAMIC;
-					body.velocity.set(0, -0.1, 0);
-					this.currentDropIndex = i;
-					this.out();
-				} else {
-					this.collector.data[i].number = 10;
-					map.offset.setY(1);
-				}
+				this.collector.data[i].number = 10;
+				map.offset.setY(1);
+				// 	const { stay } = this.collector;
+				// 	if (stay === i) {
+				// 		this.collector.data[i].drop = true;
+				// 		const body = this.bodies[i];
+				// 		body.mass = 10000;
+				// 		body.updateMassProperties();
+				// 		body.type = CANNON.Body.DYNAMIC;
+				// 		body.velocity.set(0, -0.1, 0);
+				// 		this.currentDropIndex = i;
+				// 		this.out();
+				// 	} else {
+				// 		this.collector.data[i].number = 10;
+				// 		map.offset.setY(1);
+				// 	}
 			}
 		});
 	}

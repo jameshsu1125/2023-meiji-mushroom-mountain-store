@@ -15,9 +15,9 @@ export const webglConfig = {
 		azimuth: 0.25,
 	},
 	controls: {
-		distance: { min: 2.5, max: 2.5 },
-		polar: { min: 30, max: 30 },
-		azimuth: { min: -20, max: -20 },
+		distance: { min: 2.5, max: 20 },
+		polar: { min: -75, max: 75 },
+		azimuth: { min: -Infinity, max: Infinity },
 		default: {
 			polar: 50,
 			azimuth: 35,
@@ -39,7 +39,7 @@ export const webglConfig = {
 			position: { x: 2, y: 10, z: 0 },
 		},
 		shadowMapSize: 1024,
-		debug: true,
+		debug: false,
 	},
 	renderer: {
 		alpha: true,
