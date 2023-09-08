@@ -303,6 +303,15 @@ export default class Character {
 			p.z += correction.z;
 			this.model.position.copy(p);
 			this.mixer?.update(this.delta);
+
+			if (this.isOut) return;
+			if (position.y <= 1) {
+				this.isOut = true;
+				this.down();
+				this.collector.stay = 999;
+				this.stopRender();
+				this.onGameOver('character');
+			}
 		}
 	}
 }
