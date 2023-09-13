@@ -15,7 +15,7 @@ export const webglConfig = {
 		azimuth: 0.25,
 	},
 	controls: {
-		distance: { min: 2.5, max: 20 },
+		distance: { min: 10, max: 20 },
 		polar: { min: -75, max: 75 },
 		azimuth: { min: -Infinity, max: Infinity },
 		default: {

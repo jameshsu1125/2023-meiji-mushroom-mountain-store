@@ -5,7 +5,7 @@ import GlbLoader from 'lesca-glb-loader';
 import Tweener from 'lesca-object-tweener';
 import { CubeGapSize, CubeSize, bambooSize, gameRule } from './config';
 import { easingDelta, shuffleArray } from './misc';
-import bamboo from './models/bamboo.glb';
+import bamboo from './models/bamboo4.glb';
 
 export default class Bamboo {
 	constructor({ webgl, collector, onload }) {
@@ -36,7 +36,7 @@ export default class Bamboo {
 		};
 
 		this.getOffset = () => {
-			const paddingCubeSize = CubeSize * 0.8;
+			const paddingCubeSize = 0;
 			this.offset.x = 0 - paddingCubeSize * 0.5 + Math.random() * paddingCubeSize;
 			this.offset.z = 0 - paddingCubeSize * 0.5 + Math.random() * paddingCubeSize;
 		};
@@ -44,6 +44,12 @@ export default class Bamboo {
 		this.init();
 		this.addBamboo().then(() => onload(this.name));
 		this.randomPosition = () => Math.floor(Math.random() * 9);
+
+		window.addEventListener('keydown', (e) => {
+			if (e.key === ' ') {
+				this.setPositionByIndex();
+			}
+		});
 	}
 
 	init() {
@@ -85,7 +91,7 @@ export default class Bamboo {
 		if (!aliveCubes) return;
 
 		// const { index } = aliveCubes;
-		const index = 4;
+		const index = 7;
 		this.currentIndex = index;
 		this.collector.setBambooIndex(index);
 		const position = this.position[index];
@@ -168,10 +174,10 @@ export default class Bamboo {
 
 	update(delta) {
 		if (this.model) {
-			const currentDelta = easingDelta(delta);
+			const currentDelta = easingDelta(delta, 'linear');
 			if (currentDelta > this.serial) {
 				this.serial = currentDelta;
-				// this.setPositionByIndex();
+				// if (this.serial === 5) this.setPositionByIndex();
 			}
 
 			const { position } = this.body;

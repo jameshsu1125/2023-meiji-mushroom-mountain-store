@@ -6,7 +6,7 @@ import GlbLoader from 'lesca-glb-loader';
 import Tweener from 'lesca-object-tweener';
 import { CubeGapSize, CubeSize, gameRule, mushroomSize } from './config';
 import { easingDelta, shuffleArray } from './misc';
-import mushroom from './models/mushroom2.glb';
+import mushroom from './models/mushroom3.glb';
 
 export default class Mushroom {
 	constructor({ webgl, collector, onload }) {

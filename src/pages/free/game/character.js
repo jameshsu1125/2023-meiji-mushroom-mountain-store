@@ -39,7 +39,7 @@ export default class Character {
 
 		this.property = {
 			size: CubeSize,
-			position: { x: 0, y: CubeSize - 0.5, z: 0 },
+			position: { x: CubeSize, y: CubeSize - 0.5, z: 0 },
 			correction: { x: 0, y: -0.38, z: 0 },
 		};
 
@@ -70,7 +70,7 @@ export default class Character {
 		this.doActionByName(keyName);
 	}
 
-	wave() {
+	wave(cb = () => {}) {
 		if (this.isOut) return;
 		const keyName = 'wave';
 		this.doActionByName(keyName);
@@ -81,6 +81,7 @@ export default class Character {
 			Object.keys(this.actions).forEach((key) => {
 				this.actions[key].loop = THREE.LoopRepeat;
 			});
+			cb();
 		};
 		this.actions[this.actionName].loop = THREE.LoopOnce;
 		this.actions[this.actionName]._mixer.addEventListener('finished', onActionEnd);

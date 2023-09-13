@@ -6,7 +6,7 @@ import GlbLoader from 'lesca-glb-loader';
 import Tweener from 'lesca-object-tweener';
 import { CubeGapSize, CubeSize, gameRule, mushroomSize } from './config';
 import { easingDelta, shuffleArray } from './misc';
-import mushroom from './models/mushroom2.glb';
+import mushroom from './models/mushroom3.glb';
 
 export default class Mushroom {
 	constructor({ webgl, collector, onload }) {
@@ -20,7 +20,7 @@ export default class Mushroom {
 		this.enabled = true;
 		this.offset = { x: 0, z: 0 };
 
-		this.once = false;
+		this.once = 0;
 
 		this.currentDrop = 999;
 
@@ -69,8 +69,8 @@ export default class Mushroom {
 	setPositionByIndex() {
 		if (!this.enabled) return;
 
-		if (this.once) return;
-		this.once = true;
+		if (this.once >= 3) return;
+		this.once += 1;
 
 		const [aliveCubes] = shuffleArray(
 			this.collector.data.filter((e, i) => {
@@ -84,8 +84,8 @@ export default class Mushroom {
 		);
 
 		if (!aliveCubes) return;
-		// const { index } = aliveCubes;
-		const index = 4;
+		const { index } = aliveCubes;
+		// const index = 4;
 		this.collector.setMushroomIndex(index);
 		const position = this.position[index];
 		position.y = this.property.y - 0.6;
@@ -94,6 +94,8 @@ export default class Mushroom {
 		const body = this.bodies[targetIndex];
 		const model = this.models[targetIndex];
 		model.dropIndex = index;
+
+		console.log(index);
 
 		if (!tweener) return;
 		tweener
@@ -189,10 +191,9 @@ export default class Mushroom {
 	update(delta) {
 		if (this.models.length !== 0) {
 			const currentDelta = easingDelta(delta, 'linear');
-
 			if (currentDelta > this.serial) {
 				this.serial = currentDelta;
-				// this.setPositionByIndex();
+				this.setPositionByIndex();
 			}
 
 			[...new Array(gameRule.maxMushroom).keys()].forEach((index) => {

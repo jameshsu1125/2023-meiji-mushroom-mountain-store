@@ -4,6 +4,7 @@ import { Suspense, lazy, memo, useMemo, useReducer } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Context, initialState, reducer } from '../settings/config';
 import '../settings/global.less';
+import TransitionKeyFrame from '../settings/misc';
 
 Click.install();
 Fetcher.install({
@@ -36,6 +37,7 @@ const App = () => {
 			<Context.Provider {...{ value }}>
 				<Pages />
 			</Context.Provider>
+			<TransitionKeyFrame />
 		</div>
 	);
 };

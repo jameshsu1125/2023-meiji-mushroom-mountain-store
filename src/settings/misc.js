@@ -3,10 +3,10 @@ import { memo, useCallback, useRef } from 'react';
 const TransitionKeyFrame = memo(() => {
 	const index = useRef(0);
 	const out = useRef('');
-	const r = 15;
+	const r = 64;
 
 	const render = useCallback(() => {
-		const x = Math.cos((Math.PI / 180) * index.current) * r;
+		const x = 80 + Math.cos((Math.PI / 180) * index.current) * r;
 		const y = Math.sin((Math.PI / 180) * index.current * 2) * (r * 0.5);
 
 		out.current += `${Math.round((index.current / 360) * 100)}%{transform: translateX(${
@@ -16,7 +16,7 @@ const TransitionKeyFrame = memo(() => {
 		index.current += 3.6;
 		if (index.current <= 360) requestAnimationFrame(render);
 		else {
-			navigator.clipboard?.writeText?.(out).then(
+			navigator.clipboard?.writeText?.(out.current).then(
 				() => alert('網址已經複製到剪貼簿'),
 				() => alert('剪貼簿功能不支援，請直接到網址列複製'),
 			);

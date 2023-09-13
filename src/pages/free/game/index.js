@@ -32,13 +32,21 @@ const WebGL = memo(() => {
 		sounds?.tracks?.[SoundsTrackName.bamboo]?.sound?.play?.();
 	}, []);
 
-	const onGameOver = useCallback(() => {
+	const onGameOver = useCallback((delay = 5000) => {
 		setTimeout(() => {
 			setState((S) => ({ ...S, over: true }));
-		}, 5000);
+		}, delay);
 		sounds.tracks[SoundsTrackName.move]?.sound.stop();
 		sounds.tracks[SoundsTrackName.falling]?.sound.play();
 	}, []);
+
+	useEffect(() => {
+		window.addEventListener('keydown', (e) => {
+			if (e.key === 'o') {
+				onGameOver(0);
+			}
+		});
+	}, [onGameOver]);
 
 	const onCameraZoomOuted = useCallback(() => {
 		gl.current.begin();

@@ -56,6 +56,8 @@ export default class GL {
 		this.gameStart = false;
 		this.firstDelta = false;
 
+		this.stopMove = false;
+
 		this.addMushroom();
 		this.addBamboo();
 		this.addCubes(onGameOver);
@@ -69,6 +71,15 @@ export default class GL {
 			renderer.renderer.setSize(window.innerWidth, window.innerHeight);
 		};
 		window.addEventListener('resize', onWindowResize, false);
+
+		window.addEventListener('keydown', (e) => {
+			if (e.key === 'w') {
+				this.stopMove = true;
+				this.character.wave(() => {
+					this.stopMove = false;
+				});
+			}
+		});
 	}
 
 	setCharacterMoveSoundTrack(track) {
@@ -195,7 +206,7 @@ export default class GL {
 				this.mushroom?.update(currentDelta);
 				this.cubes?.update(currentDelta);
 			}
-			if (this.controller) this.character.move(this.controller);
+			if (this.controller && !this.stopMove) this.character.move(this.controller);
 			this.character.update();
 			// this.debuger?.update();
 		});

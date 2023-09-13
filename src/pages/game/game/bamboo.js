@@ -5,7 +5,7 @@ import GlbLoader from 'lesca-glb-loader';
 import Tweener from 'lesca-object-tweener';
 import { CubeGapSize, CubeSize, bambooSize, gameRule } from './config';
 import { easingDelta, shuffleArray } from './misc';
-import bamboo from './models/bamboo2.glb';
+import bamboo from './models/bamboo4.glb';
 
 export default class Bamboo {
 	constructor({ webgl, collector, onload }) {

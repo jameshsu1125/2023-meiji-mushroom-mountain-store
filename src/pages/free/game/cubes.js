@@ -33,6 +33,13 @@ export default class Cubes {
 		this.gapSize = CubeGapSize;
 
 		this.addBoxes();
+
+		this.drop = false;
+		window.addEventListener('keydown', (e) => {
+			if (e.key === 'd') {
+				this.drop = true;
+			}
+		});
 	}
 
 	addPhysics({ col, row, i }) {
@@ -148,8 +155,24 @@ export default class Cubes {
 			map.offset.setY(n / 10);
 
 			if (n === this.numberOfBox) {
-				this.collector.data[i].number = 9;
-				map.offset.setY(1);
+				if (!this.drop) {
+					this.collector.data[i].number = 9;
+					map.offset.setY(1);
+				} else {
+					const { stay } = this.collector;
+					if (stay === i) {
+						this.collector.data[i].drop = true;
+						const body = this.bodies[i];
+
+						body.type = CANNON.Body.DYNAMIC;
+						body.velocity.set(0, -10, 0);
+						this.currentDropIndex = i;
+						this.out();
+					} else {
+						this.collector.data[i].number = 10;
+						map.offset.setY(1);
+					}
+				}
 			}
 		});
 	}

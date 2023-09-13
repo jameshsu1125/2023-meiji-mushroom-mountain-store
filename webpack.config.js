@@ -16,8 +16,6 @@ module.exports = () => {
 			index: './src/pages/index.js',
 			game: './src/pages/game.js',
 			invoice: './src/pages/invoice.js',
-			test: './src/pages/test.js',
-			device: './src/pages/device.js',
 		},
 		module: {
 			rules: [

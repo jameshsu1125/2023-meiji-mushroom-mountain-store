@@ -18,7 +18,7 @@ const Description = memo(() => {
 					</div>
 					<Dialog maxHeight='500px'>
 						<div className='scroller'>
-							<div className='mb-5 mt-2'>【活動名稱】明治 《來吧 菇菇山營業中！ 》</div>
+							<div className='mb-5 mt-2'>【活動名稱】明治 《來吧 菇菇山營業中！》</div>
 							<p>
 								【活動期間】
 								<br />

@@ -2,7 +2,6 @@ import OnloadProvider from 'lesca-react-onload';
 import useTween, { Bezier } from 'lesca-use-tween';
 import { memo, useEffect, useMemo } from 'react';
 import { TRANSITION } from '../../../settings/constant';
-import './index.less';
 
 const Demo = memo(({ step, transition, setState, setTransition }) => {
 	const [style, setStyle] = useTween({ opacity: 0, y: 50 });
@@ -25,7 +24,18 @@ const Demo = memo(({ step, transition, setState, setTransition }) => {
 	}, [transition]);
 
 	const currentComponent = useMemo(() => {
-		if (step === 0) return <div className={`demo step${step}`} />;
+		if (step === 0) {
+			return (
+				<div className={`demo step${step}`}>
+					<div>
+						<div className='panel'>
+							<div className='stick' />
+						</div>
+						<div className='keyboard' />
+					</div>
+				</div>
+			);
+		}
 		return (
 			<OnloadProvider key={step} onload={() => setTransition(TRANSITION.fadeIn)}>
 				<div className={`demo step${step}`} />

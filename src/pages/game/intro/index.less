@@ -80,9 +80,58 @@
 		}
 	}
 
+	.step2 {
+		background-image: url('./img/3.gif');
+	}
+
+	.step1 {
+		background-image: url('./img/2.gif');
+	}
+
+	.step0 {
+		background-image: url('./img/1.gif');
+
+		& > div {
+			position: absolute;
+			top: 0;
+			right: 0;
+			bottom: 0;
+			left: 0;
+
+			@apply flex justify-center items-center;
+
+			.panel {
+				display: none;
+			}
+
+			@keyframes keyboard {
+				0% {
+					background-position-y: 0%;
+				}
+				100% {
+					background-position-y: 125%;
+				}
+			}
+
+			.keyboard {
+				width: image-width(@img) * @scale;
+				height: image-height(@img) * @scale * 0.2;
+				background-image: url(@img);
+				background-position-y: 0%;
+				background-size: 100%;
+				animation: keyboard 5s steps(5) infinite;
+
+				@scale: 1.2;
+				@img: './img/keyboard.svg';
+			}
+		}
+	}
+
 	.demo {
 		padding-bottom: 100%;
 		width: 100%;
+		background-size: cover;
+		background-repeat: no-repeat;
 		@apply bg-backgroundColor border-4 border-white rounded-2xl;
 	}
 
@@ -122,6 +171,24 @@
 
 					@scale: 0.6;
 					@img: './img/bamboo.png';
+				}
+			}
+		}
+
+		.step0 {
+			& > div {
+				.keyboard {
+					display: none;
+				}
+
+				.panel {
+					background-color: rgba(255, 255, 255, 0.7);
+					@apply pointer-events-none h-48 w-48 rounded-full block;
+
+					.stick {
+						animation: joystickDemo 5s ease-in-out infinite;
+						@apply absolute left-1/2 top-1/2 -ml-16 -mt-16 h-24 w-24 rounded-full bg-white;
+					}
 				}
 			}
 		}
