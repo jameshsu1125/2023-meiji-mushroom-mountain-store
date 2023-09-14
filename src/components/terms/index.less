@@ -1,6 +1,14 @@
 .Terms {
 	@apply my-2 flex flex-row items-start justify-start;
 
+	& > div {
+		@apply relative;
+	}
+
+	.trigger {
+		@apply w-12 h-12 bg-transparent absolute -top-2 -left-1;
+	}
+
 	input {
 		@apply mx-2 mt-1 h-5 w-5;
 	}
