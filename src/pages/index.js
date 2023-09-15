@@ -1,4 +1,5 @@
 import Click from 'lesca-click';
+import Gtag from 'lesca-gtag';
 import { Suspense, lazy, memo, useContext, useMemo, useReducer } from 'react';
 import { createRoot } from 'react-dom/client';
 import LoadingProcess from '../components/loadingProcess';
@@ -9,6 +10,7 @@ import { ACTION, PAGE } from '../settings/constant';
 import '../settings/global.less';
 
 Click.install();
+Gtag.install(process.env.GA_ID, true);
 
 const Pages = memo(() => {
 	const [context] = useContext(Context);

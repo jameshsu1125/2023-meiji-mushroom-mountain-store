@@ -1,11 +1,12 @@
 /* eslint-disable react/jsx-one-expression-per-line */
+import Gtag from 'lesca-gtag';
 import { memo, useEffect, useState } from 'react';
 import Article from '../../../components/article';
-import Dialog from '../../../components/dialog';
-import './index.less';
-import Container from '../../../components/container';
 import RegularButton from '../../../components/button';
-import { MenuState, RespondBreakPoint } from '../../../settings/config';
+import Container from '../../../components/container';
+import Dialog from '../../../components/dialog';
+import { GtagState, MenuState, RespondBreakPoint } from '../../../settings/config';
+import './index.less';
 
 const Prospect = ({ children }) => <div className='prospect'>{children}</div>;
 const Clouds = () => (
@@ -73,7 +74,10 @@ const Home = memo(() => {
 							<div>
 								<RegularButton
 									onClick={() => {
-										window.location.href = MenuState.data[1].page;
+										setTimeout(() => {
+											window.location.href = MenuState.data[1].page;
+										}, 300);
+										Gtag.event(GtagState.landing.pv, GtagState.landing.event.玩遊戲);
 									}}
 									width='160px'
 								>
@@ -82,7 +86,10 @@ const Home = memo(() => {
 								<RegularButton
 									width='160px'
 									onClick={() => {
-										window.location.href = MenuState.data[2].page;
+										setTimeout(() => {
+											window.location.href = MenuState.data[2].page;
+										}, 300);
+										Gtag.event(GtagState.landing.pv, GtagState.landing.event.登錄發票);
 									}}
 								>
 									登錄發票

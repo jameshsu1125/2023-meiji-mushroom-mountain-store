@@ -52,3 +52,79 @@ export const DEFAULT_RESPOND = {
 	Data: { UserId: '' },
 	MessageList: [],
 };
+
+export const GtagState = {
+	landing: {
+		pv: '首頁',
+		event: {
+			玩遊戲: '玩遊戲',
+			登錄發票: '登錄發票',
+		},
+	},
+	menu: {
+		page: '選單',
+		event: {
+			[MenuState.data[0].name]: [MenuState.data[0].name],
+			[MenuState.data[1].name]: [MenuState.data[1].name],
+			[MenuState.data[2].name]: [MenuState.data[2].name],
+			[MenuState.data[3].name]: [MenuState.data[3].name],
+			[MenuState.data[4].name]: [MenuState.data[4].name],
+			[MenuState.data[5].name]: [MenuState.data[5].name],
+			logo: 'logo',
+		},
+	},
+	game: {
+		遊戲頁: {
+			page: '遊戲頁',
+			event: {
+				菇菇怎麼採: '菇菇怎麼採',
+				開始採菇: '開始採菇',
+			},
+		},
+		遊戲解說頁: {
+			page: '遊戲解說頁',
+			event: {
+				下一步: '下一步',
+				開始採菇: '開始採菇',
+			},
+		},
+		遊戲結束頁: {
+			page: '遊戲結束頁',
+		},
+		遊戲結果頁: {
+			page: '遊戲結果頁',
+			event: {
+				填單抽回饋禮: '填單抽回饋禮',
+				再玩一次: '再玩一次',
+			},
+		},
+		填單抽回饋禮頁: {
+			page: '填單抽回饋禮頁',
+			event: {
+				確認送出: '確認送出',
+			},
+		},
+		您的資料已送出頁: {
+			page: '您的資料已送出頁',
+			event: {
+				回到主頁: '回到主頁',
+				繼續採菇: '繼續採菇',
+			},
+		},
+	},
+	invoice: {
+		登錄發票頁: {
+			page: '登錄發票頁',
+			event: {
+				確認送出: '確認送出',
+			},
+		},
+		登錄發票已送出頁: {
+			page: '登錄發票已送出頁',
+			event: {
+				回到主頁: '回到主頁',
+				繼續登錄發票: '繼續登錄發票',
+			},
+		},
+	},
+};

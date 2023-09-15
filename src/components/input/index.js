@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable jsx-a11y/control-has-associated-label */
 import { useMemo } from 'react';
 import { INVOICE_INFO_NAME, USER_AGE, USER_GENDER } from '../../settings/constant';
 import './index.less';
@@ -15,6 +17,27 @@ const RandomCode = () => (
 		參考圖例
 	</button>
 );
+
+const CheckBox = ({ name, value, checked = false }) => {
+	const onClick = () => {
+		const inputs = document.getElementsByTagName('input');
+		const checkboxes = [...inputs].filter((tag) => tag.type === 'radio');
+		checkboxes.forEach((item) => {
+			if (item.value === String(value)) item.checked = true;
+			else item.checked = false;
+		});
+	};
+	return (
+		<div className='relative p-3'>
+			<input type='radio' name={name} value={value} defaultChecked={checked} />
+			<button
+				className='w-14 h-14 absolute top-0 left-0 -ml-2 mt-1 bg-transparent'
+				onClick={onClick}
+				type='button'
+			/>
+		</div>
+	);
+};
 
 const RegularInput = ({
 	labelName = ['name', 'name'],
@@ -50,11 +73,11 @@ const RegularInput = ({
 				return (
 					<div className='flex w-full flex-row items-center justify-start space-x-5 px-5'>
 						<div className='flex flex-row items-center space-x-2'>
-							<input type='radio' name={labelName[1]} value={USER_GENDER.先生} defaultChecked />
+							<CheckBox name={labelName[1]} value={USER_GENDER.先生} checked />
 							<div className='pr-3'>先生</div>
 						</div>
 						<div className='flex flex-row items-center space-x-2'>
-							<input type='radio' name={labelName[1]} value={USER_GENDER.小姐} />
+							<CheckBox name={labelName[1]} value={USER_GENDER.小姐} />
 							<div>小姐</div>
 						</div>
 					</div>

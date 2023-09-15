@@ -1,12 +1,14 @@
+import Gtag from 'lesca-gtag';
 import OnloadProvider from 'lesca-react-onload';
 import useTween, { Bezier } from 'lesca-use-tween';
 import { memo, useContext, useEffect, useState } from 'react';
 import RegularButton from '../../../components/button';
 import { RespondContainer } from '../../../components/container';
+import useScale from '../../../hooks/useScale';
+import { GtagState } from '../../../settings/config';
 import { TRANSITION } from '../../../settings/constant';
 import { GameContext, GamePage, GameSteps } from '../config';
 import './index.less';
-import useScale from '../../../hooks/useScale';
 
 const Score = ({ score, transition }) => {
 	const [currentScore, setScore] = useTween({ score: 0 });
@@ -55,6 +57,9 @@ const Result = memo(() => {
 	const { score } = state;
 	const [transition, setTransition] = useState(TRANSITION.unset);
 	const [scale] = useScale();
+	useEffect(() => {
+		Gtag.pv(GtagState.game.遊戲結果頁.page);
+	}, []);
 	return (
 		<OnloadProvider onload={() => setTransition(TRANSITION.fadeIn)}>
 			<div
@@ -71,7 +76,13 @@ const Result = memo(() => {
 								<RegularButton
 									maxWidth='100%'
 									width='235px'
-									onClick={() => setState((S) => ({ ...S, page: GamePage.form }))}
+									onClick={() => {
+										Gtag.event(
+											GtagState.game.遊戲結果頁.page,
+											GtagState.game.遊戲結果頁.event.填單抽回饋禮,
+										);
+										setState((S) => ({ ...S, page: GamePage.form }));
+									}}
 								>
 									填單抽回饋禮
 								</RegularButton>
@@ -81,6 +92,10 @@ const Result = memo(() => {
 									maxWidth='100%'
 									width='235px'
 									onClick={() => {
+										Gtag.event(
+											GtagState.game.遊戲結果頁.page,
+											GtagState.game.遊戲結果頁.event.再玩一次,
+										);
 										setState((S) => ({
 											...S,
 											steps: GameSteps.unset,

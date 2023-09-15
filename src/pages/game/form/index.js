@@ -1,16 +1,18 @@
 import Click from 'lesca-click';
+import Gtag from 'lesca-gtag';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import RegularButton from '../../../components/button';
 import { RespondContainer } from '../../../components/container';
 import RegularInput from '../../../components/input';
 import Remark from '../../../components/remark';
+import Scrollable from '../../../components/scrollable';
 import Symbols from '../../../components/symbols';
 import Terms from '../../../components/terms';
 import useSaveUserInfo from '../../../hooks/useSaveUserInfo';
+import { GtagState } from '../../../settings/config';
 import { USER_INFO_NAME } from '../../../settings/constant';
 import { GameContext, GamePage, SoundsTrackName } from '../config';
 import './index.less';
-import Scrollable from '../../../components/scrollable';
 
 const GameForm = memo(() => {
 	const termRef = useRef();
@@ -40,6 +42,11 @@ const GameForm = memo(() => {
 		const formData = new FormData(e.target);
 		formData.append('agree', agree ? '1' : '0');
 		fetcher(Object.fromEntries([...formData]));
+		Gtag.event(GtagState.game.填單抽回饋禮頁.page, GtagState.game.填單抽回饋禮頁.event.確認送出);
+	}, []);
+
+	useEffect(() => {
+		Gtag.pv(GtagState.game.填單抽回饋禮頁.page);
 	}, []);
 
 	return (

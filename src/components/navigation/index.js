@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
+import Gtag from 'lesca-gtag';
 import { memo, useCallback, useState } from 'react';
-import { MenuState } from '../../settings/config';
+import { GtagState, MenuState } from '../../settings/config';
 import Container from '../container';
 import Drawer from './drawer';
 import './index.less';
@@ -8,7 +9,10 @@ import './index.less';
 const Logo = () => (
 	<button
 		onClick={() => {
-			window.location.href = MenuState.data[0].page;
+			setTimeout(() => {
+				window.location.href = MenuState.data[0].page;
+			}, 300);
+			Gtag.event(GtagState.menu.page, GtagState.menu.event.logo);
 		}}
 		className='logo'
 		type='button'
@@ -16,7 +20,7 @@ const Logo = () => (
 );
 
 const MenuButton = ({ name, page, navigate }) => (
-	<button onClick={() => navigate?.(page)} type='button'>
+	<button onClick={() => navigate?.(page, name)} type='button'>
 		{name}
 	</button>
 );
@@ -52,8 +56,11 @@ const Menu = ({ drawer, setDrawer, navigate }) => (
 const Navigation = memo(() => {
 	const [drawer, setDrawer] = useState(false);
 
-	const navigate = useCallback((p) => {
-		window.location.href = p;
+	const navigate = useCallback((p, n) => {
+		setTimeout(() => {
+			window.location.href = p;
+		}, 300);
+		Gtag.event(GtagState.menu.page, GtagState.menu.event[n]);
 	}, []);
 
 	return (

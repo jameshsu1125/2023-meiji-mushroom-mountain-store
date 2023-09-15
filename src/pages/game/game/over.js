@@ -1,8 +1,10 @@
+import Gtag from 'lesca-gtag';
 import useTween from 'lesca-use-tween';
 import { memo, useContext, useEffect } from 'react';
-import './over.less';
-import { gameRule } from './config';
+import { GtagState } from '../../../settings/config';
 import { GameContext, GamePage } from '../config';
+import { gameRule } from './config';
+import './over.less';
 
 const Over = memo(() => {
 	const [, setState] = useContext(GameContext);
@@ -21,6 +23,7 @@ const Over = memo(() => {
 				},
 			},
 		);
+		Gtag.pv(GtagState.game.遊戲結束頁.page);
 	}, []);
 	return (
 		<div className='Over'>

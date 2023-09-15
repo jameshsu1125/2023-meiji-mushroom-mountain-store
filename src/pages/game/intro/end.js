@@ -1,8 +1,10 @@
+import Gtag from 'lesca-gtag';
 import OnloadProvider from 'lesca-react-onload';
 import useTween from 'lesca-use-tween';
 import { memo, useContext, useEffect, useState } from 'react';
 import Article from '../../../components/article';
 import RegularButton from '../../../components/button';
+import { GtagState } from '../../../settings/config';
 import { TRANSITION } from '../../../settings/constant';
 import { GameContext, GamePage } from '../config';
 import './end.less';
@@ -65,7 +67,10 @@ const Button = ({ transition, setTransition }) => {
 			<RegularButton
 				maxWidth='100%'
 				width='157px'
-				onClick={() => setTransition(TRANSITION.fadeOut)}
+				onClick={() => {
+					Gtag.event(GtagState.game.遊戲解說頁.page, GtagState.game.遊戲解說頁.event.開始採菇);
+					setTransition(TRANSITION.fadeOut);
+				}}
 			>
 				開始採菇
 			</RegularButton>

@@ -1,4 +1,5 @@
 import Click from 'lesca-click';
+import Gtag from 'lesca-gtag';
 import { memo, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import RegularButton from '../../../components/button';
 import { RespondContainer } from '../../../components/container';
@@ -6,6 +7,7 @@ import RegularInput from '../../../components/input';
 import Remark from '../../../components/remark';
 import Terms from '../../../components/terms';
 import useSaveInvoice from '../../../hooks/useSaveInvoice';
+import { GtagState } from '../../../settings/config';
 import { INVOICE_INFO_NAME } from '../../../settings/constant';
 import { InvoiceContext, InvoicePage } from '../config';
 import './index.less';
@@ -25,6 +27,7 @@ const InvoiceHome = memo(() => {
 
 	useEffect(() => {
 		Click.addPreventExcept('.InvoiceHome');
+		Gtag.pv(GtagState.invoice.登錄發票頁.page);
 	}, []);
 
 	const onSubmit = useCallback((e) => {
@@ -32,8 +35,8 @@ const InvoiceHome = memo(() => {
 		const agree = termRef.current.value();
 		const formData = new FormData(e.target);
 		formData.append('agree', agree ? '1' : '0');
-
 		fetcher(Object.fromEntries([...formData]));
+		Gtag.event(GtagState.invoice.登錄發票頁.page, GtagState.invoice.登錄發票頁.event.確認送出);
 	}, []);
 
 	return (

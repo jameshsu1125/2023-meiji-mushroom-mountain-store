@@ -1,10 +1,11 @@
+import Gtag from 'lesca-gtag';
 import OnloadProvider from 'lesca-react-onload';
 import useTween, { Bezier, TweenProvider } from 'lesca-use-tween';
 import { memo, useContext, useEffect, useState } from 'react';
 import RegularButton from '../../../components/button';
 import { RespondContainer } from '../../../components/container';
 import useScale from '../../../hooks/useScale';
-import { Context, RespondBreakPoint } from '../../../settings/config';
+import { Context, GtagState, RespondBreakPoint } from '../../../settings/config';
 import { ACTION } from '../../../settings/constant';
 import { GameContext, GamePage, GameSteps } from '../config';
 import WebGL from '../game';
@@ -33,6 +34,7 @@ const Picture = ({ steps, setState }) => {
 							maxWidth='100%'
 							width={window.innerWidth >= RespondBreakPoint.md ? '160px' : '200px'}
 							onClick={() => {
+								Gtag.event(GtagState.game.遊戲頁.page, GtagState.game.遊戲頁.event.菇菇怎麼採);
 								setState((S) => ({ ...S, page: GamePage.intro }));
 							}}
 						>
@@ -50,6 +52,7 @@ const Picture = ({ steps, setState }) => {
 							maxWidth='100%'
 							width={window.innerWidth >= RespondBreakPoint.md ? '160px' : '200px'}
 							onClick={() => {
+								Gtag.event(GtagState.game.遊戲頁.page, GtagState.game.遊戲頁.event.開始採菇);
 								setState((S) => {
 									S.sounds?.loadSound?.(() => {
 										setState((SS) => ({ ...SS, soundsLoaded: true }));
@@ -126,6 +129,7 @@ const GameHome = memo(() => {
 
 	useEffect(() => {
 		setContext({ type: ACTION.loadingProcess, state: { enabled: true } });
+		Gtag.pv(GtagState.game.遊戲頁.page);
 	}, []);
 
 	return (

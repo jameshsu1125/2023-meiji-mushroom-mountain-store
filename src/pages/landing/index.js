@@ -1,6 +1,8 @@
 import Click from 'lesca-click';
+import Gtag from 'lesca-gtag';
 import { Suspense, lazy, memo, useEffect, useMemo, useState } from 'react';
 import Section from '../../components/section';
+import { GtagState } from '../../settings/config';
 import { LandingContext, LandingSections, LandingState } from './config';
 import './index.less';
 
@@ -37,6 +39,10 @@ const Landing = memo(() => {
 			return '';
 		});
 		return pages;
+	}, []);
+
+	useEffect(() => {
+		Gtag.pv(GtagState.landing.pv);
 	}, []);
 
 	return (

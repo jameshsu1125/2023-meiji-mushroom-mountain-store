@@ -1,5 +1,6 @@
 import Click from 'lesca-click';
 import Fetcher, { contentType, formatType } from 'lesca-fetcher';
+import Gtag from 'lesca-gtag';
 import { Suspense, lazy, memo, useMemo, useReducer } from 'react';
 import { createRoot } from 'react-dom/client';
 import LoadingProcess from '../components/loadingProcess';
@@ -15,6 +16,7 @@ Fetcher.install({
 	contentType: contentType.JSON,
 	formatType: formatType.JSON,
 });
+Gtag.install(process.env.GA_ID, true);
 
 const Pages = memo(() => {
 	const Page = useMemo(() => {

@@ -1,13 +1,15 @@
 import Click from 'lesca-click';
+import Gtag from 'lesca-gtag';
 import OnloadProvider from 'lesca-react-onload';
 import QueryString from 'lesca-url-parameters';
 import useTween, { Bezier } from 'lesca-use-tween';
 import { memo, useEffect, useState } from 'react';
 import RegularButton from '../../../components/button';
 import { RespondContainer } from '../../../components/container';
+import Scrollable from '../../../components/scrollable';
+import { GtagState } from '../../../settings/config';
 import { TRANSITION } from '../../../settings/constant';
 import './index.less';
-import Scrollable from '../../../components/scrollable';
 
 const Text = ({ transition }) => {
 	const [style, setStyle] = useTween({ opacity: 0, y: 30 });
@@ -37,6 +39,7 @@ const GameSubmitted = memo(() => {
 
 	useEffect(() => {
 		Click.addPreventExcept('.GameSubmitted');
+		Gtag.pv(GtagState.game.您的資料已送出頁.page);
 	}, []);
 
 	return (
@@ -54,7 +57,13 @@ const GameSubmitted = memo(() => {
 									width='170px'
 									maxWidth='100%'
 									onClick={() => {
-										window.location.href = QueryString.root();
+										setTimeout(() => {
+											window.location.href = QueryString.root();
+										}, 300);
+										Gtag.event(
+											GtagState.game.您的資料已送出頁.page,
+											GtagState.game.您的資料已送出頁.event.回到主頁,
+										);
 									}}
 								>
 									回到主頁
@@ -64,7 +73,13 @@ const GameSubmitted = memo(() => {
 									maxWidth='100%'
 									onClick={() => {
 										// setState((S) => ({ ...S, page: GamePage.home }));
-										window.location.reload();
+										setTimeout(() => {
+											window.location.reload();
+										}, 300);
+										Gtag.event(
+											GtagState.game.您的資料已送出頁.page,
+											GtagState.game.您的資料已送出頁.event.繼續採菇,
+										);
 									}}
 								>
 									繼續採菇

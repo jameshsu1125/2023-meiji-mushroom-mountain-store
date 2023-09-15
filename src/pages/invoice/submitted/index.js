@@ -1,10 +1,12 @@
 import Click from 'lesca-click';
+import Gtag from 'lesca-gtag';
 import OnloadProvider from 'lesca-react-onload';
 import QueryString from 'lesca-url-parameters';
 import useTween, { Bezier } from 'lesca-use-tween';
 import { memo, useContext, useEffect, useState } from 'react';
 import RegularButton from '../../../components/button';
 import { RespondContainer } from '../../../components/container';
+import { GtagState } from '../../../settings/config';
 import { TRANSITION } from '../../../settings/constant';
 import { InvoiceContext, InvoicePage } from '../config';
 import './index.less';
@@ -35,6 +37,7 @@ const InvoiceSubmitted = memo(() => {
 
 	useEffect(() => {
 		Click.addPreventExcept('.InvoiceSubmitted');
+		Gtag.pv(GtagState.invoice.登錄發票已送出頁.page);
 	}, []);
 
 	return (
@@ -48,18 +51,28 @@ const InvoiceSubmitted = memo(() => {
 						</div>
 						<div className='w-full space-y-5'>
 							<RegularButton
-								width='200px'
+								width='250px'
 								maxWidth='100%'
 								onClick={() => {
-									window.location.href = QueryString.root();
+									setTimeout(() => {
+										window.location.href = QueryString.root();
+									}, 300);
+									Gtag.event(
+										GtagState.invoice.登錄發票已送出頁.page,
+										GtagState.invoice.登錄發票已送出頁.event.回到主頁,
+									);
 								}}
 							>
 								回到主頁
 							</RegularButton>
 							<RegularButton
-								width='200px'
+								width='250px'
 								maxWidth='100%'
 								onClick={() => {
+									Gtag.event(
+										GtagState.invoice.登錄發票已送出頁.page,
+										GtagState.invoice.登錄發票已送出頁.event.繼續登錄發票,
+									);
 									setState((S) => ({ ...S, page: InvoicePage.home }));
 								}}
 							>
