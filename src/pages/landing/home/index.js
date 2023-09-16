@@ -90,6 +90,8 @@ const Home = memo(() => {
 											window.location.href = MenuState.data[2].page;
 										}, 300);
 										Gtag.event(GtagState.landing.pv, GtagState.landing.event.登錄發票);
+										window.gtag_report_conversion?.();
+										window.dadk?.('track', 'SubmitApplication');
 									}}
 								>
 									登錄發票

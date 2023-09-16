@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-tw">
 	<head>
 		<meta charset="utf-8" />
@@ -20,6 +20,79 @@
 		<link href="img/favicon.ico" rel="icon" type="image/x-icon" />
 		<meta name="apple-mobile-web-app-capable" content="no" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<!-- Meta Pixel Code -->
+		<script>
+			!(function (f, b, e, v, n, t, s) {
+				if (f.fbq) return;
+				n = f.fbq = function () {
+					n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+				};
+				if (!f._fbq) f._fbq = n;
+				n.push = n;
+				n.loaded = !0;
+				n.version = '2.0';
+				n.queue = [];
+				t = b.createElement(e);
+				t.async = !0;
+				t.src = v;
+				s = b.getElementsByTagName(e)[0];
+				s.parentNode.insertBefore(t, s);
+			})(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+			fbq('init', '174784582317816');
+			fbq('track', 'PageView');
+		</script>
+		<noscript
+			><img
+				height="1"
+				width="1"
+				style="display: none"
+				src="https://www.facebook.com/tr?id=174784582317816&ev=PageView&noscript=1"
+		/></noscript>
+		<!-- End Meta Pixel Code -->
+		<!-- Google tag (gtag.js) -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=AW-11008855309"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag() {
+				dataLayer.push(arguments);
+			}
+			gtag('js', new Date());
+			gtag('config', 'AW-11008855309');
+		</script>
+		<!-- Event snippet for 點擊登錄發票按鈕 conversion page In your html page, add the snippet and call gtag_report_conversion when someone clicks on the chosen link or button. -->
+		<script>
+			function gtag_report_conversion(url) {
+				var callback = function () {
+					if (typeof url != 'undefined') {
+						window.location = url;
+					}
+				};
+				gtag('event', 'conversion', {
+					send_to: 'AW-11008855309/043mCLGB2OEYEI2at4Ep',
+					event_callback: callback,
+				});
+				return false;
+			}
+		</script>
+		<script>
+			!(function () {
+				var d = function d(a) {
+					for (var e = arguments.length, n = new Array(e > 1 ? e - 1 : 0), i = 1; i < e; i++)
+						n[i - 1] = arguments[i];
+					d.queue.push([a].concat(n));
+				};
+				(d.queue = []), (window.dadk = window.dadk || d);
+				var a = document.createElement('script');
+				(a.src =
+					'undefined' != typeof URLSearchParams
+						? 'https://unpkg.com/@dcard/web-ad-tracking-sdk/build/dadk.iife.js'
+						: 'https://unpkg.com/@dcard/web-ad-tracking-sdk/build/outdated-dadk.iife.js'),
+					document.head.appendChild(a),
+					window.dadk('init', 'zEmGhuyEZqOc_MT-jXFlX'),
+					window.dadk('track', 'PageView');
+			})();
+		</script>
 	</head>
 	<body>
 		<div id="app"></div>

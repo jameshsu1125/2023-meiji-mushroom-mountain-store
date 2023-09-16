@@ -28,6 +28,7 @@ const InvoiceHome = memo(() => {
 	useEffect(() => {
 		Click.addPreventExcept('.InvoiceHome');
 		Gtag.pv(GtagState.invoice.登錄發票頁.page);
+		window.fbq?.('trackCustom', 'Invoice', { event: 'Invoice' });
 	}, []);
 
 	const onSubmit = useCallback((e) => {
