@@ -7,7 +7,7 @@
 [![NPM](https://img.shields.io/badge/DEV-Jameshsu1125-9cf?style=for-the-badge)](https://www.npmjs.com/~jameshsu1125)
 
 <p align="center">
-  <a href="https://github.com/jameshsu1125/2023-meiji-mushroom-mountain-store">
+  <a href="https://meiji-event.com.tw/2023/">
     <img src="./public/img/apple-touch-icon.png" alt="Logo" width=72 height=72>
   </a>
   <h3 align="center">meiji</h3>
