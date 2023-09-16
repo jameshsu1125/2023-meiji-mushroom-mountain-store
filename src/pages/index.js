@@ -10,7 +10,7 @@ import { ACTION, PAGE } from '../settings/constant';
 import '../settings/global.less';
 
 Click.install();
-Gtag.install(process.env.GA_ID, true);
+Gtag.install(process.env.GA_ID);
 
 const Pages = memo(() => {
 	const [context] = useContext(Context);

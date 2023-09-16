@@ -16,7 +16,7 @@ Fetcher.install({
 	contentType: contentType.JSON,
 	formatType: formatType.JSON,
 });
-Gtag.install(process.env.GA_ID, true);
+Gtag.install(process.env.GA_ID);
 
 const Pages = memo(() => {
 	const Page = useMemo(() => {
