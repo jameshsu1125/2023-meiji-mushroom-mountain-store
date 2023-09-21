@@ -16,25 +16,10 @@ import './index.less';
 
 const GameForm = memo(() => {
 	const termRef = useRef();
-	const [res, fetcher] = useSaveUserInfo();
+	const [respond, fetcher] = useSaveUserInfo();
 	const [state, setState] = useContext(GameContext);
 	const { sounds } = state;
 	const labelName = useMemo(() => Object.entries(USER_INFO_NAME).map((e) => e), []);
-	useEffect(() => {
-		if (res) {
-			if (res.Result) setState((S) => ({ ...S, page: GamePage.submitted }));
-			else alert(res.MessageList.join(', '));
-		}
-	}, [res]);
-
-	useEffect(() => {
-		sounds?.tracks[SoundsTrackName.bgm]?.sound.fade(
-			sounds.isMute ? 0 : sounds.sounds[0].volume,
-			0,
-			1000,
-		);
-		Click.addPreventExcept('.GameForm');
-	}, []);
 
 	const onSubmit = useCallback((e) => {
 		e.preventDefault();
@@ -43,6 +28,22 @@ const GameForm = memo(() => {
 		formData.append('agree', agree ? '1' : '0');
 		fetcher(Object.fromEntries([...formData]));
 		Gtag.event(GtagState.game.填單抽回饋禮頁.page, GtagState.game.填單抽回饋禮頁.event.確認送出);
+	}, []);
+
+	useEffect(() => {
+		if (respond) {
+			if (respond.Result) setState((S) => ({ ...S, page: GamePage.submitted }));
+			else alert(respond.MessageList.join(', '));
+		}
+	}, [respond]);
+
+	useEffect(() => {
+		sounds?.tracks[SoundsTrackName.bgm]?.sound.fade(
+			sounds.isMute ? 0 : sounds.sounds[0].volume,
+			0,
+			1000,
+		);
+		Click.addPreventExcept('.GameForm');
 	}, []);
 
 	useEffect(() => {

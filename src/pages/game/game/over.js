@@ -25,6 +25,7 @@ const Over = memo(() => {
 		);
 		Gtag.pv(GtagState.game.遊戲結束頁.page);
 	}, []);
+
 	return (
 		<div className='Over'>
 			<div style={style}>

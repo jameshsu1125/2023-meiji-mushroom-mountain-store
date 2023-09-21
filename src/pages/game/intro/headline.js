@@ -6,9 +6,8 @@ const Headline = memo(({ children, step, transition }) => {
 	const [style, setStyle] = useTween({ opacity: 0, x: window.innerWidth });
 
 	useEffect(() => {
-		if (transition === TRANSITION.fadeIn) {
-			setStyle({ opacity: 1, x: 0 }, 500);
-		} else if (transition === TRANSITION.fadeOut) {
+		if (transition === TRANSITION.fadeIn) setStyle({ opacity: 1, x: 0 }, 500);
+		else if (transition === TRANSITION.fadeOut) {
 			setStyle(
 				{ opacity: 0, x: -window.innerWidth },
 				{

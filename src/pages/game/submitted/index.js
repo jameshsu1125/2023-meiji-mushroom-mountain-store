@@ -34,7 +34,6 @@ const Image = ({ transition }) => {
 };
 
 const GameSubmitted = memo(() => {
-	// const [, setState] = useContext(GameContext);
 	const [transition, setTransition] = useState(TRANSITION.unset);
 
 	useEffect(() => {
@@ -72,7 +71,6 @@ const GameSubmitted = memo(() => {
 									width='170px'
 									maxWidth='100%'
 									onClick={() => {
-										// setState((S) => ({ ...S, page: GamePage.home }));
 										setTimeout(() => {
 											window.location.reload();
 										}, 300);

@@ -14,16 +14,16 @@ import './index.less';
 
 const InvoiceHome = memo(() => {
 	const termRef = useRef();
-	const [res, fetcher] = useSaveInvoice();
+	const [respond, fetcher] = useSaveInvoice();
 	const [, setState] = useContext(InvoiceContext);
 	const labelName = useMemo(() => Object.entries(INVOICE_INFO_NAME).map((e) => e), []);
 
 	useEffect(() => {
-		if (res) {
-			if (res.Result) setState((S) => ({ ...S, page: InvoicePage.submitted }));
-			else alert(res.MessageList.join(', '));
+		if (respond) {
+			if (respond.Result) setState((S) => ({ ...S, page: InvoicePage.submitted }));
+			else alert(respond.MessageList.join(', '));
 		}
-	}, [res]);
+	}, [respond]);
 
 	useEffect(() => {
 		Click.addPreventExcept('.InvoiceHome');

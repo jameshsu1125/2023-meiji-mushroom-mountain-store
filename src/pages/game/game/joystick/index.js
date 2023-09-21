@@ -6,8 +6,6 @@ const Joystick = memo(({ onJoyStickMove, onJoyStickStop }) => {
 	const [vec2, setVec2] = useState({ x: window.innerWidth * 0.5, y: window.innerHeight * 0.8 });
 	const [stickPosition, setStickPosition] = useState({ x: 0, y: 0 });
 	const ref = useRef({ enabled: false, sx: 0, sy: 0, mx: 0, my: 0 });
-	// const timeoutID = useRef();
-
 	const { left, top } = useMemo(() => ({ left: vec2.x, top: vec2.y }), [vec2]);
 
 	const DefaultVec2 = useCallback(
@@ -34,8 +32,6 @@ const Joystick = memo(({ onJoyStickMove, onJoyStickStop }) => {
 		setStickPosition({ x: 0, y: 0 });
 		onJoyStickStop();
 		setVec2(DefaultVec2());
-		// clearTimeout(timeoutID.current);
-		// timeoutID.current = setTimeout(() => setVec2(DefaultVec2()), 500);
 	}, []);
 
 	const onMove = useCallback((event) => {

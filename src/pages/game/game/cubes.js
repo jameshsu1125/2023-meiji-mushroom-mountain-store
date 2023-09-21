@@ -137,9 +137,7 @@ export default class Cubes {
 	stop() {
 		this.enabled = false;
 		this.bodies.forEach((body, index) => {
-			if (index !== this.currentDropIndex) {
-				body.position.y = -100;
-			}
+			if (index !== this.currentDropIndex) body.position.y = -100;
 		});
 	}
 

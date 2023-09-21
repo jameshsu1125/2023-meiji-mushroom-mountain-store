@@ -22,6 +22,7 @@ const Landing = memo(() => {
 			window.removeEventListener('scroll', scroll);
 		};
 		window.addEventListener('scroll', scroll);
+		Gtag.pv(GtagState.landing.pv);
 	}, []);
 
 	const Pages = useMemo(() => {
@@ -39,10 +40,6 @@ const Landing = memo(() => {
 			return '';
 		});
 		return pages;
-	}, []);
-
-	useEffect(() => {
-		Gtag.pv(GtagState.landing.pv);
 	}, []);
 
 	return (
