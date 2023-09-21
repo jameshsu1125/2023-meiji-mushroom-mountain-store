@@ -117,6 +117,11 @@ const RegularInput = ({
 				{Element}
 				{code && <RandomCode />}
 			</div>
+			{code && (
+				<figcaption className='w-full -bottom-10 lg:-bottom-7 text-2xl lg:text-base absolute text-secondary text-right'>
+					*若無隨機碼，輸入0000即可
+				</figcaption>
+			)}
 		</div>
 	);
 };

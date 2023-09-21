@@ -47,7 +47,7 @@ const InvoiceHome = memo(() => {
 				<form onSubmit={onSubmit}>
 					<div className='inputs'>
 						<div className='note'>欄位皆為必填</div>
-						<div className='space-y-5'>
+						<div className='space-y-5 pb-12 lg:pb-8'>
 							<RegularInput
 								labelName={labelName[0]}
 								placeholder='請輸入真實姓名'
