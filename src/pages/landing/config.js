@@ -21,7 +21,7 @@ export const IncentiveList = {
 	both: [
 		{ name: ['FUJIFILM instax', 'mini Evo相機'], amount: 3, price: 8990 },
 		{ name: ['Vitantonio ', '多功能計時鬆餅機'], amount: 3, price: 6400 },
-		{ name: ['象印 ', '分離式鐵板燒烤組'], amount: 3, price: 4880 },
+		{ name: ['象印 ', '分離式鐵板燒烤組'], amount: 3, price: 6290 },
 		{ name: ['香菇先生精美周邊 ', '眼罩＆隨身鏡'], amount: 50, price: null },
 		{ name: ['LINE POINTS', '100點'], amount: 40, price: null },
 	],
