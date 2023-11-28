@@ -1,7 +1,36 @@
 .Modal {
-	@apply pointer-events-none fixed left-0 top-0 flex h-full w-full items-start justify-center;
+	@apply fixed w-full h-full top-0 z-50 flex justify-center items-center px-20;
 
-	& > span {
-		@apply mt-20 bg-primary p-5 text-white;
+	.bg {
+		background-color: rgba(255, 255, 255, 0.8);
+		@apply absolute w-full h-full top-0;
+	}
+
+	.dialog {
+		background-image: url('../../settings/img/bg.jpg');
+		background-size: cover;
+		box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+		@apply relative w-full max-w-4xl p-8 rounded-xl;
+
+		&::before {
+			background-image: url('../../pages/landing/home/img/hill.png');
+			background-position: bottom center;
+			background-size: 120% auto;
+			background-repeat: no-repeat;
+			content: '';
+			@apply absolute w-full h-full top-0 left-0;
+		}
+
+		h1 {
+			@apply font-MiBold text-5xl;
+		}
+
+		h2 {
+			@apply font-MiRegular text-2xl;
+		}
+
+		.scroll {
+			@apply w-full h-44 bg-white max-w-2xl rounded-2xl text-center flex flex-col justify-start items-center overflow-y-scroll overflow-x-hidden;
+		}
 	}
 }

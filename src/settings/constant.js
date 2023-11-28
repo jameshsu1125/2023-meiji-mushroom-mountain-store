@@ -15,9 +15,9 @@ export const PAGE = {
 };
 
 export const MODAL = {
-	enabled: false,
+	enabled: true,
 	body: '',
-	time: 0,
+	time: 100000000,
 };
 
 export const LOADING_PROCESS_STATE = {
