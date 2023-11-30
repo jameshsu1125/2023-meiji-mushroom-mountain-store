@@ -1,11 +1,12 @@
 import Click from 'lesca-click';
 import Gtag from 'lesca-gtag';
-import { Suspense, lazy, memo, useContext, useMemo, useReducer } from 'react';
+import QueryString from 'lesca-url-parameters';
+import { Suspense, lazy, memo, useContext, useEffect, useMemo, useReducer } from 'react';
 import { createRoot } from 'react-dom/client';
 import LoadingProcess from '../components/loadingProcess';
 import Modal from '../components/modal';
 import Navigation from '../components/navigation';
-import { Context, initialState, reducer } from '../settings/config';
+import { Context, WINNER_DATE, initialState, reducer } from '../settings/config';
 import { ACTION, PAGE } from '../settings/constant';
 import '../settings/global.less';
 
@@ -35,6 +36,15 @@ const Pages = memo(() => {
 const App = () => {
 	const [state, setState] = useReducer(reducer, initialState);
 	const value = useMemo(() => [state, setState], [state]);
+
+	useEffect(() => {
+		const now = Date.now();
+		const currentTime = WINNER_DATE.getTime();
+		if (now > currentTime || QueryString.get('modal') === 'true') {
+			setState({ type: ACTION.modal, state: { enabled: true } });
+		}
+	}, []);
+
 	return (
 		<div className='App'>
 			<Context.Provider {...{ value }}>

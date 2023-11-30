@@ -1,5 +1,6 @@
+@import url('../../settings/config.less');
 .Modal {
-	@apply fixed w-full h-full top-0 z-50 flex justify-center items-center px-20;
+	@apply fixed w-full h-full top-0 z-50 flex justify-center items-center px-16;
 
 	.bg {
 		background-color: rgba(255, 255, 255, 0.8);
@@ -10,7 +11,7 @@
 		background-image: url('../../settings/img/bg.jpg');
 		background-size: cover;
 		box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-		@apply relative w-full max-w-4xl p-8 rounded-xl;
+		@apply relative w-full max-w-4xl rounded-xl py-8 space-y-6;
 
 		&::before {
 			background-image: url('../../pages/landing/home/img/hill.png');
@@ -26,11 +27,112 @@
 		}
 
 		h2 {
-			@apply font-MiRegular text-2xl;
+			@apply font-MiRegular px-9 text-3xl md:text-3xl flex flex-col lg:flex-row;
+		}
+
+		.md-character {
+			top: 110px;
+			left: -100px;
+			z-index: 20;
+			width: image-width(@img) * @scale;
+			height: image-height(@img) * @scale;
+			background-image: url(@img);
+			background-size: 100%;
+			filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.4));
+
+			@scale: 0.8;
+			@img: './img/character.png';
+
+			@apply absolute;
+		}
+
+		@media only screen and (max-width: @MD) {
+			.md-character {
+				top: -120px;
+				left: -72px;
+				z-index: 1;
+				width: image-width(@img) * @scale;
+				height: image-height(@img) * @scale;
+
+				@scale: 0.7;
+				@img: './img/character.png';
+			}
 		}
 
 		.scroll {
-			@apply w-full h-44 bg-white max-w-2xl rounded-2xl text-center flex flex-col justify-start items-center overflow-y-scroll overflow-x-hidden;
+			z-index: 2;
+			min-height: 260px;
+
+			@apply relative w-full p-8 space-y-5 text-black h-44 bg-white max-w-3xl rounded-2xl text-center flex flex-col justify-start items-start lg:items-center overflow-y-scroll overflow-x-hidden;
+
+			div {
+				@apply space-y-2 w-full;
+			}
+			h3 {
+				@apply lg:text-2xl font-MiSemibold text-left lg:text-center text-3xl;
+			}
+
+			p {
+				@apply font-MiNormal text-3xl lg:text-xl text-left lg:text-center;
+			}
+		}
+
+		.footer {
+			background-color: #e60038;
+			@apply relative w-full flex justify-center leading-snug lg:flex-row items-center px-5 text-4xl lg:text-3xl font-MiRegular text-white py-3 flex-col;
+
+			span {
+				color: #f3e228;
+				@apply font-MiBold;
+			}
+
+			&::after {
+				top: -144px;
+				right: 7px;
+				z-index: 3;
+				width: image-width(@img) * @scale;
+				height: image-height(@img) * @scale;
+				background-image: url(@img);
+				background-size: 100%;
+				content: '';
+
+				@scale: 1;
+				@img: './img/mushroom.png';
+				@apply absolute;
+			}
+		}
+
+		@media only screen and (max-width: @MD) {
+			.scroll {
+				min-height: 350px;
+			}
+			.footer {
+				&::after {
+					top: -107px;
+					right: -29px;
+					width: image-width(@img) * @scale;
+					height: image-height(@img) * @scale;
+
+					@scale: 0.8;
+					@img: './img/mushroom.png';
+				}
+			}
+		}
+
+		.close {
+			width: image-width(@img) * @scale;
+			height: image-height(@img) * @scale;
+			background-image: url(@img);
+			background-size: 100%;
+			cursor: pointer;
+			transition: 0.1s;
+
+			@scale: 0.5;
+			@img: './img/close.png';
+
+			&:hover {
+				@apply rotate-90;
+			}
 		}
 	}
 }
